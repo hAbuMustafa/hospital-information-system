@@ -15,5 +15,3 @@ const scheme = {
 };
 
 export default scheme;
-
-// todo: remove all prefixes like "Patient_"
