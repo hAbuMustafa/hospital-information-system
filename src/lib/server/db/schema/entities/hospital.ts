@@ -1,12 +1,4 @@
-import {
-  pgSchema,
-  varchar,
-  foreignKey,
-  bigint,
-  integer,
-  text,
-  date,
-} from 'drizzle-orm/pg-core';
+import { pgSchema, varchar, foreignKey, integer, text, date } from 'drizzle-orm/pg-core';
 import { Person } from './people';
 
 export const Hospital = pgSchema('Hospital');
@@ -29,7 +21,7 @@ export const Staff = Hospital.table(
     department: varchar({ length: 45 }).notNull(),
     employment_date: date({ mode: 'date' }).notNull(),
     manager_id: integer().notNull(),
-    person_id: bigint({ mode: 'bigint' })
+    person_id: integer()
       .notNull()
       .references(() => Person.id),
   },

@@ -1,6 +1,6 @@
 import {
   pgSchema,
-  bigserial,
+  serial,
   varchar,
   foreignKey,
   bigint,
@@ -15,7 +15,7 @@ import { Sec_pb_key, User } from './system';
 export const Pharmacy = pgSchema('Pharmacy');
 
 export const ActiveIngredient = Pharmacy.table('ActiveIngredient', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  id: serial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   name_ar: varchar({ length: 100 }).notNull(),
   alias: varchar({ length: 45 }),
@@ -36,13 +36,13 @@ export const DosageForm_SizeUnit = Pharmacy.table('DosageForm_SizeUnit', {
 });
 
 export const ActiveIngredient_Use = Pharmacy.table('ActiveIngredient_Use', {
-  ac_id: bigint({ mode: 'bigint' }).references(() => ActiveIngredient.id),
+  ac_id: integer().references(() => ActiveIngredient.id),
   use_id: integer().references(() => Use.id),
 });
 
 export const BrandName = Pharmacy.table('BrandName', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  formulary_id: bigint({ mode: 'bigint' }).references(() => Formulary.id),
+  id: serial().primaryKey(),
+  formulary_id: integer().references(() => Formulary.id),
   name: varchar({ length: 45 }).notNull(),
   name_ar: varchar({ length: 45 }),
   size: decimal({ precision: 10, scale: 5 }),
@@ -55,16 +55,16 @@ export const BrandName = Pharmacy.table('BrandName', {
 });
 
 export const DosageUnit_look_like = Pharmacy.table('DosageUnit_look_like', {
-  brand_name_id: bigint({ mode: 'bigint' })
+  brand_name_id: integer()
     .notNull()
     .references(() => BrandName.id),
-  look_like_id: bigint({ mode: 'bigint' })
+  look_like_id: integer()
     .notNull()
     .references(() => BrandName.id),
 });
 
 export const Formulary = Pharmacy.table('Formulary', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  id: serial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   cat_strategy: boolean().default(false),
   cat_high_concentration_electrolyte: boolean().default(false),
@@ -73,7 +73,7 @@ export const Formulary = Pharmacy.table('Formulary', {
 });
 
 export const Formulary_ROA = Pharmacy.table('Formulary_ROA', {
-  formulary_id: bigint({ mode: 'bigint' }).references(() => Formulary.id),
+  formulary_id: integer().references(() => Formulary.id),
   roa: integer()
     .notNull()
     .references(() => RouteOfAdministration.id),
@@ -82,9 +82,9 @@ export const Formulary_ROA = Pharmacy.table('Formulary_ROA', {
 export const Formulation = Pharmacy.table(
   'Formulation',
   {
-    id: bigserial({ mode: 'bigint' }).primaryKey(),
-    formulary_id: bigint({ mode: 'bigint' }).references(() => Formulary.id),
-    ac_id: bigint({ mode: 'bigint' }).references(() => ActiveIngredient.id),
+    id: serial().primaryKey(),
+    formulary_id: integer().references(() => Formulary.id),
+    ac_id: integer().references(() => ActiveIngredient.id),
     amount: decimal({ precision: 10, scale: 5 }).notNull(),
     amount_unit: integer()
       .notNull()
@@ -123,11 +123,11 @@ export const Use = Pharmacy.table('Use', {
 });
 
 export const Invoice = Pharmacy.table('Invoice', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  patient_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  created_by: bigint({ mode: 'bigint' })
+  created_by: integer()
     .notNull()
     .references(() => User.id),
   created_at: timestamp().notNull().default(new Date()),
@@ -144,7 +144,7 @@ export const Invoice = Pharmacy.table('Invoice', {
 /*
 export const Invoice_Items = Pharmacy.table('Invoice_Items', {
   id: serial().primaryKey(),
-  invoice_id: bigint({ mode: "bigint" })
+  invoice_id: integer()
     .notNull()
     .references(() => Invoice.id),
   item_id: int()
@@ -156,7 +156,7 @@ export const Invoice_Items = Pharmacy.table('Invoice_Items', {
 
   export const Ph_InEco = Pharmacy.table('Ph_InEco', {
    id: serial().primaryKey(),
-   brand_name_id: bigint({ mode: "bigint" })
+   brand_name_id: integer()
      .notNull()
      .references(() => BrandNames.id),
    amount: int().notNull(),

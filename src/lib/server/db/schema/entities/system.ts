@@ -1,4 +1,5 @@
 import {
+  serial,
   bigserial,
   varchar,
   bigint,
@@ -27,7 +28,7 @@ export const Sec_pv_key = Security.table('Sec_pv_key', {
 
 export const RefreshToken = Security.table('RefreshToken', {
   id: varchar({ length: 256 }).primaryKey(),
-  user_id: bigint({ mode: 'bigint' })
+  user_id: integer()
     .notNull()
     .references(() => User.id),
   token_hash: varchar({ length: 36 }).notNull(),
@@ -37,11 +38,11 @@ export const RefreshToken = Security.table('RefreshToken', {
 });
 
 export const User = Security.table('User', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  id: serial().primaryKey(),
   username: varchar({ length: 45 }).notNull().unique(),
   hashed_pw: text().notNull(),
   role: integer().notNull(),
-  person_id: bigint({ mode: 'bigint' })
+  person_id: integer()
     .notNull()
     .references(() => Person.id),
   staff_id: integer().references(() => Staff.id),

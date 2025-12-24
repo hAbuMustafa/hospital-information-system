@@ -21,10 +21,10 @@ export const MedPlan = MedicationPlan.table(
   {
     id: bigserial({ mode: 'bigint' }).primaryKey(),
     timestamp: timestamp({ mode: 'date' }).notNull(),
-    patient_id: bigint({ mode: 'bigint' })
+    patient_id: integer()
       .notNull()
       .references(() => InPatient.id),
-    medication_id: bigint({ mode: 'bigint' })
+    medication_id: integer()
       .notNull()
       .references(() => Formulary.id),
     amount: decimal({ precision: 10, scale: 2 }).notNull(),

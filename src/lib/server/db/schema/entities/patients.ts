@@ -1,6 +1,6 @@
 import {
   pgSchema,
-  bigserial,
+  serial,
   varchar,
   bigint,
   integer,
@@ -17,8 +17,8 @@ import { Person } from './people';
 export const Patient = pgSchema('Patient');
 
 export const InPatient = Patient.table('InPatient', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  person_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  person_id: integer()
     .notNull()
     .references(() => Person.id),
   meal_type: varchar({ length: 45 }),
@@ -29,7 +29,7 @@ export const InPatient = Patient.table('InPatient', {
 });
 
 export const Insurance_Doc = Patient.table('Insurance_Doc', {
-  patient_id: bigint({ mode: 'bigint' })
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
   insurance_entity: varchar({ length: 45 }).notNull(),
@@ -46,16 +46,16 @@ export const Insurance_Doc = Patient.table('Insurance_Doc', {
 });
 
 export const Diagnosis = Patient.table('Diagnosis', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  id: serial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   icd11: varchar({ length: 45 }),
 });
 
 export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
-  patient_id: bigint({ mode: 'bigint' })
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  diagnosis_id: bigint({ mode: 'bigint' })
+  diagnosis_id: integer()
     .notNull()
     .references(() => Diagnosis.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
@@ -66,8 +66,8 @@ export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
 });
 
 export const Admission_Order = Patient.table('Admission_Order', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  person_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  person_id: integer()
     .references(() => Person.id)
     .notNull(),
   notes: text(),
@@ -84,10 +84,10 @@ export const Admission_Order = Patient.table('Admission_Order', {
 
 export const Admission = Patient.table('Admission', {
   id: varchar({ length: 8 }).primaryKey(), // Archive File Number
-  patient_id: bigint({ mode: 'bigint' })
+  patient_id: integer()
     .references(() => InPatient.id)
     .notNull(),
-  admission_order_id: bigint({ mode: 'bigint' }).references(() => Admission_Order.id),
+  admission_order_id: integer().references(() => Admission_Order.id),
   admission_notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
   registrar: integer().references(() => Staff.id),
@@ -99,8 +99,8 @@ export const Discharge_Reason = Patient.table('Discharge_Reason', {
 });
 
 export const Discharge_Order = Patient.table('Discharge_Order', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  patient_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  patient_id: integer()
     .references(() => InPatient.id)
     .notNull(),
   notes: text(),
@@ -115,11 +115,11 @@ export const Discharge_Order = Patient.table('Discharge_Order', {
 });
 
 export const Discharge = Patient.table('Discharge', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  patient_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  discharge_order_id: bigint({ mode: 'bigint' }).references(() => Discharge_Order.id),
+  discharge_order_id: integer().references(() => Discharge_Order.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
   discharge_reason: integer()
     .notNull()
@@ -131,8 +131,8 @@ export const Discharge = Patient.table('Discharge', {
 });
 
 export const Transfer_Order = Patient.table('Transfer_Order', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  patient_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
   to_ward: integer()
@@ -150,15 +150,15 @@ export const Transfer_Order = Patient.table('Transfer_Order', {
 });
 
 export const Transfer = Patient.table('Transfer', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  patient_id: bigint({ mode: 'bigint' })
+  id: serial().primaryKey(),
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
   from_ward_id: integer().references(() => Ward.id),
   to_ward_id: integer()
     .notNull()
     .references(() => Ward.id),
-  transfer_order_id: bigint({ mode: 'bigint' }).references(() => Transfer_Order.id),
+  transfer_order_id: integer().references(() => Transfer_Order.id),
   notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });

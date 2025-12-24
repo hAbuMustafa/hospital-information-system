@@ -1,8 +1,8 @@
 import {
   pgSchema,
+  serial,
   bigserial,
   varchar,
-  bigint,
   integer,
   text,
   date,
@@ -12,7 +12,7 @@ import {
 export const People = pgSchema('People');
 
 export const Person = People.table('Person', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  id: serial().primaryKey(),
   first_name: varchar({ length: 45 }).notNull(),
   father_name: varchar({ length: 45 }).notNull(),
   grandfather_name: varchar({ length: 45 }).notNull(),
@@ -32,7 +32,7 @@ export const Contact_type = People.table('Contact_type', {
 
 export const People_contact_information = People.table('People_contact_information', {
   id: bigserial({ mode: 'bigint' }).primaryKey(),
-  person_id: bigint({ mode: 'bigint' })
+  person_id: integer()
     .notNull()
     .references(() => Person.id),
   contact_type: integer()
@@ -51,16 +51,16 @@ export const Person_IdDoc = People.table('Person_IdDoc', {
   id: bigserial({ mode: 'bigint' }).primaryKey(),
   document_number: varchar({ length: 45 }).notNull().unique(),
   document_type: integer().references(() => IdDoc_type.id),
-  person_id: bigint({ mode: 'bigint' })
+  person_id: integer()
     .notNull()
     .references(() => Person.id),
 });
 
 export const Person_relationship = People.table('Person_relationship', {
-  person_id: bigint({ mode: 'bigint' })
+  person_id: integer()
     .notNull()
     .references(() => Person.id),
-  related_to_id: bigint({ mode: 'bigint' })
+  related_to_id: integer()
     .notNull()
     .references(() => Person.id),
   relationship: varchar({ length: 45 }).notNull(),
