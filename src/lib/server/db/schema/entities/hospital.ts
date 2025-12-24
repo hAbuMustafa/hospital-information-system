@@ -1,4 +1,4 @@
-import { pgSchema, varchar, foreignKey, integer, text, date } from 'drizzle-orm/pg-core';
+import { pgSchema, varchar, integer, text, date } from 'drizzle-orm/pg-core';
 import { Person } from './people';
 
 export const Hospital = pgSchema('Hospital');
@@ -11,25 +11,19 @@ export const Ward = Hospital.table('Ward', {
   tags: text(),
 });
 
-export const Staff = Hospital.table(
-  'Staff',
-  {
-    id: integer().primaryKey(),
-    job: varchar({ length: 45 }).notNull(),
-    qualification: varchar({ length: 45 }).notNull(),
-    major: varchar({ length: 45 }).notNull(),
-    department: varchar({ length: 45 }).notNull(),
-    employment_date: date({ mode: 'date' }).notNull(),
-    manager_id: integer().notNull(),
-    person_id: integer()
-      .notNull()
-      .references(() => Person.id),
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.manager_id],
-      foreignColumns: [table.id],
-      name: 'staff_manager_link',
-    }),
-  ]
-);
+export const Staff = Hospital.table('Staff', {
+  id: integer().primaryKey(),
+  job: varchar({ length: 45 }).notNull(),
+  qualification: varchar({ length: 45 }).notNull(),
+  major: varchar({ length: 45 }).notNull(),
+  department: varchar({ length: 45 }).notNull(),
+  employment_date: date({ mode: 'date' }).notNull(),
+  person_id: integer()
+    .notNull()
+    .references(() => Person.id),
+});
+
+export const ReportsTo = Hospital.table('ReportsTo', {
+  staff_id: integer().references(() => Staff.id),
+  reports_to_id: integer().references(() => Staff.id),
+});
