@@ -1,22 +1,21 @@
 import { db } from '$lib/server/db';
 import {
-  Patient_discharge_reasons,
-  Patient_id_doc_type,
-  Patient_wards,
-  People,
-  Patients,
-  Wards,
-  Diagnoses,
-  Patient_Diagnoses,
-} from '$lib/server/db/schema';
+  Discharge_Reason,
+  Transfer,
+  InPatient,
+  Diagnosis,
+  Patient_diagnosis,
+} from '$lib/server/db/schema/entities/patients';
+import { Person, IdDoc_type } from '$lib/server/db/schema/entities/people';
+import { Ward } from '$lib/server/db/schema/entities/hospital';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { and, eq, isNull, like } from 'drizzle-orm';
 
-export async function createWard(ward: typeof Wards.$inferInsert) {
+export async function createWard(ward: typeof Ward.$inferInsert) {
   try {
     const { id, name, floor, capacity, tags } = ward;
     const [new_ward] = await db
-      .insert(Wards)
+      .insert(Ward)
       .values({ id, name, floor, capacity, tags: tags?.toString() })
       .returning();
 
@@ -31,12 +30,9 @@ export async function createWard(ward: typeof Wards.$inferInsert) {
   }
 }
 
-export async function createIdDocType(docType: typeof Patient_id_doc_type.$inferInsert) {
+export async function createIdDocType(docType: typeof IdDoc_type.$inferInsert) {
   try {
-    const [new_id_doc_type] = await db
-      .insert(Patient_id_doc_type)
-      .values(docType)
-      .returning();
+    const [new_id_doc_type] = await db.insert(IdDoc_type).values(docType).returning();
 
     return { success: true, data: new_id_doc_type };
   } catch (error) {
@@ -47,11 +43,11 @@ export async function createIdDocType(docType: typeof Patient_id_doc_type.$infer
 }
 
 export async function createDischargeReason(
-  dischargeReason: typeof Patient_discharge_reasons.$inferInsert
+  dischargeReason: typeof Discharge_Reason.$inferInsert
 ) {
   try {
     const [new_discharge_reason] = await db
-      .insert(Patient_discharge_reasons)
+      .insert(Discharge_Reason)
       .values(dischargeReason)
       .returning();
 
@@ -74,7 +70,7 @@ export async function createDiagnosis(
 
   try {
     const [newDiagnosis] = await conn
-      .insert(Diagnoses)
+      .insert(Diagnosis)
       .values(typeof diagnosis === 'string' ? { name: diagnosis } : diagnosis)
       .returning();
 
@@ -92,17 +88,17 @@ export async function createDiagnosis(
 export async function isAdmitted(idDocType: number, idDocNum: string) {
   const [foundAdmitted] = await db
     .select({
-      name: People.name,
-      recent_ward_name: Patients.recent_ward,
+      name: Person.name,
+      recent_ward_name: InPatient.recent_ward,
     })
-    .from(Patients)
-    .leftJoin(People, eq(Patients.person_id, People.id))
-    .leftJoin(Wards, eq(Patients.recent_ward, Wards.id))
+    .from(InPatient)
+    .leftJoin(Person, eq(InPatient.person_id, Person.id))
+    .leftJoin(Ward, eq(InPatient.recent_ward, Ward.id))
     .where(
       and(
-        eq(People.id_doc_type, idDocType),
-        eq(People.id_doc_num, idDocNum),
-        isNull(Patients.discharge_date)
+        eq(Person.id_doc_type, idDocType),
+        eq(Person.id_doc_num, idDocNum),
+        isNull(InPatient.discharge_date)
       )
     );
 
@@ -125,33 +121,33 @@ type newPatientT = {
 export async function createPatient(patient: newPatientT) {
   try {
     const new_patient = await db.transaction(async (tx) => {
-      let foundPerson: typeof People.$inferSelect | null = null;
+      let foundPerson: typeof Person.$inferSelect | null = null;
 
       if (!patient.person_id) {
         if (patient.id_doc_num) {
           [foundPerson] = await tx
             .select()
-            .from(People)
-            .where(eq(People.id_doc_num, patient.id_doc_num));
+            .from(Person)
+            .where(eq(Person.id_doc_num, patient.id_doc_num));
         }
 
         if (!foundPerson) {
           const { id: droppedPatientId, ...restOfPatientData } = patient;
-          [foundPerson] = await tx.insert(People).values(restOfPatientData).returning();
+          [foundPerson] = await tx.insert(Person).values(restOfPatientData).returning();
         }
 
         patient.person_id = foundPerson.id;
       }
 
       const [newPatient] = await tx
-        .insert(Patients)
+        .insert(InPatient)
         .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
           newPatientT,
           'person_id'
         >)
         .returning();
 
-      await tx.insert(Patient_wards).values({
+      await tx.insert(Transfer).values({
         patient_id: newPatient.id,
         ward: patient.admission_ward,
         timestamp: patient.admission_date,
@@ -161,12 +157,12 @@ export async function createPatient(patient: newPatientT) {
       for (let i = 0; i < patient.diagnosis.length; i++) {
         const currentDiagnosisText = patient.diagnosis[i];
 
-        let diagnosis: typeof Diagnoses.$inferSelect;
+        let diagnosis: typeof Diagnosis.$inferSelect;
 
         const [foundDiagnosis] = await tx
           .select()
-          .from(Diagnoses)
-          .where(eq(Diagnoses.name, currentDiagnosisText));
+          .from(Diagnosis)
+          .where(eq(Diagnosis.name, currentDiagnosisText));
 
         if (foundDiagnosis) {
           diagnosis = foundDiagnosis;
@@ -187,7 +183,7 @@ export async function createPatient(patient: newPatientT) {
           }
         }
 
-        await tx.insert(Patient_Diagnoses).values({
+        await tx.insert(Patient_diagnosis).values({
           patient_id: newPatient.id,
           diagnosis_id: diagnosis.id,
           timestamp: patient.admission_date,
@@ -211,14 +207,14 @@ export async function createPatient(patient: newPatientT) {
 export async function createPatientFromSeed(patient: App.CustomTypes['PatientSeedT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
-      let foundPerson: typeof People.$inferSelect | null = null;
+      let foundPerson: typeof Person.$inferSelect | null = null;
 
       if (!patient.person_id) {
         if (patient.id_doc_num) {
           [foundPerson] = await tx
             .select()
-            .from(People)
-            .where(eq(People.id_doc_num, patient.id_doc_num!));
+            .from(Person)
+            .where(eq(Person.id_doc_num, patient.id_doc_num!));
         }
 
         if (!foundPerson) {
@@ -234,7 +230,7 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
           }
 
           const { id: droppedPatientId, ...restOfPatientData } = patient;
-          [foundPerson] = await tx.insert(People).values(restOfPatientData).returning();
+          [foundPerson] = await tx.insert(Person).values(restOfPatientData).returning();
         }
 
         patient.person_id = foundPerson.id;
@@ -246,14 +242,14 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
       }
 
       const [newPatient] = await tx
-        .insert(Patients)
+        .insert(InPatient)
         .values({
           ...patient,
           recent_ward: patient.admission_ward,
         } as App.Require<App.CustomTypes['PatientSeedT'], 'person_id'>)
         .returning();
 
-      await tx.insert(Patient_wards).values({
+      await tx.insert(Transfer).values({
         patient_id: newPatient.id,
         ward: patient.admission_ward,
         timestamp: patient.admission_date,
@@ -265,12 +261,12 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
       for (let i = 0; i < pDiagnoses.length; i++) {
         const currentDiagnosisText = pDiagnoses[i];
 
-        let diagnosis: typeof Diagnoses.$inferSelect;
+        let diagnosis: typeof Diagnosis.$inferSelect;
 
         const [foundDiagnosis] = await tx
           .select()
-          .from(Diagnoses)
-          .where(eq(Diagnoses.name, currentDiagnosisText));
+          .from(Diagnosis)
+          .where(eq(Diagnosis.name, currentDiagnosisText));
 
         if (foundDiagnosis) {
           diagnosis = foundDiagnosis;
@@ -291,7 +287,7 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
           }
         }
 
-        await tx.insert(Patient_Diagnoses).values({
+        await tx.insert(Patient_diagnosis).values({
           patient_id: newPatient.id,
           diagnosis_id: diagnosis.id,
           timestamp: patient.admission_date,
@@ -312,18 +308,15 @@ export async function createPatientFromSeed(patient: App.CustomTypes['PatientSee
   }
 }
 
-export async function transferPatient(transfer: typeof Patient_wards.$inferInsert) {
+export async function transferPatient(transfer: typeof Transfer.$inferInsert) {
   try {
     const new_transfer = await db.transaction(async (tx) => {
-      const [transferInsert] = await tx
-        .insert(Patient_wards)
-        .values(transfer)
-        .returning();
+      const [transferInsert] = await tx.insert(Transfer).values(transfer).returning();
 
       await tx
-        .update(Patients)
+        .update(InPatient)
         .set({ recent_ward: transfer.ward })
-        .where(eq(Patients.id, transfer.patient_id));
+        .where(eq(InPatient.id, transfer.patient_id));
 
       return transferInsert;
     });
@@ -347,19 +340,19 @@ export async function dischargePatient(patientDischarge: {
 }) {
   try {
     const [patient] = await db
-      .update(Patients)
+      .update(InPatient)
       .set({
         discharge_date: patientDischarge.discharge_date,
         discharge_reason: patientDischarge.discharge_reason,
         discharge_notes: patientDischarge.discharge_notes ?? null,
       })
-      .where(eq(Patients.id, patientDischarge.id))
-      .returning({ id: Patients.id, person_id: Patients.person_id });
+      .where(eq(InPatient.id, patientDischarge.id))
+      .returning({ id: InPatient.id, person_id: InPatient.person_id });
 
     const [person] = await db
       .select()
-      .from(People)
-      .where(eq(People.id, patient.person_id));
+      .from(Person)
+      .where(eq(Person.id, patient.person_id));
 
     return {
       success: true,
@@ -375,9 +368,9 @@ export async function dischargePatient(patientDischarge: {
 export async function getLastMedicalNumber() {
   const num = (
     await db
-      .select({ mId: Patients.id })
-      .from(Patients)
-      .where(like(Patients.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`))
+      .select({ mId: InPatient.id })
+      .from(InPatient)
+      .where(like(InPatient.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`))
   )
     .map((mn) => Number(mn?.mId.split('/')[1] || '0'))
     .sort((a, b) => a - b)
@@ -387,7 +380,7 @@ export async function getLastMedicalNumber() {
 }
 
 export async function getDiagnoses() {
-  const diagnoses_list = await db.select().from(Diagnoses);
+  const diagnoses_list = await db.select().from(Diagnosis);
 
   return diagnoses_list.map((d) => d.name) || [];
 }

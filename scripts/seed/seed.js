@@ -15,7 +15,6 @@ import {
 import {
   createDrugUnit,
   createDrugCategory,
-  createDrug,
 } from '../../src/lib/server/db/operations/drugs';
 
 import {
@@ -77,7 +76,6 @@ export async function beginSeed() {
 
   // Seed Initial Data
   await seed(new_Users, createUser);
-  await seed(new_Drugs, createDrug);
   await seed(new_Patients, createPatientFromSeed);
   await seed(new_PatientTransfers, transferPatient);
 
