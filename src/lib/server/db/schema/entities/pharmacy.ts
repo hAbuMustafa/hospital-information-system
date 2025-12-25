@@ -127,8 +127,6 @@ export const Use = Pharmacy.table('Use', {
   use: varchar({ length: 45 }).notNull(),
 });
 
-/* TEMPLATE */
-
 export const PharmacyStock_Drugs = Pharmacy.table('PharmacyStock_Drugs', {
   id: serial().primaryKey(),
   brand_name_id: integer()
