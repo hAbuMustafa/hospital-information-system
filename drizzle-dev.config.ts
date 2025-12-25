@@ -15,6 +15,7 @@ export default defineConfig({
   schemaFilter: [
     'Hospital',
     'MedicationPlan',
+    'Finance',
     'Patient',
     'People',
     'Pharmacy',
