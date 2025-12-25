@@ -5,7 +5,7 @@ import {
   Patients,
   People,
   Wards,
-} from '$lib/server/db/schema';
+} from '$lib/server/db/schema/entities';
 import { json } from '@sveltejs/kit';
 import { eq, isNull, sql } from 'drizzle-orm';
 

@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db/index';
-import { Patient_wards, Patients } from '$lib/server/db/schema';
+import { Patient_wards, Patients } from '$lib/server/db/schema/entities';
 import { json } from '@sveltejs/kit';
 import { between } from 'drizzle-orm';
 

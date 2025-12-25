@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db/';
-import { People } from '$lib/server/db/schema';
+import { People } from '$lib/server/db/schema/entities';
 import { regexp } from '$lib/utils/drizzle';
 import { regexifiedPersonName } from '$lib/utils/querying';
 import { json } from '@sveltejs/kit';

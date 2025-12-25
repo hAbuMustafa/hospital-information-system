@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db/index.js';
-import { Patients } from '$lib/server/db/schema';
+import { Patients } from '$lib/server/db/schema/entities';
 import { json } from '@sveltejs/kit';
 import { eq, ne } from 'drizzle-orm';
 
