@@ -1,10 +1,18 @@
-import { pgSchema, varchar, integer, text, date } from 'drizzle-orm/pg-core';
+import {
+  pgSchema,
+  varchar,
+  integer,
+  text,
+  date,
+  smallserial,
+  smallint,
+} from 'drizzle-orm/pg-core';
 import { Person } from './people';
 
 export const Hospital = pgSchema('Hospital');
 
 export const Ward = Hospital.table('Ward', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 10 }).notNull(),
   floor: integer().notNull(),
   capacity: integer().default(0),
@@ -12,7 +20,7 @@ export const Ward = Hospital.table('Ward', {
 });
 
 export const Staff = Hospital.table('Staff', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   job: varchar({ length: 45 }).notNull(),
   qualification: varchar({ length: 45 }).notNull(),
   major: varchar({ length: 45 }).notNull(),
@@ -24,6 +32,6 @@ export const Staff = Hospital.table('Staff', {
 });
 
 export const ReportsTo = Hospital.table('ReportsTo', {
-  staff_id: integer().references(() => Staff.id),
-  reports_to_id: integer().references(() => Staff.id),
+  staff_id: smallint().references(() => Staff.id),
+  reports_to_id: smallint().references(() => Staff.id),
 });

@@ -8,6 +8,7 @@ import {
   decimal,
   text,
   timestamp,
+  smallint,
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Formulary } from './pharmacy';
@@ -33,7 +34,7 @@ export const MedPlan = MedicationPlan.table(
     duration_days: decimal({ precision: 10, scale: 2 }).notNull(),
     mixed_with: bigint({ mode: 'bigint' }),
     discontinued_at: timestamp({ mode: 'date' }),
-    discontinue_phys_id: integer().references(() => Staff.id),
+    discontinue_phys_id: smallint().references(() => Staff.id),
     discontinue_phys_signature: varchar({ length: 256 }),
     discontinue_phys_sign_key_id: bigint({ mode: 'bigint' }).references(
       () => Sec_pb_key.id
@@ -58,7 +59,7 @@ export const MedPlan_note = MedicationPlan.table('MedPlan_note', {
   note_type: integer()
     .notNull()
     .references(() => MedPlan_note_type.id),
-  author_id: integer()
+  author_id: smallint()
     .notNull()
     .references(() => Staff.id),
   author_signature: varchar({ length: 256 }).notNull(),
@@ -76,7 +77,7 @@ export const MedPlan_sign_nurse = MedicationPlan.table('MedPlan_sign_nurse', {
   med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  nurse_id: integer()
+  nurse_id: smallint()
     .notNull()
     .references(() => Staff.id),
   nurse_signature: varchar({ length: 256 }).notNull(),
@@ -90,7 +91,7 @@ export const MedPlan_sign_pharm = MedicationPlan.table('MedPlan_sign_pharm', {
   med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  pharm_id: integer()
+  pharm_id: smallint()
     .notNull()
     .references(() => Staff.id),
   pharm_signature: varchar({ length: 256 }).notNull(),
@@ -104,7 +105,7 @@ export const MedPlan_sign_phys = MedicationPlan.table('MedPlan_sign_phys', {
   med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  phys_id: integer()
+  phys_id: smallint()
     .notNull()
     .references(() => Staff.id),
   phys_signature: varchar({ length: 256 }).notNull(),

@@ -9,6 +9,7 @@ import {
   date,
   boolean,
   timestamp,
+  smallint,
 } from 'drizzle-orm/pg-core';
 import { Staff, Ward } from './hospital';
 import { Sec_pb_key } from './system';
@@ -22,7 +23,7 @@ export const InPatient = Patient.table('InPatient', {
     .notNull()
     .references(() => Person.id),
   meal_type: varchar({ length: 45 }),
-  recent_ward: integer()
+  recent_ward: smallint()
     .notNull()
     .references(() => Ward.id),
   security_status: boolean().default(false),
@@ -60,7 +61,7 @@ export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
     .references(() => Diagnosis.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
   type: varchar({ length: 45 }),
-  diagnosing_phys_id: integer().references(() => Staff.id),
+  diagnosing_phys_id: smallint().references(() => Staff.id),
   diagnosing_phys_signature: varchar({ length: 256 }),
   diagnosing_phys_sign_key_id: bigint({ mode: 'bigint' }).references(() => Sec_pb_key.id),
 });
@@ -73,7 +74,7 @@ export const Admission_Order = Patient.table('Admission_Order', {
   notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
   referred_from: varchar({ length: 100 }).default('reception'),
-  admitting_phys: integer()
+  admitting_phys: smallint()
     .references(() => Staff.id)
     .notNull(),
   admitting_phys_signature: varchar({ length: 256 }).notNull(),
@@ -90,7 +91,7 @@ export const Admission = Patient.table('Admission', {
   admission_order_id: integer().references(() => Admission_Order.id),
   admission_notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  registrar: integer().references(() => Staff.id),
+  registrar: smallint().references(() => Staff.id),
 });
 
 export const Discharge_Reason = Patient.table('Discharge_Reason', {
@@ -104,7 +105,7 @@ export const Discharge_Order = Patient.table('Discharge_Order', {
     .references(() => InPatient.id)
     .notNull(),
   notes: text(),
-  phys_id: integer()
+  phys_id: smallint()
     .references(() => Staff.id)
     .notNull(),
   phys_signature: varchar({ length: 256 }).notNull(),
@@ -125,7 +126,7 @@ export const Discharge = Patient.table('Discharge', {
     .notNull()
     .references(() => Discharge_Reason.id),
   notes: text(),
-  registrar: integer().references(() => Staff.id),
+  registrar: smallint().references(() => Staff.id),
   registrar_signature: varchar({ length: 256 }),
   registrar_sign_key: bigint({ mode: 'bigint' }).references(() => Sec_pb_key.id),
 });
@@ -135,11 +136,11 @@ export const Transfer_Order = Patient.table('Transfer_Order', {
   patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  to_ward: integer()
+  to_ward: smallint()
     .notNull()
     .references(() => Ward.id),
   notes: text(),
-  phys_id: integer()
+  phys_id: smallint()
     .notNull()
     .references(() => Staff.id),
   phys_signature: varchar({ length: 256 }).notNull(),
@@ -154,8 +155,8 @@ export const Transfer = Patient.table('Transfer', {
   patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  from_ward_id: integer().references(() => Ward.id),
-  to_ward_id: integer()
+  from_ward_id: smallint().references(() => Ward.id),
+  to_ward_id: smallint()
     .notNull()
     .references(() => Ward.id),
   transfer_order_id: integer().references(() => Transfer_Order.id),

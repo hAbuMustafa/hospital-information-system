@@ -173,7 +173,7 @@ export const Invoice_Items = Pharmacy.table('Invoice_Items', {
      .notNull()
      .references(() => Ph_InEco.id),
    amount: int().notNull(),
-   pharm_id: int()
+   pharm_id: smallint()
      .notNull()
      .references(() => Staff.id),
    pharm_signature: varchar({ length: 256 }).notNull(),
@@ -181,6 +181,6 @@ export const Invoice_Items = Pharmacy.table('Invoice_Items', {
      .notNull()
      .references(() => Sec_pb_key.id),
    med_plan_id: bigint({ mode: "bigint" }).references(() => MedPlan.id),
-   dispensing_nurse_id: int().references(() => Staff.id),
+   dispensing_nurse_id: smallint().references(() => Staff.id),
  });
 */

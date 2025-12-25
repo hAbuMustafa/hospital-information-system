@@ -8,6 +8,7 @@ import {
   boolean,
   timestamp,
   pgSchema,
+  smallint,
 } from 'drizzle-orm/pg-core';
 import { Person } from './people';
 import { Staff } from './hospital';
@@ -45,7 +46,7 @@ export const User = Security.table('User', {
   person_id: integer()
     .notNull()
     .references(() => Person.id),
-  staff_id: integer().references(() => Staff.id),
+  staff_id: smallint().references(() => Staff.id),
   pb_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
