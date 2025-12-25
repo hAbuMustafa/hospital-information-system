@@ -8,9 +8,14 @@ import {
   decimal,
   boolean,
   timestamp,
+  date,
+  smallint,
+  bigserial,
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Sec_pb_key, User } from './system';
+import { Staff } from './hospital';
+import { MedPlan } from './medication_plan';
 
 export const Pharmacy = pgSchema('Pharmacy');
 
@@ -122,65 +127,35 @@ export const Use = Pharmacy.table('Use', {
   use: varchar({ length: 45 }).notNull(),
 });
 
-export const Invoice = Pharmacy.table('Invoice', {
+/* TEMPLATE */
+
+export const PharmacyStock_Drugs = Pharmacy.table('PharmacyStock_Drugs', {
   id: serial().primaryKey(),
-  patient_id: integer()
+  brand_name_id: integer()
     .notNull()
-    .references(() => InPatient.id),
-  created_by: integer()
+    .references(() => BrandName.id),
+  amount: integer().notNull(),
+  unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
+  expiry_date: date({ mode: 'date' }),
+  batch_number: varchar({ length: 32 }),
+  stock_category: integer().references(() => StockCategory.id),
+});
+
+export const PharmacyTransaction_Drugs = Pharmacy.table('PharmacyTransaction_Drugs', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
+  timestamp: timestamp({ mode: 'date' }).notNull(),
+  item_id: integer()
     .notNull()
-    .references(() => User.id),
-  created_at: timestamp().notNull().default(new Date()),
-  from: timestamp().notNull(),
-  till: timestamp().notNull(),
-  total: decimal({ precision: 10, scale: 5 }).notNull(),
-  creator_pb_key_id: bigint({ mode: 'bigint' })
+    .references(() => PharmacyStock_Drugs.id),
+  amount: integer().notNull(),
+  pharmacist_id: smallint()
+    .notNull()
+    .references(() => Staff.id),
+  pharmacist_signature: varchar({ length: 256 }).notNull(),
+  pharmacist_sign_key: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  creator_signature: varchar({ length: 256 }),
+  patient_id: bigint({ mode: 'bigint' }).references(() => InPatient.id),
+  med_plan_id: bigint({ mode: 'bigint' }).references(() => MedPlan.id),
+  dispensing_nurse_id: smallint().references(() => Staff.id),
 });
-
-// TEMPLATE: for all Pharmacies
-/*
-export const Invoice_Items = Pharmacy.table('Invoice_Items', {
-  id: serial().primaryKey(),
-  invoice_id: integer()
-    .notNull()
-    .references(() => Invoice.id),
-  item_id: int()
-    .notNull()
-    .references(() => Ph_InEco_Stock.id),
-  amount: int().notNull().default(1),
-  unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
-});
-
-  export const Ph_InEco = Pharmacy.table('Ph_InEco', {
-   id: serial().primaryKey(),
-   brand_name_id: integer()
-     .notNull()
-     .references(() => BrandNames.id),
-   amount: int().notNull(),
-   unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
-   expiry_date: date({ mode: 'date' }),
-   batch_number: varchar({ length: 32 }),
-   stock_category: int().reference(()=>StockCategory.id),
- });
-
- export const Ph_InEco_Transaction = Pharmacy.table('Ph_InEco_Transaction', {
-   id: serial().primaryKey(),
-   timestamp: timestamp({ mode: 'date' }).notNull(),
-   item_id: bigint({ mode: "bigint" })
-     .notNull()
-     .references(() => Ph_InEco.id),
-   amount: int().notNull(),
-   pharm_id: smallint()
-     .notNull()
-     .references(() => Staff.id),
-   pharm_signature: varchar({ length: 256 }).notNull(),
-   pharm_sign_key: bigint({ mode: "bigint" })
-     .notNull()
-     .references(() => Sec_pb_key.id),
-   med_plan_id: bigint({ mode: "bigint" }).references(() => MedPlan.id),
-   dispensing_nurse_id: smallint().references(() => Staff.id),
- });
-*/
