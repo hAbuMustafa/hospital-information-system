@@ -19,6 +19,7 @@ export const Patient = pgSchema('Patient');
 
 export const InPatient = Patient.table('InPatient', {
   id: serial().primaryKey(),
+  file_id: varchar({ length: 8 }), // Archive File Number
   person_id: integer()
     .notNull()
     .references(() => Person.id),
@@ -84,7 +85,7 @@ export const Admission_Order = Patient.table('Admission_Order', {
 });
 
 export const Admission = Patient.table('Admission', {
-  id: varchar({ length: 8 }).primaryKey(), // Archive File Number
+  id: integer().primaryKey(),
   patient_id: integer()
     .references(() => InPatient.id)
     .notNull(),
