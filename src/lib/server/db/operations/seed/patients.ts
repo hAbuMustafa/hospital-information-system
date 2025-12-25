@@ -6,10 +6,10 @@ import {
   Patient_diagnosis,
 } from '$lib/server/db/schema/entities/patients';
 import { Person } from '$lib/server/db/schema/entities/people';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { eq } from 'drizzle-orm';
-import type { newPatientT } from './types';
 
-export async function createPatient(patient: newPatientT) {
+export async function createPatientFromSeed(patient: App.CustomTypes['PatientSeedT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
       let foundPerson: typeof Person.$inferSelect | null = null;
@@ -19,10 +19,21 @@ export async function createPatient(patient: newPatientT) {
           [foundPerson] = await tx
             .select()
             .from(Person)
-            .where(eq(Person.id_doc_num, patient.id_doc_num));
+            .where(eq(Person.id_doc_num, patient.id_doc_num!));
         }
 
         if (!foundPerson) {
+          let numberValidity;
+
+          if (patient.id_doc_type === 1 && patient.id_doc_num) {
+            try {
+              numberValidity = verifyEgyptianNationalId(patient.id_doc_num);
+              if (!numberValidity) patient.id_doc_num = patient.id_doc_num + ' INVALID';
+            } catch (e) {
+              patient.id_doc_num = patient.id_doc_num + ' INVALID';
+            }
+          }
+
           const { id: droppedPatientId, ...restOfPatientData } = patient;
           [foundPerson] = await tx.insert(Person).values(restOfPatientData).returning();
         }
@@ -30,12 +41,17 @@ export async function createPatient(patient: newPatientT) {
         patient.person_id = foundPerson.id;
       }
 
+      if (patient.admission_notes?.includes('مسجون')) {
+        patient.security_status = true;
+        patient.admission_notes?.replace('مسجون', '');
+      }
+
       const [newPatient] = await tx
         .insert(InPatient)
-        .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
-          newPatientT,
-          'person_id'
-        >)
+        .values({
+          ...patient,
+          recent_ward: patient.admission_ward,
+        } as App.Require<App.CustomTypes['PatientSeedT'], 'person_id'>)
         .returning();
 
       await tx.insert(Transfer).values({
@@ -45,8 +61,10 @@ export async function createPatient(patient: newPatientT) {
         notes: 'admission',
       });
 
-      for (let i = 0; i < patient.diagnosis.length; i++) {
-        const currentDiagnosisText = patient.diagnosis[i];
+      const pDiagnoses = patient.diagnosis.split('+').map((d) => d.trim());
+
+      for (let i = 0; i < pDiagnoses.length; i++) {
+        const currentDiagnosisText = pDiagnoses[i];
 
         let diagnosis: typeof Diagnosis.$inferSelect;
 
@@ -87,63 +105,6 @@ export async function createPatient(patient: newPatientT) {
     return {
       success: true,
       data: new_patient,
-    };
-  } catch (error) {
-    return {
-      error,
-    };
-  }
-}
-
-export async function transferPatient(transfer: typeof Transfer.$inferInsert) {
-  try {
-    const new_transfer = await db.transaction(async (tx) => {
-      const [transferInsert] = await tx.insert(Transfer).values(transfer).returning();
-
-      await tx
-        .update(InPatient)
-        .set({ recent_ward: transfer.ward })
-        .where(eq(InPatient.id, transfer.patient_id));
-
-      return transferInsert;
-    });
-
-    return {
-      success: true,
-      data: new_transfer,
-    };
-  } catch (error) {
-    return {
-      error,
-    };
-  }
-}
-
-export async function dischargePatient(patientDischarge: {
-  id: string;
-  discharge_reason: number;
-  discharge_date: Date;
-  discharge_notes?: string;
-}) {
-  try {
-    const [patient] = await db
-      .update(InPatient)
-      .set({
-        discharge_date: patientDischarge.discharge_date,
-        discharge_reason: patientDischarge.discharge_reason,
-        discharge_notes: patientDischarge.discharge_notes ?? null,
-      })
-      .where(eq(InPatient.id, patientDischarge.id))
-      .returning({ id: InPatient.id, person_id: InPatient.person_id });
-
-    const [person] = await db
-      .select()
-      .from(Person)
-      .where(eq(Person.id, patient.person_id));
-
-    return {
-      success: true,
-      data: { id: patient.id, name: person.name },
     };
   } catch (error) {
     return {
