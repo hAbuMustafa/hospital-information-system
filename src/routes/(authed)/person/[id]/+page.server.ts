@@ -1,4 +1,4 @@
-import { id_doc_type_list } from '$lib/server/db/menus.js';
+import { id_doc_type_list } from '$lib/server/db/menus';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params, fetch }) {

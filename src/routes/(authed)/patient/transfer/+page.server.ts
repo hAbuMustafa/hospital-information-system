@@ -1,5 +1,5 @@
 import { ward_list } from '$lib/server/db/menus';
-import { transferPatient } from '$lib/server/db/operations/patients.js';
+import { transferPatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export async function load({ fetch, url }) {

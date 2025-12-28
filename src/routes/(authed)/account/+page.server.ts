@@ -1,11 +1,11 @@
-import { isUniqueValue, updateUser } from '$lib/server/db/operations/users.js';
+import { isUniqueValue, updateUser } from '$lib/server/db/operations/users';
 import {
   arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
   emailPattern,
   nationalIdPattern,
   usernamePattern,
-} from '$lib/stores/patterns.js';
+} from '$lib/stores/patterns';
 import { fail, type Action } from '@sveltejs/kit';
 
 export function load() {

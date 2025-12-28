@@ -5,7 +5,7 @@
     egyptianMobileNumberPattern,
     nationalIdPattern,
     usernamePattern,
-  } from '$lib/stores/patterns.js';
+  } from '$lib/stores/patterns';
 
   let { data } = $props();
 </script>

@@ -1,6 +1,6 @@
-import { validateLogin } from '$lib/server/db/operations/auth.js';
-import { changePassword } from '$lib/server/db/operations/users.js';
-import { passwordPattern } from '$lib/stores/patterns.js';
+import { validateLogin } from '$lib/server/db/operations/auth';
+import { changePassword } from '$lib/server/db/operations/users';
+import { passwordPattern } from '$lib/stores/patterns';
 import { fail, redirect } from '@sveltejs/kit';
 
 export function load() {

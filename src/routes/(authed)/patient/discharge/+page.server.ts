@@ -1,5 +1,5 @@
 import { discharge_reason_list } from '$lib/server/db/menus';
-import { dischargePatient } from '$lib/server/db/operations/patients.js';
+import { dischargePatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export async function load({ url, fetch }) {

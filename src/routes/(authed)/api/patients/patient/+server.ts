@@ -1,4 +1,4 @@
-import { db } from '$lib/server/db/index.js';
+import { db } from '$lib/server/db/';
 import { Patients } from '$lib/server/db/schema/entities';
 import { json } from '@sveltejs/kit';
 import { eq, ne } from 'drizzle-orm';

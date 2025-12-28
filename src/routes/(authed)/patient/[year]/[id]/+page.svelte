@@ -8,7 +8,7 @@
     TimelineSeparator,
     TimelineDot,
   } from 'svelte-vertical-timeline';
-  import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format.js';
+  import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
 
   let { data } = $props();
