@@ -2,6 +2,35 @@ import { db } from '$lib/server/db';
 import { Discharge_Reason, Diagnosis } from '$lib/server/db/schema/entities/patients';
 import { Ward } from '$lib/server/db/schema/entities/hospital';
 
+import { Contact_type, IdDoc_type } from '$lib/server/db/schema/entities/people';
+
+export async function createIdDocType(docType: typeof IdDoc_type.$inferInsert) {
+  try {
+    const [new_id_doc_type] = await db.insert(IdDoc_type).values(docType).returning();
+
+    return { success: true, data: new_id_doc_type };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
+export async function createContactType(contactType: typeof Contact_type.$inferInsert) {
+  try {
+    const [new_contact_type] = await db
+      .insert(Contact_type)
+      .values(contactType)
+      .returning();
+
+    return { success: true, data: new_contact_type };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 export async function createWard(ward: typeof Ward.$inferInsert) {
   try {
     const { id, name, floor, capacity, tags } = ward;
