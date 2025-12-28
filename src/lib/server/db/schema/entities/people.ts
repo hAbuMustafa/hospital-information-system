@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
   pgSchema,
   serial,
@@ -9,6 +10,7 @@ import {
   boolean,
   smallserial,
   smallint,
+  pgView,
 } from 'drizzle-orm/pg-core';
 
 export const People = pgSchema('People');
@@ -33,7 +35,6 @@ export const Contact_type = People.table('Contact_type', {
 });
 
 export const People_contact_information = People.table('People_contact_information', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
   person_id: integer()
     .notNull()
     .references(() => Person.id),
@@ -45,17 +46,16 @@ export const People_contact_information = People.table('People_contact_informati
 });
 
 export const IdDoc_type = People.table('IdDoc_type', {
-  id: integer().primaryKey(),
-  name: text().notNull(),
+  id: smallserial().primaryKey(),
+  name: varchar({ length: 16 }).notNull(),
 });
 
 export const Person_IdDoc = People.table('Person_IdDoc', {
-  id: bigserial({ mode: 'bigint' }).primaryKey(),
-  document_number: varchar({ length: 45 }).notNull().unique(),
-  document_type: integer().references(() => IdDoc_type.id),
   person_id: integer()
     .notNull()
     .references(() => Person.id),
+  document_type: smallint().references(() => IdDoc_type.id),
+  document_number: varchar({ length: 45 }).notNull().unique(),
 });
 
 export const Person_relationship = People.table('Person_relationship', {
