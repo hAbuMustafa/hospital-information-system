@@ -2,7 +2,6 @@ import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
 import {
   createPatient,
   getDiagnoses,
-  getLastMedicalNumber,
   isAdmitted,
 } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
@@ -12,15 +11,12 @@ import { DrizzleQueryError } from 'drizzle-orm';
 export async function load() {
   const diagnoses_list = await getDiagnoses();
 
-  const lastMedicalNumber = await getLastMedicalNumber();
-
   return {
     title: 'تسجيل دخول مريض',
     id_doc_type_list: new_id_doc_type,
     wards_list: new_Wards,
     floors_list: floors,
     diagnoses_list,
-    nextMedicalNumber: (lastMedicalNumber || 0) + 1,
   };
 }
 
@@ -37,7 +33,7 @@ export const actions = {
     let birthdate = data.get('birthdate') as unknown as Date;
 
     // Patient Data
-    let medicalNumber = data.get('medical_number') as unknown as number;
+    let patientFileNumber = data.get('patient_file_number') as unknown as number;
     let admissionWard = data.get('admission_ward') as unknown as number;
     let diagnosis = data.getAll('diagnosis') as unknown as string[];
     let heathInsurance = data.get('health_insurance') as unknown as boolean;
@@ -47,7 +43,7 @@ export const actions = {
     let admissionNotes = data.get('admission_notes') as unknown as string;
 
     const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
-      medicalNumber,
+      patientFileNumber,
       patientName,
       idDocType,
       idDocNum,
@@ -65,7 +61,7 @@ export const actions = {
 
     const failMessages = [];
 
-    if (!medicalNumber) failMessages.push('الرقم الطبي مطلوب');
+    if (!patientFileNumber) failMessages.push('الرقم الطبي مطلوب');
     if (!patientName) failMessages.push(' اسم المريض مطلوب');
     if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
     if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
@@ -88,7 +84,7 @@ export const actions = {
 
     try {
       personId = Number(personId);
-      medicalNumber = Number(medicalNumber);
+      patientFileNumber = Number(patientFileNumber);
       idDocType = Number(idDocType);
       admissionWard = Number(admissionWard);
 
@@ -118,7 +114,9 @@ export const actions = {
     }
 
     const result = await createPatient({
-      id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
+      id: [admissionDate.getFullYear().toString().slice(2, 4), patientFileNumber].join(
+        '/'
+      ),
       name: patientName.trim(),
       id_doc_type: idDocType,
       id_doc_num: idDocNum.trim(),
@@ -138,7 +136,7 @@ export const actions = {
       )
     ) {
       return failWithMessages([
-        { message: `الرقم الطبي ${medicalNumber} مسجل مسبقا`, type: 'error' },
+        { message: `الرقم الطبي ${patientFileNumber} مسجل مسبقا`, type: 'error' },
       ]);
     }
 

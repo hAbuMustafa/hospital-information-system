@@ -19,20 +19,6 @@ export async function isAdmitted(idDocType: number, idDocNum: string) {
   return foundAdmitted;
 }
 
-export async function getLastMedicalNumber() {
-  const num = (
-    await db
-      .select({ mId: InPatient.id })
-      .from(InPatient)
-      .where(like(InPatient.id, `${new Date().getFullYear().toString().slice(2, 4)}/%`))
-  )
-    .map((mn) => Number(mn?.mId.split('/')[1] || '0'))
-    .sort((a, b) => a - b)
-    .pop();
-
-  return num || 0;
-}
-
 export async function getDiagnoses() {
   const diagnoses_list = await db.select().from(Diagnosis);
 

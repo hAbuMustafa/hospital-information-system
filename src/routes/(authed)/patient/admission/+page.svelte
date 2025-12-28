@@ -12,7 +12,7 @@
 
   const { data, form } = $props();
 
-  let medicalNumber = $state(form?.medicalNumber ?? '');
+  let patientFileNumber = $state(form?.patientFileNumber ?? '');
   let patientName = $state(form?.patientName ?? '');
   let idDocType = $state(form?.idDocType ? Number(form.idDocType) : 1);
   let idDocNum = $state(form?.idDocNum ?? '');
@@ -71,26 +71,17 @@
 
 <form method="POST" class="flex-form">
   <div class="input-pair">
-    <label for="medical_number">الرقم الطبي</label>
-    <div class="medical_number_input">
+    <label for="patient_file_number">رقم الملف</label>
+    <div class="patient_file_number_input">
       <!-- svelte-ignore a11y_autofocus -->
       <input
         type="number"
-        name="medical_number"
-        id="medical_number"
-        placeholder={String(data.nextMedicalNumber)}
+        name="patient_file_number"
+        id="patient_file_number"
         autofocus
-        bind:value={medicalNumber}
+        bind:value={patientFileNumber}
         required
       />
-      {#if !medicalNumber}
-        <button
-          type="button"
-          onclick={() => {
-            medicalNumber = data.nextMedicalNumber;
-          }}>{String(data.nextMedicalNumber)}</button
-        >
-      {/if}
     </div>
   </div>
 
@@ -234,7 +225,7 @@
 
 <style>
   form {
-    div.medical_number_input {
+    div.patient_file_number_input {
       display: grid;
       grid-template-columns: 1fr max-content;
     }
