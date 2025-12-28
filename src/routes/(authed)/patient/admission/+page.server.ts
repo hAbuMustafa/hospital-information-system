@@ -1,9 +1,6 @@
 import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
-import {
-  createPatient,
-  getDiagnoses,
-  isAdmitted,
-} from '$lib/server/db/operations/patients';
+import { getDiagnoses, isAdmitted } from '$lib/server/db/operations/utils';
+import { createPatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id.js';
 import { DrizzleQueryError } from 'drizzle-orm';
@@ -107,7 +104,7 @@ export const actions = {
     if (foundAdmitted) {
       return failWithMessages([
         {
-          message: `المريض "${foundAdmitted.name}" محجوز بالفعل في "${foundAdmitted.recent_ward_name}"`,
+          message: `المريض "${foundAdmitted.patient_name}" محجوز بالفعل في "${foundAdmitted.ward_name}"`,
           type: 'error',
         },
       ]);
