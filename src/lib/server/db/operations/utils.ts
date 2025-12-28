@@ -1,10 +1,6 @@
 import { db } from '$lib/server/db';
-import {
-  InPatient,
-  Diagnosis,
-  current_inPatient,
-} from '$lib/server/db/schema/entities/patients';
-import { and, eq, like } from 'drizzle-orm';
+import { Diagnosis, current_inPatient } from '$lib/server/db/schema/entities/patients';
+import { and, eq } from 'drizzle-orm';
 
 export async function isAdmitted(idDocType: number, idDocNum: string) {
   const [foundAdmitted] = await db
