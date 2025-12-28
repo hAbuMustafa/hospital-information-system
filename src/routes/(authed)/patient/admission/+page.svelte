@@ -5,10 +5,10 @@
   import { formatDate } from '$lib/utils/date-format';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
-  import type { People } from '$lib/server/db/schema';
+  import { Person } from '$lib/server/db/schema/entities/people';
   import Picker from '$lib/components/Forms/Picker.svelte';
 
-  type FetchedPersonT = typeof People.$inferSelect;
+  type FetchedPersonT = typeof Person.$inferSelect;
 
   const { data, form } = $props();
 
@@ -55,13 +55,19 @@
   function selectPerson(person: FetchedPersonT) {
     hasSelectedPerson = true;
 
-    patientName = person.name;
+    patientName = [
+      person.first_name,
+      person.father_name,
+      person.grandfather_name,
+      person.family_name,
+    ].join(' ');
 
     selectedPersonId = person.id;
 
-    idDocType = person.id_doc_type ?? 1;
+    // fix: uncomment these when a People VIEW is used for the lookup
+    // idDocType = person.id_doc_type ?? 1;
 
-    idDocNum = person.id_doc_num ?? '';
+    // idDocNum = person.id_doc_num ?? '';
 
     if (person.gender) {
       gender = Number(person.gender);
