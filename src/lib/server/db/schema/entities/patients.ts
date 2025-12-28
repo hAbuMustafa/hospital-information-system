@@ -10,10 +10,12 @@ import {
   boolean,
   timestamp,
   smallint,
+  pgView,
 } from 'drizzle-orm/pg-core';
 import { Staff, Ward } from './hospital';
 import { Sec_pb_key } from './system';
 import { Person } from './people';
+import { sql } from 'drizzle-orm';
 
 export const Patient = pgSchema('Patient');
 
@@ -29,6 +31,63 @@ export const InPatient = Patient.table('InPatient', {
     .references(() => Ward.id),
   security_status: boolean().default(false),
 });
+
+/* 
+  SELECT * FROM "Patient"."InPatient" p 
+    INNER JOIN "People"."Person" pr on p.person_id = pr.id
+    INNER JOIN "Hospital"."Ward" w on p.recent_ward = w.id
+    INNER JOIN "Patient"."Discharge" d on d.patient_id = p.id
+    INNER JOIN "Patient"."Discharge_Reason" r on d.discharge_reason = r.id;
+*/
+export const current_inPatient = pgView('current_inPatient', {
+  patient_id: integer(),
+  person_id: integer(),
+  patient_file_number: varchar({ length: 8 }),
+  patient_name: text(),
+  id_doc_type: smallint(),
+  id_doc_number: varchar({ length: 45 }),
+  meal_type: varchar({ length: 45 }),
+  recent_ward_id: smallint(),
+  ward_name: varchar({ length: 10 }),
+  ward_floor: integer(),
+  ward_tags: text(),
+  security_status: boolean(),
+  gender: boolean(),
+  birthdate: date(),
+  discharge_order_id: integer(),
+  discharge_time: timestamp(),
+  discharge_reason: varchar({ length: 15 }),
+  discharge_notes: text(),
+}).as(
+  sql`
+SELECT 
+	p.id as patient_id,
+	p.person_id,
+	p.file_id as patient_file_number,
+	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "patient_name",
+	doc.document_type as id_doc_type,
+	doc.document_number as id_doc_number,
+	p.meal_type,
+	p.recent_ward as recent_ward_id,
+	w.name as ward_name,
+	w.floor as ward_floor,
+	w.tags as ward_tags,
+	p.security_status,
+	pr.gender,
+	pr.birthdate,
+	d.discharge_order_id,
+	d.timestamp as discharge_time,
+	r.reason as discharge_reason,
+	d.notes as discharge_notes
+FROM "Patient"."InPatient" p 
+INNER JOIN "People"."Person" pr on p.person_id = pr.id
+INNER JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
+INNER JOIN "Hospital"."Ward" w on p.recent_ward = w.id
+INNER JOIN "Patient"."Discharge" d on d.patient_id = p.id
+INNER JOIN "Patient"."Discharge_Reason" r on d.discharge_reason = r.id
+WHERE d.timestamp IS NOT NULL;
+`
+);
 
 export const Insurance_Doc = Patient.table('Insurance_Doc', {
   patient_id: integer()

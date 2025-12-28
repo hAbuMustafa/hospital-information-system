@@ -1,26 +1,21 @@
 import { db } from '$lib/server/db';
-import { InPatient, Diagnosis } from '$lib/server/db/schema/entities/patients';
-import { Person } from '$lib/server/db/schema/entities/people';
-import { Ward } from '$lib/server/db/schema/entities/hospital';
-import { and, eq, isNull, like } from 'drizzle-orm';
+import {
+  InPatient,
+  Diagnosis,
+  current_inPatient,
+} from '$lib/server/db/schema/entities/patients';
+import { and, eq, like } from 'drizzle-orm';
 
 export async function isAdmitted(idDocType: number, idDocNum: string) {
   const [foundAdmitted] = await db
-    .select({
-      name: Person.name,
-      recent_ward_name: InPatient.recent_ward,
-    })
-    .from(InPatient)
-    .leftJoin(Person, eq(InPatient.person_id, Person.id))
-    .leftJoin(Ward, eq(InPatient.recent_ward, Ward.id))
+    .select()
+    .from(current_inPatient)
     .where(
       and(
-        eq(Person.id_doc_type, idDocType),
-        eq(Person.id_doc_num, idDocNum),
-        isNull(InPatient.discharge_date)
+        eq(current_inPatient.id_doc_type, idDocType),
+        eq(current_inPatient.id_doc_number, idDocNum)
       )
     );
-
   return foundAdmitted;
 }
 
