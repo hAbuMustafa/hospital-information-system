@@ -1,5 +1,4 @@
 import { patients as new_Patients } from './data/patients';
-import { drugs as new_Drugs } from './data/drugs';
 import { users as new_Users } from './data/users';
 import { transfers as new_PatientTransfers } from './data/patient_transfers';
 
@@ -8,21 +7,21 @@ import {
   createWard,
   createIdDocType,
   createDischargeReason,
-  createPatientFromSeed,
-  transferPatient,
   createDiagnosis,
-} from '../../src/lib/server/db/operations/patients';
+} from '../../src/lib/server/db/operations/menus';
+import { seedPatient } from '../../src/lib/server/db/operations/seed/patients';
+import { transferPatient } from '../../src/lib/server/db/operations/patients';
 import {
   createDrugUnit,
   createDrugCategory,
 } from '../../src/lib/server/db/operations/drugs';
 
 import {
-  new_Wards,
-  new_id_doc_type,
-  new_Patient_discharge_reasons,
-  new_Drugs_unit,
-  new_Drugs_category,
+  ward_list,
+  id_doc_type_list,
+  discharge_reason_list,
+  dosage_unit_list,
+  stock_category_list,
 } from '../../src/lib/server/db/menus';
 
 async function seed(items, insertFunction) {
@@ -67,16 +66,16 @@ export async function beginSeed() {
   );
 
   // Seed Menu Lists
-  await seed(new_Wards, createWard);
-  await seed(new_id_doc_type, createIdDocType);
-  await seed(new_Patient_discharge_reasons, createDischargeReason);
-  await seed(new_Drugs_unit, createDrugUnit);
-  await seed(new_Drugs_category, createDrugCategory);
+  await seed(ward_list, createWard);
+  await seed(id_doc_type_list, createIdDocType);
+  await seed(discharge_reason_list, createDischargeReason);
+  await seed(dosage_unit_list, createDrugUnit);
+  await seed(stock_category_list, createDrugCategory);
   await seed(new_Diagnoses, createDiagnosis);
 
   // Seed Initial Data
   await seed(new_Users, createUser);
-  await seed(new_Patients, createPatientFromSeed);
+  await seed(new_Patients, seedPatient);
   await seed(new_PatientTransfers, transferPatient);
 
   console.timeEnd('total seeding time');
