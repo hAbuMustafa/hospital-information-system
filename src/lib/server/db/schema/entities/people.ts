@@ -7,6 +7,8 @@ import {
   text,
   date,
   boolean,
+  smallserial,
+  smallint,
 } from 'drizzle-orm/pg-core';
 
 export const People = pgSchema('People');
@@ -26,7 +28,7 @@ export const Person = People.table('Person', {
 });
 
 export const Contact_type = People.table('Contact_type', {
-  id: integer().primaryKey(),
+  id: smallserial(),
   name: varchar({ length: 15 }).notNull(),
 });
 
@@ -35,7 +37,7 @@ export const People_contact_information = People.table('People_contact_informati
   person_id: integer()
     .notNull()
     .references(() => Person.id),
-  contact_type: integer()
+  contact_type: smallint()
     .notNull()
     .references(() => Contact_type.id),
   contact_string: varchar({ length: 100 }).notNull().unique(),
