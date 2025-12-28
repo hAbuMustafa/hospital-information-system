@@ -32,14 +32,7 @@ export const InPatient = Patient.table('InPatient', {
   security_status: boolean().default(false),
 });
 
-/* 
-  SELECT * FROM "Patient"."InPatient" p 
-    INNER JOIN "People"."Person" pr on p.person_id = pr.id
-    INNER JOIN "Hospital"."Ward" w on p.recent_ward = w.id
-    INNER JOIN "Patient"."Discharge" d on d.patient_id = p.id
-    INNER JOIN "Patient"."Discharge_Reason" r on d.discharge_reason = r.id;
-*/
-export const current_inPatient = pgView('current_inPatient', {
+export const current_inPatient_view = pgView('current_inPatient_view', {
   patient_id: integer(),
   person_id: integer(),
   patient_file_number: varchar({ length: 8 }),
