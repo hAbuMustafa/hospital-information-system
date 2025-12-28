@@ -1,11 +1,11 @@
-import { new_Wards } from '$lib/server/db/menus';
+import { ward_list } from '$lib/server/db/menus';
 import { transferPatient } from '$lib/server/db/operations/patients.js';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export async function load({ fetch, url }) {
   const pageProps = {
     title: 'تحويل مريض إلى قسم',
-    wards: new_Wards,
+    wards: ward_list,
   };
   const patientId = url.searchParams.get('patientId');
 
@@ -89,8 +89,8 @@ export const actions = {
     return {
       success: true,
       message: `تم تحويل المريض "${patientName}" من "${
-        new_Wards.find((w) => w.id === selectedPatientRecentWardId)?.name
-      }" إلى "${new_Wards.find((w) => w.id === transferTo)?.name}"`,
+        ward_list.find((w) => w.id === selectedPatientRecentWardId)?.name
+      }" إلى "${ward_list.find((w) => w.id === transferTo)?.name}"`,
     };
   },
 };

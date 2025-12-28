@@ -1,4 +1,4 @@
-import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
+import { floors, id_doc_type_list, ward_list } from '$lib/server/db/menus';
 import { getDiagnoses, isAdmitted } from '$lib/server/db/operations/utils';
 import { createPatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
@@ -10,8 +10,8 @@ export async function load() {
 
   return {
     title: 'تسجيل دخول مريض',
-    id_doc_type_list: new_id_doc_type,
-    wards_list: new_Wards,
+    id_doc_type_list: id_doc_type_list,
+    wards_list: ward_list,
     floors_list: floors,
     diagnoses_list,
   };

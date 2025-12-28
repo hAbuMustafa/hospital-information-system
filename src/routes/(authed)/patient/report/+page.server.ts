@@ -1,4 +1,4 @@
-import { new_Wards } from '$lib/server/db/menus';
+import { ward_list } from '$lib/server/db/menus';
 
 export async function load({ fetch }) {
   const currentInpatient = await fetch('/api/patients/current-inpatient').then((d) =>
@@ -7,7 +7,7 @@ export async function load({ fetch }) {
 
   return {
     title: 'تقرير المرضى بالأقسام',
-    wards: new_Wards,
+    wards: ward_list,
     patients: currentInpatient.map(
       (p: {
         id: string;

@@ -1,11 +1,11 @@
-import { new_Patient_discharge_reasons } from '$lib/server/db/menus';
+import { discharge_reason_list } from '$lib/server/db/menus';
 import { dischargePatient } from '$lib/server/db/operations/patients.js';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 
 export async function load({ url, fetch }) {
   const pageProps = {
     title: 'تسجيل خروج مريض',
-    discharge_reasons: new_Patient_discharge_reasons.filter((r) => r.id !== 8),
+    discharge_reasons: discharge_reason_list.filter((r) => r.id !== 8),
   };
   const patientId = url.searchParams.get('patientId');
 
