@@ -2,7 +2,6 @@ import { sql } from 'drizzle-orm';
 import {
   pgSchema,
   serial,
-  bigserial,
   varchar,
   integer,
   text,
@@ -28,6 +27,39 @@ export const Person = People.table('Person', {
   religion: varchar({ length: 15 }),
   occupation: varchar({ length: 45 }),
 });
+
+export const people_data = pgView('people_data', {
+  person_id: integer(),
+  person_name: text(),
+  id_doc_type: varchar({ length: 16 }),
+  id_doc_num: varchar({ length: 45 }),
+  gender: boolean(),
+  birthdate: date(),
+  race: varchar({ length: 16 }),
+  marital_status: boolean(),
+  religion: varchar({ length: 15 }),
+  occupation: varchar({ length: 45 }),
+  contact_type: varchar({ length: 15 }),
+  contact_string: varchar({ length: 100 }),
+}).as(sql`
+SELECT 
+	pr.id as person_id,
+	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "person_name",
+	doc.document_type as id_doc_type,
+	doc.document_number as id_doc_number,
+	pr.gender,
+	pr.birthdate,
+	pr.race,
+	pr.marital_status,
+	pr.religion,
+	pr.occupation,
+	ct.name as contact_type,
+	con.contact_string
+FROM "People"."Person" pr
+INNER JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
+INNER JOIN "People"."People_contact_information" con on con.person_id = pr.id
+INNER JOIN "People"."Contact_type" ct on con.contact_type = ct.id;
+  `);
 
 export const Contact_type = People.table('Contact_type', {
   id: smallserial(),
