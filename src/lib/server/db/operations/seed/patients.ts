@@ -9,7 +9,7 @@ import { Person } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { eq } from 'drizzle-orm';
 
-export async function createPatientFromSeed(patient: App.CustomTypes['PatientSeedT']) {
+export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
   try {
     const new_patient = await db.transaction(async (tx) => {
       let foundPerson: typeof Person.$inferSelect | null = null;
