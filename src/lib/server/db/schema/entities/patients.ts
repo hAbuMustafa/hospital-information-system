@@ -60,6 +60,7 @@ SELECT
 	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "patient_name",
 	doc.document_type as id_doc_type,
 	doc.document_number as id_doc_number,
+  i.insurance_number as health_insurance,
 	p.meal_type,
 	p.recent_ward as recent_ward_id,
 	w.name as ward_name,
@@ -75,6 +76,7 @@ SELECT
 FROM "Patient"."InPatient" p 
 INNER JOIN "People"."Person" pr on p.person_id = pr.id
 INNER JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
+INNER JOIN "Patient"."Insurance_Doc" i on i.patient_id = p.id
 INNER JOIN "Hospital"."Ward" w on p.recent_ward = w.id
 INNER JOIN "Patient"."Discharge" d on d.patient_id = p.id
 INNER JOIN "Patient"."Discharge_Reason" r on d.discharge_reason = r.id
