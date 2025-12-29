@@ -28,13 +28,13 @@ declare global {
         id_doc_num?: string;
         diagnosis: string;
         admission_date: Date;
-        dismissal_date?: Date;
+        discharge_date?: Date;
         admission_notes?: string;
         gender?: boolean;
         birthdate?: Date;
         health_insurance?: boolean;
         id_doc_type?: number;
-        dismissal_reason?: number;
+        discharge_reason?: number;
         admission_ward: number;
         security_status: boolean;
         person_id?: number;
