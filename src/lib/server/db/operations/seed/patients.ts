@@ -149,15 +149,32 @@ export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
   }
 }
 
-export async function seedPatientTransfer(transfer: typeof Transfer.$inferInsert) {
+type seedTransferT = {
+  patient_id: string;
+  timestamp: Date;
+  ward: number;
+};
+
+export async function seedPatientTransfer(transfer: seedTransferT) {
   try {
     const new_transfer = await db.transaction(async (tx) => {
-      const [transferInsert] = await tx.insert(Transfer).values(transfer).returning();
+      const [patient] = await tx
+        .select()
+        .from(InPatient)
+        .where(eq(InPatient.file_id, transfer.patient_id));
+      const [transferInsert] = await tx
+        .insert(Transfer)
+        .values({
+          patient_id: patient.id,
+          timestamp: transfer.timestamp,
+          to_ward_id: transfer.ward,
+        })
+        .returning();
 
       await tx
         .update(InPatient)
-        .set({ recent_ward: transfer.to_ward_id })
-        .where(eq(InPatient.id, transfer.patient_id));
+        .set({ recent_ward: transfer.ward })
+        .where(eq(InPatient.id, patient.id));
 
       return transferInsert;
     });
