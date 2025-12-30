@@ -80,7 +80,7 @@ INNER JOIN "Patient"."Insurance_Doc" i on i.patient_id = p.id
 INNER JOIN "Hospital"."Ward" w on p.recent_ward = w.id
 INNER JOIN "Patient"."Discharge" d on d.patient_id = p.id
 INNER JOIN "Patient"."Discharge_Reason" r on d.discharge_reason = r.id
-WHERE d.timestamp IS NOT NULL;
+WHERE d.timestamp IS NOT NULL
 `
 );
 

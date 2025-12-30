@@ -58,11 +58,11 @@ SELECT
 FROM "People"."Person" pr
 INNER JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
 INNER JOIN "People"."People_contact_information" con on con.person_id = pr.id
-INNER JOIN "People"."Contact_type" ct on con.contact_type = ct.id;
+INNER JOIN "People"."Contact_type" ct on con.contact_type = ct.id
   `);
 
 export const Contact_type = People.table('Contact_type', {
-  id: smallserial(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
 });
 
