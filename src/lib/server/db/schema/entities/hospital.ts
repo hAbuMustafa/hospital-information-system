@@ -21,11 +21,11 @@ export const Ward = Hospital.table('Ward', {
 
 export const Staff = Hospital.table('Staff', {
   id: smallserial().primaryKey(),
-  job: varchar({ length: 45 }).notNull(),
-  qualification: varchar({ length: 45 }).notNull(),
-  major: varchar({ length: 45 }).notNull(),
-  department: varchar({ length: 45 }).notNull(),
-  employment_date: date({ mode: 'date' }).notNull(),
+  job: varchar({ length: 45 }), // todo: make a list
+  qualification: varchar({ length: 45 }),
+  major: varchar({ length: 45 }),
+  department: varchar({ length: 45 }), // todo: make a list
+  employment_date: date({ mode: 'date' }),
   person_id: integer()
     .notNull()
     .references(() => Person.id),
