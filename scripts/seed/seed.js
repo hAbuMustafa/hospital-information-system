@@ -2,15 +2,18 @@ import { patients as new_Patients } from './data/patients';
 import { users as new_Users } from './data/users';
 import { transfers as new_PatientTransfers } from './data/patient_transfers';
 
-import { createUser } from '../../src/lib/server/db/operations/users';
+import { seedUser } from '../../src/lib/server/db/operations/seed/users';
 import {
   createWard,
   createIdDocType,
   createDischargeReason,
   createDiagnosis,
+  createContactType,
 } from '../../src/lib/server/db/operations/menus';
-import { seedPatient } from '../../src/lib/server/db/operations/seed/patients';
-import { transferPatient } from '../../src/lib/server/db/operations/patients';
+import {
+  seedPatient,
+  seedPatientTransfer,
+} from '../../src/lib/server/db/operations/seed/patients';
 import {
   createDrugUnit,
   createDrugCategory,
@@ -22,6 +25,7 @@ import {
   discharge_reason_list,
   dosage_unit_list,
   stock_category_list,
+  contact_type_list,
 } from '../../src/lib/server/db/menus';
 
 async function seed(items, insertFunction) {
@@ -71,12 +75,13 @@ export async function beginSeed() {
   await seed(discharge_reason_list, createDischargeReason);
   await seed(dosage_unit_list, createDrugUnit);
   await seed(stock_category_list, createDrugCategory);
+  await seed(contact_type_list, createContactType);
   await seed(new_Diagnoses, createDiagnosis);
 
   // Seed Initial Data
-  await seed(new_Users, createUser);
+  await seed(new_Users, seedUser);
   await seed(new_Patients, seedPatient);
-  await seed(new_PatientTransfers, transferPatient);
+  await seed(new_PatientTransfers, seedPatientTransfer);
 
   console.timeEnd('total seeding time');
 }
