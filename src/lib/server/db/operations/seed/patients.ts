@@ -148,3 +148,27 @@ export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
     };
   }
 }
+
+export async function seedPatientTransfer(transfer: typeof Transfer.$inferInsert) {
+  try {
+    const new_transfer = await db.transaction(async (tx) => {
+      const [transferInsert] = await tx.insert(Transfer).values(transfer).returning();
+
+      await tx
+        .update(InPatient)
+        .set({ recent_ward: transfer.to_ward_id })
+        .where(eq(InPatient.id, transfer.patient_id));
+
+      return transferInsert;
+    });
+
+    return {
+      success: true,
+      data: new_transfer,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
