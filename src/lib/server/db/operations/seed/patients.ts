@@ -21,7 +21,7 @@ export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
           .select({ id: Person_IdDoc.person_id })
           .from(Person_IdDoc)
           .where(eq(Person_IdDoc.document_number, patient.id_doc_num));
-        foundPersonId = firstResult.id;
+        foundPersonId = firstResult?.id;
       }
 
       if (!foundPersonId) {
