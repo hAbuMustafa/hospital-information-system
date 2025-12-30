@@ -4,9 +4,10 @@ import {
   InPatient,
   Diagnosis,
   Patient_diagnosis,
+  InPatient_file,
 } from '$lib/server/db/schema/entities/patients';
 import { Person } from '$lib/server/db/schema/entities/people';
-import { eq } from 'drizzle-orm';
+import { eq, max } from 'drizzle-orm';
 import type { newPatientT } from './types';
 
 export async function createPatient(patient: newPatientT) {
@@ -150,4 +151,13 @@ export async function dischargePatient(patientDischarge: {
       error,
     };
   }
+}
+
+export async function getLastPatientFileNumber(year: number) {
+  const [num] = await db
+    .select({ number: max(InPatient_file.number) })
+    .from(InPatient_file)
+    .where(eq(InPatient_file.year, year));
+
+  return num?.number || 0;
 }
