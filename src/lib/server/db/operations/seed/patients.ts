@@ -6,10 +6,11 @@ import {
   Patient_diagnosis,
   Discharge,
   Insurance_Doc,
+  InPatient_file,
 } from '$lib/server/db/schema/entities/patients';
 import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { createDiagnosis } from '$lib/server/db/operations/menus';
 
 export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
@@ -75,7 +76,6 @@ export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
       const [newPatient] = await tx
         .insert(InPatient)
         .values({
-          file_id: patient.id,
           person_id: foundPersonId,
           security_status: patient.security_status,
           recent_ward: patient.admission_ward,
@@ -88,6 +88,17 @@ export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
         timestamp: patient.admission_date,
         notes: 'admission',
       });
+
+      const [admYear, admFileNumber] = patient.id.split('/').map(Number);
+
+      const [newFile] = await tx
+        .insert(InPatient_file)
+        .values({
+          patient_id: newPatient.id,
+          year: admYear,
+          number: admFileNumber,
+        })
+        .returning();
 
       if (patient.discharge_date && patient.discharge_reason) {
         await tx.insert(Discharge).values({
@@ -166,14 +177,18 @@ type seedTransferT = {
 export async function seedPatientTransfer(transfer: seedTransferT) {
   try {
     const new_transfer = await db.transaction(async (tx) => {
+      const [admYear, admFileNumber] = transfer.patient_id.split('/').map(Number);
       const [patient] = await tx
         .select()
-        .from(InPatient)
-        .where(eq(InPatient.file_id, transfer.patient_id));
+        .from(InPatient_file)
+        .where(
+          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
+        );
+
       const [transferInsert] = await tx
         .insert(Transfer)
         .values({
-          patient_id: patient.id,
+          patient_id: patient.patient_id,
           timestamp: transfer.timestamp,
           to_ward_id: transfer.ward,
         })
@@ -182,7 +197,7 @@ export async function seedPatientTransfer(transfer: seedTransferT) {
       await tx
         .update(InPatient)
         .set({ recent_ward: transfer.ward })
-        .where(eq(InPatient.id, patient.id));
+        .where(eq(InPatient.id, patient.patient_id));
 
       return transferInsert;
     });

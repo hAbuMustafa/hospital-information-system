@@ -11,6 +11,8 @@ import {
   timestamp,
   smallint,
   pgView,
+  check,
+  unique,
 } from 'drizzle-orm/pg-core';
 import { Staff, Ward } from './hospital';
 import { Sec_pb_key } from './system';
@@ -21,7 +23,6 @@ export const Patient = pgSchema('Patient');
 
 export const InPatient = Patient.table('InPatient', {
   id: serial().primaryKey(),
-  file_id: varchar({ length: 8 }), // Archive File Number
   person_id: integer()
     .notNull()
     .references(() => Person.id),
@@ -31,6 +32,25 @@ export const InPatient = Patient.table('InPatient', {
     .references(() => Ward.id),
   security_status: boolean().default(false),
 });
+
+export const InPatient_file = Patient.table(
+  'InPatient_file',
+  {
+    id: serial().primaryKey(),
+    year: smallint().notNull(),
+    number: smallint().notNull(),
+    patient_id: integer()
+      .references(() => InPatient.id)
+      .notNull(),
+  },
+  (table) => [
+    check(
+      'year_check',
+      sql`${table.year} >= (2024-2000) AND ${table.year} <= (date_part('year', CURRENT_DATE)-2000)`
+    ),
+    unique('unique_file_number_in_a_year').on(table.year, table.number),
+  ]
+);
 
 export const inPatient_view = pgView('inPatient_view', {
   patient_id: integer(),
@@ -55,8 +75,8 @@ export const inPatient_view = pgView('inPatient_view', {
   sql`
 SELECT p.id AS patient_id,
 p.person_id,
-p.file_id AS patient_file_number,
-concat_ws(' '::text, pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) AS patient_name,
+CONCAT(pf.year, '/', pf.number) AS patient_file_number,
+CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) AS patient_name,
 doc.document_type AS id_doc_type,
 doc.document_number AS id_doc_number,
 i.insurance_number AS health_insurance,
@@ -74,12 +94,13 @@ r.name AS discharge_reason,
 d.notes AS discharge_notes
 FROM "Patient"."InPatient" p
  LEFT JOIN "People"."Person" pr ON p.person_id = pr.id
+ LEFT JOIN "Patient"."InPatient_file" pf ON p.id = pf.patient_id
  LEFT JOIN "People"."Person_IdDoc" doc ON doc.person_id = pr.id
  LEFT JOIN "Patient"."Insurance_Doc" i ON i.patient_id = p.id
  LEFT JOIN "Hospital"."Ward" w ON p.recent_ward = w.id
  LEFT JOIN "Patient"."Discharge" d ON d.patient_id = p.id
  LEFT JOIN "Patient"."Discharge_Reason" r ON d.discharge_reason = r.id
-ORDER BY p.id;
+ORDER BY p.id
 `
 );
 
