@@ -5,6 +5,7 @@ import {
   Diagnosis,
   Patient_diagnosis,
   Discharge,
+  Insurance_Doc,
 } from '$lib/server/db/schema/entities/patients';
 import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
@@ -93,6 +94,13 @@ export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
           patient_id: newPatient.id,
           discharge_reason: patient.discharge_reason,
           timestamp: patient.discharge_date,
+        });
+      }
+
+      if (patient.health_insurance) {
+        await tx.insert(Insurance_Doc).values({
+          patient_id: newPatient.id,
+          insurance_entity: 'الهيئة العامة للتأمين الصحي',
         });
       }
 
