@@ -33,7 +33,7 @@ async function seed(items, insertFunction) {
 
   console.warn('\nStarting ' + seedName + ' seed..');
 
-  console.time(seedName, ' seed, took');
+  console.time(seedName + ' seed, took');
 
   for (let i = 0; i < items.length; i++) {
     const itemReturn = await insertFunction(items[i]);
@@ -49,7 +49,7 @@ async function seed(items, insertFunction) {
     }
   }
 
-  console.timeEnd(seedName, ' seed, took');
+  console.timeEnd(seedName + ' seed, took');
   console.info('Done Seeding ' + seedName);
 }
 
