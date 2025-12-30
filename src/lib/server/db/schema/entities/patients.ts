@@ -10,7 +10,6 @@ import {
   boolean,
   timestamp,
   smallint,
-  pgView,
   check,
   unique,
 } from 'drizzle-orm/pg-core';

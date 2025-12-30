@@ -9,7 +9,6 @@ import {
   boolean,
   smallserial,
   smallint,
-  pgView,
 } from 'drizzle-orm/pg-core';
 
 export const People = pgSchema('People');
