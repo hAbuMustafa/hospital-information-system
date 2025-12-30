@@ -85,10 +85,11 @@ WHERE d.timestamp IS NOT NULL
 );
 
 export const Insurance_Doc = Patient.table('Insurance_Doc', {
+  id: serial().primaryKey(),
   patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  insurance_entity: varchar({ length: 45 }).notNull(),
+  insurance_entity: varchar({ length: 45 }),
   insurance_number: varchar({ length: 30 }),
   type: varchar({ length: 45 }),
   valid_from_date: date({ mode: 'date' }),
