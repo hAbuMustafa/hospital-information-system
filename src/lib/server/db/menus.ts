@@ -31,6 +31,16 @@ export const id_doc_type_list = [
   { name: 'بدون', id: 6 },
 ];
 
+export const contact_type_list = [
+  { name: 'رقم موبايل', id: 1 },
+  { name: 'رقم أرضي', id: 2 },
+  { name: 'بريد إلكتروني', id: 3 },
+  { name: 'عنوان إقامة', id: 4 },
+  { name: 'عنوان عمل', id: 5 },
+  { name: 'عنوان آخر', id: 6 },
+  { name: 'رقم بريدي', id: 7 },
+];
+
 export const discharge_reason_list = [
   { name: 'تحسن', id: 1 },
   { name: 'حسب الطلب', id: 2 },
