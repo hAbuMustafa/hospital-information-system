@@ -45,7 +45,7 @@ export const people_view = People.view('people_view', {
 SELECT 
 	pr.id as person_id,
 	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "person_name",
-	doc.document_type as id_doc_type,
+	doctype.name as id_doc_type,
 	doc.document_number as id_doc_number,
 	pr.gender,
 	pr.birthdate,
@@ -56,9 +56,10 @@ SELECT
 	ct.name as contact_type,
 	con.contact_string
 FROM "People"."Person" pr
-INNER JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
-INNER JOIN "People"."People_contact_information" con on con.person_id = pr.id
-INNER JOIN "People"."Contact_type" ct on con.contact_type = ct.id
+  LEFT JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
+  LEFT JOIN "People"."IdDoc_type" doctype on doc.document_type = doctype.id
+  LEFT JOIN "People"."People_contact_information" con on con.person_id = pr.id
+  LEFT JOIN "People"."Contact_type" ct on con.contact_type = ct.id
   `);
 
 export const Contact_type = People.table('Contact_type', {
