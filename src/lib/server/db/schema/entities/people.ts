@@ -28,7 +28,7 @@ export const Person = People.table('Person', {
   occupation: varchar({ length: 45 }),
 });
 
-export const people_view = pgView('people_view', {
+export const people_view = People.view('people_view', {
   person_id: integer(),
   person_name: text(),
   id_doc_type: varchar({ length: 16 }),

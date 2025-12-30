@@ -52,7 +52,7 @@ export const InPatient_file = Patient.table(
   ]
 );
 
-export const inPatient_view = pgView('inPatient_view', {
+export const inPatient_view = Patient.view('inPatient_view', {
   patient_id: integer(),
   person_id: integer(),
   patient_file_number: varchar({ length: 8 }),
