@@ -71,7 +71,7 @@ SELECT
 	pr.birthdate,
 	d.discharge_order_id,
 	d.timestamp as discharge_time,
-	r.reason as discharge_reason,
+	r.name as discharge_reason,
 	d.notes as discharge_notes
 FROM "Patient"."InPatient" p 
 INNER JOIN "People"."Person" pr on p.person_id = pr.id
@@ -151,7 +151,7 @@ export const Admission = Patient.table('Admission', {
 
 export const Discharge_Reason = Patient.table('Discharge_Reason', {
   id: integer().primaryKey(),
-  reason: varchar({ length: 15 }).notNull(),
+  name: varchar({ length: 32 }).notNull(),
 });
 
 export const Discharge_Order = Patient.table('Discharge_Order', {
