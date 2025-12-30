@@ -32,7 +32,7 @@ export const InPatient = Patient.table('InPatient', {
   security_status: boolean().default(false),
 });
 
-export const current_inPatient_view = pgView('current_inPatient_view', {
+export const inPatient_view = pgView('inPatient_view', {
   patient_id: integer(),
   person_id: integer(),
   patient_file_number: varchar({ length: 8 }),
@@ -53,34 +53,33 @@ export const current_inPatient_view = pgView('current_inPatient_view', {
   discharge_notes: text(),
 }).as(
   sql`
-SELECT 
-	p.id as patient_id,
-	p.person_id,
-	p.file_id as patient_file_number,
-	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "patient_name",
-	doc.document_type as id_doc_type,
-	doc.document_number as id_doc_number,
-  i.insurance_number as health_insurance,
-	p.meal_type,
-	p.recent_ward as recent_ward_id,
-	w.name as ward_name,
-	w.floor as ward_floor,
-	w.tags as ward_tags,
-	p.security_status,
-	pr.gender,
-	pr.birthdate,
-	d.discharge_order_id,
-	d.timestamp as discharge_time,
-	r.name as discharge_reason,
-	d.notes as discharge_notes
-FROM "Patient"."InPatient" p 
-INNER JOIN "People"."Person" pr on p.person_id = pr.id
-INNER JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
-INNER JOIN "Patient"."Insurance_Doc" i on i.patient_id = p.id
-INNER JOIN "Hospital"."Ward" w on p.recent_ward = w.id
-INNER JOIN "Patient"."Discharge" d on d.patient_id = p.id
-INNER JOIN "Patient"."Discharge_Reason" r on d.discharge_reason = r.id
-WHERE d.timestamp IS NOT NULL
+SELECT p.id AS patient_id,
+p.person_id,
+p.file_id AS patient_file_number,
+concat_ws(' '::text, pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) AS patient_name,
+doc.document_type AS id_doc_type,
+doc.document_number AS id_doc_number,
+i.insurance_number AS health_insurance,
+p.meal_type,
+p.recent_ward AS recent_ward_id,
+w.name AS ward_name,
+w.floor AS ward_floor,
+w.tags AS ward_tags,
+p.security_status,
+pr.gender,
+pr.birthdate,
+d.discharge_order_id,
+d."timestamp" AS discharge_time,
+r.name AS discharge_reason,
+d.notes AS discharge_notes
+FROM "Patient"."InPatient" p
+ LEFT JOIN "People"."Person" pr ON p.person_id = pr.id
+ LEFT JOIN "People"."Person_IdDoc" doc ON doc.person_id = pr.id
+ LEFT JOIN "Patient"."Insurance_Doc" i ON i.patient_id = p.id
+ LEFT JOIN "Hospital"."Ward" w ON p.recent_ward = w.id
+ LEFT JOIN "Patient"."Discharge" d ON d.patient_id = p.id
+ LEFT JOIN "Patient"."Discharge_Reason" r ON d.discharge_reason = r.id
+ORDER BY p.id;
 `
 );
 
