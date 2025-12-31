@@ -1,3 +1,4 @@
+import config from './seed.config.json' with {type:'json'};
 import { patients as new_Patients } from './data/patients';
 import { users as new_Users } from './data/users';
 import { transfers as new_PatientTransfers } from './data/patient_transfers';
@@ -60,28 +61,37 @@ export async function beginSeed() {
   }
   console.time('total seeding time');
 
-  const new_Diagnoses = Array.from(
-    new Set(
-      new_Patients
-        .map((p) => p.diagnosis?.split('+').map((d) => d.trim()))
-        .flat()
-        .sort()
-    )
-  );
-
   // Seed Menu Lists
-  await seed(ward_list, createWard);
-  await seed(id_doc_type_list, createIdDocType);
-  await seed(discharge_reason_list, createDischargeReason);
-  await seed(dosage_unit_list, createDrugUnit);
-  await seed(stock_category_list, createDrugCategory);
-  await seed(contact_type_list, createContactType);
-  await seed(new_Diagnoses, createDiagnosis);
+  if (config.all || config.menus || config.wards) await seed(ward_list, createWard);
+  if (config.all || config.menus || config.id_doc_types)
+    await seed(id_doc_type_list, createIdDocType);
+  if (config.all || config.menus || config.discharge_reasons)
+    await seed(discharge_reason_list, createDischargeReason);
+  if (config.all || config.menus || config.dosage_unit)
+    await seed(dosage_unit_list, createDrugUnit);
+  if (config.all || config.menus || config.stock_categories)
+    await seed(stock_category_list, createDrugCategory);
+  if (config.all || config.menus || config.contact_types)
+    await seed(contact_type_list, createContactType);
+
+  // Diagnoses
+  if (config.all || config.diagnoses) {
+    const new_Diagnoses = Array.from(
+      new Set(
+        new_Patients
+          .map((p) => p.diagnosis?.split('+').map((d) => d.trim()))
+          .flat()
+          .sort()
+      )
+    );
+    await seed(new_Diagnoses, createDiagnosis);
+  }
 
   // Seed Initial Data
-  await seed(new_Users, seedUser);
-  await seed(new_Patients, seedPatient);
-  await seed(new_PatientTransfers, seedPatientTransfer);
+  if (config.all || config.data || config.users) await seed(new_Users, seedUser);
+  if (config.all || config.data || config.patients) await seed(new_Patients, seedPatient);
+  if (config.all || config.data || config.patientTransfers)
+    await seed(new_PatientTransfers, seedPatientTransfer);
 
   console.timeEnd('total seeding time');
 }
