@@ -96,6 +96,9 @@ export const actions: Actions = {
       failMessages.push('الرقم القومي غير صحيح');
     }
 
+    // fix: if any of next values are not unique AND there is no user bound to these data, create the user with the supplied data and bind the new user to the existing Person
+    // fix: If, however, there is a user bound to a Person with any of the supposedly unique values, reject the user creation process, and require admin intervention
+
     // username used before?
     const isUniqueUser = await isUniqueUsername(username);
     if (!isUniqueUser) failMessages.push('اسم المستخدم مسجل مسبقا.');
