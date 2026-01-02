@@ -1,4 +1,9 @@
-import { createUser, isUniqueValue } from '$lib/server/db/operations/users';
+import {
+  createUser,
+  isUniqueUsername,
+  isUniqueContactString,
+  isUniqueNationalId,
+} from '$lib/server/db/operations/users';
 import {
   arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
@@ -92,20 +97,23 @@ export const actions: Actions = {
     }
 
     // username used before?
-    const isUniqueUsername = await isUniqueValue('username', username);
-    if (!isUniqueUsername) failMessages.push('اسم المستخدم مسجل مسبقا.');
+    const isUniqueUser = await isUniqueUsername(username);
+    if (!isUniqueUser) failMessages.push('اسم المستخدم مسجل مسبقا.');
 
     // email registered before?
-    const isUniqueEmail = await isUniqueValue('email', email);
+    const isUniqueEmail = await isUniqueContactString('email', email);
     if (!isUniqueEmail) failMessages.push('البريد الإلكتروني مسجل مسبقا.');
 
     // phone-number registered before?
-    const isUniquePhone_number = await isUniqueValue('phone_number', phone_number);
+    const isUniquePhone_number = await isUniqueContactString(
+      'phone_number',
+      phone_number
+    );
     if (!isUniquePhone_number) failMessages.push('رقم الهاتف مسجل مسبقا.');
 
     // national id registered before?
-    const isUniqueNationalId = await isUniqueValue('national_id', national_id);
-    if (!isUniqueNationalId) failMessages.push('الرقم القومي مسجل مسبقا.');
+    const isUniqueNationalIdNumber = await isUniqueNationalId(national_id);
+    if (!isUniqueNationalIdNumber) failMessages.push('الرقم القومي مسجل مسبقا.');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
