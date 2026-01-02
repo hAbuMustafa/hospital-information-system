@@ -3,18 +3,11 @@ import { PV_KEY_ENCR_KEY } from '$env/static/private';
 import { Sec_pb_key, Sec_pv_key, User } from '$lib/server/db/schema/entities/system';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import { people_view } from '../schema/entities/people';
+import type { NewUserDataT } from './types';
 
 const SALT_ROUNDS = 12;
-
-type NewUserDataT = {
-  username: string;
-  password: string;
-  name: string;
-  national_id: string;
-  email: string;
-  phone_number: string;
-};
 
 export async function createUser(newUserData: NewUserDataT) {
   const passwordHash = await bcrypt.hash(newUserData.password, SALT_ROUNDS);
@@ -96,11 +89,29 @@ export async function updateUser(
   }
 }
 
-export async function isUniqueValue(
-  field: keyof Omit<Partial<typeof User.$inferSelect>, 'id'>,
-  value: string | number | Date | boolean
+export async function isUniqueUsername(username: string) {
+  const result = await db.$count(User, eq(User.username, username));
+
+  return result === 0;
+}
+
+export async function isUniqueContactString(
+  field: 'email' | 'phone_number',
+  value: string
 ) {
-  const result = await db.$count(User, eq(User[field], value));
+  const result = await db.$count(
+    people_view,
+    and(eq(people_view.contact_type, field), eq(people_view.contact_string, value))
+  );
+
+  return result === 0;
+}
+
+export async function isUniqueNationalId(national_id: string) {
+  const result = await db.$count(
+    people_view,
+    and(eq(people_view.id_doc_type, 'رقم قومي'), eq(people_view.id_doc_num, national_id))
+  );
 
   return result === 0;
 }
