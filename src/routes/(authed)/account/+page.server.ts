@@ -1,4 +1,4 @@
-import { isUniqueValue, updateUser } from '$lib/server/db/operations/users';
+import { isUniqueContactString, updateUser } from '$lib/server/db/operations/users';
 import {
   arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
@@ -66,7 +66,7 @@ function createAction(
       return fail(401, { message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️' });
 
     if (mustBeUnique) {
-      const isUnique = await isUniqueValue(fieldName, fieldValue);
+      const isUnique = await isUniqueContactString(fieldName, fieldValue);
 
       if (!isUnique)
         return fail(401, {
