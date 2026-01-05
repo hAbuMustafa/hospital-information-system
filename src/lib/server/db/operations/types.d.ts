@@ -41,3 +41,15 @@ export type PatientSeedT = {
   security_status: boolean;
   person_id?: number;
 };
+
+export type seedTransferT = {
+  file_id: string;
+  timestamp: Date;
+  ward: number;
+};
+
+export type seedDischargeT = {
+  file_id: string;
+  discharge_date: Date;
+  discharge_reason: number;
+};
