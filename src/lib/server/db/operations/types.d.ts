@@ -15,7 +15,10 @@ export type newPatientT = {
 export type NewUserDataT = {
   username: string;
   password: string;
-  name: string;
+  first_name: string;
+  father_name: string;
+  grandfather_name: string;
+  family_name: string | null;
   national_id: string;
   email: string;
   phone_number: string;
