@@ -97,14 +97,6 @@ export async function seedPatient(patient: PatientSeedT) {
         })
         .returning();
 
-      if (patient.discharge_date && patient.discharge_reason) {
-        await tx.insert(Discharge).values({
-          patient_id: newPatient.id,
-          discharge_reason: patient.discharge_reason,
-          timestamp: patient.discharge_date,
-        });
-      }
-
       if (patient.health_insurance) {
         await tx.insert(Insurance_Doc).values({
           patient_id: newPatient.id,
