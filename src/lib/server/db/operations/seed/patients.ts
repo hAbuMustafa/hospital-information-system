@@ -39,11 +39,7 @@ export async function seedPatient(patient: PatientSeedT) {
           }
         }
 
-        const {
-          id: droppedPatientId,
-          name: patient_name,
-          ...restOfPatientData
-        } = patient;
+        const { name: patient_name, ...restOfPatientData } = patient;
         const [first_name, father_name, grandfather_name, ...family_name] =
           patient_name.split(' ');
         let [newPersonInsert] = await tx
@@ -90,7 +86,7 @@ export async function seedPatient(patient: PatientSeedT) {
         notes: 'admission',
       });
 
-      const [admYear, admFileNumber] = patient.id.split('/').map(Number);
+      const [admYear, admFileNumber] = patient.file_id.split('/').map(Number);
 
       const [newFile] = await tx
         .insert(InPatient_file)
