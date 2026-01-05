@@ -14,7 +14,8 @@ import {
 } from '../../src/lib/server/db/operations/menus';
 import {
   seedPatient,
-  seedPatientTransfer,seedPatientDischarge,
+  seedPatientTransfer,
+  seedPatientDischarge,
 } from '../../src/lib/server/db/operations/seed/patients';
 import {
   createDrugUnit,
@@ -89,7 +90,8 @@ export async function beginSeed() {
   }
 
   // Seed Initial Data
-  if (config.all || config.data || config.patients || config.patientAdmissions) await seed(new_PatientAdmissions, seedPatient);
+  if (config.all || config.data || config.patients || config.patientAdmissions)
+    await seed(new_PatientAdmissions, seedPatient);
   if (config.all || config.data || config.patients || config.patientTransfers)
     await seed(new_PatientTransfers, seedPatientTransfer);
   if (config.all || config.data || config.patients || config.patientDischarges)
