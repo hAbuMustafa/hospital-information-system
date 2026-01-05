@@ -108,7 +108,7 @@ SELECT
   u.active,
   u.last_login,
   u.password_reset_required
-FROM "Security"."Users" u
+FROM "Security"."User" u
   LEFT JOIN "People"."Person" pr ON u.person_id = pr.id
   LEFT JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
   LEFT JOIN "People"."IdDoc_type" doctype on doc.document_type = doctype.id
