@@ -1,7 +1,8 @@
 import config from './seed.config.json' with {type:'json'};
-import { patients as new_Patients } from './data/patients';
-import { users as new_Users } from './data/users';
+import { admissions as new_PatientAdmissions } from './data/patient_admissions';
 import { transfers as new_PatientTransfers } from './data/patient_transfers';
+import { discharges as new_PatientDischarges } from './data/patient_discharges';
+import { users as new_Users } from './data/users';
 
 import { seedUser } from '../../src/lib/server/db/operations/seed/users';
 import {
@@ -13,7 +14,7 @@ import {
 } from '../../src/lib/server/db/operations/menus';
 import {
   seedPatient,
-  seedPatientTransfer,
+  seedPatientTransfer,seedPatientDischarge,
 } from '../../src/lib/server/db/operations/seed/patients';
 import {
   createDrugUnit,
@@ -78,7 +79,7 @@ export async function beginSeed() {
   if (config.all || config.diagnoses) {
     const new_Diagnoses = Array.from(
       new Set(
-        new_Patients
+        new_PatientAdmissions
           .map((p) => p.diagnosis?.split('+').map((d) => d.trim()))
           .flat()
           .sort()
@@ -88,10 +89,12 @@ export async function beginSeed() {
   }
 
   // Seed Initial Data
-  if (config.all || config.data || config.users) await seed(new_Users, seedUser);
-  if (config.all || config.data || config.patients) await seed(new_Patients, seedPatient);
-  if (config.all || config.data || config.patientTransfers)
+  if (config.all || config.data || config.patients || config.patientAdmissions) await seed(new_PatientAdmissions, seedPatient);
+  if (config.all || config.data || config.patients || config.patientTransfers)
     await seed(new_PatientTransfers, seedPatientTransfer);
+  if (config.all || config.data || config.patients || config.patientDischarges)
+    await seed(new_PatientDischarges, seedPatientDischarge);
+  if (config.all || config.data || config.users) await seed(new_Users, seedUser);
 
   console.timeEnd('total seeding time');
 }
