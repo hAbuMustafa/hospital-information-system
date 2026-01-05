@@ -207,16 +207,21 @@ export async function seedPatientDischarge(discharge: seedDischargeT) {
           and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
         );
 
-      const [dischargeInsert] = await tx
-        .insert(Discharge)
-        .values({
-          patient_id: patient.patient_id,
-          discharge_reason: discharge.discharge_reason,
-          timestamp: discharge.discharge_date,
-        })
-        .returning();
+      if (patient) {
+        const [dischargeInsert] = await tx
+          .insert(Discharge)
+          .values({
+            patient_id: patient.patient_id,
+            discharge_reason: discharge.discharge_reason,
+            timestamp: discharge.discharge_date,
+          })
+          .returning();
 
-      return dischargeInsert;
+        return dischargeInsert;
+      }
+      return {
+        message: 'no patient was found with the supplied file id',
+      };
     });
 
     return {
