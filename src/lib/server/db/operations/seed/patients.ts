@@ -12,8 +12,9 @@ import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { eq, and } from 'drizzle-orm';
 import { createDiagnosis } from '$lib/server/db/operations/menus';
+import type { PatientSeedT } from '../types';
 
-export async function seedPatient(patient: App.CustomTypes['PatientSeedT']) {
+export async function seedPatient(patient: PatientSeedT) {
   try {
     const new_patient = await db.transaction(async (tx) => {
       let foundPersonId: number | null = null;
