@@ -12,7 +12,7 @@ import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { eq, and } from 'drizzle-orm';
 import { createDiagnosis } from '$lib/server/db/operations/menus';
-import type { PatientSeedT } from '../types';
+import type { PatientSeedT, seedDischargeT, seedTransferT } from '../types';
 
 export async function seedPatient(patient: PatientSeedT) {
   try {
@@ -165,16 +165,10 @@ export async function seedPatient(patient: PatientSeedT) {
   }
 }
 
-type seedTransferT = {
-  patient_id: string;
-  timestamp: Date;
-  ward: number;
-};
-
 export async function seedPatientTransfer(transfer: seedTransferT) {
   try {
     const new_transfer = await db.transaction(async (tx) => {
-      const [admYear, admFileNumber] = transfer.patient_id.split('/').map(Number);
+      const [admYear, admFileNumber] = transfer.file_id.split('/').map(Number);
       const [patient] = await tx
         .select()
         .from(InPatient_file)
@@ -202,6 +196,40 @@ export async function seedPatientTransfer(transfer: seedTransferT) {
     return {
       success: true,
       data: new_transfer,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
+export async function seedPatientDischarge(discharge: seedDischargeT) {
+  try {
+    const new_discharge = await db.transaction(async (tx) => {
+      const [admYear, admFileNumber] = discharge.file_id.split('/').map(Number);
+      const [patient] = await tx
+        .select()
+        .from(InPatient_file)
+        .where(
+          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
+        );
+
+      const [dischargeInsert] = await tx
+        .insert(Discharge)
+        .values({
+          patient_id: patient.patient_id,
+          discharge_reason: discharge.discharge_reason,
+          timestamp: discharge.discharge_date,
+        })
+        .returning();
+
+      return dischargeInsert;
+    });
+
+    return {
+      success: true,
+      data: new_discharge,
     };
   } catch (error) {
     return {
