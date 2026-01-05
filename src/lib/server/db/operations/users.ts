@@ -1,11 +1,22 @@
 import { generateKeyPairSync } from 'node:crypto';
 import { PV_KEY_ENCR_KEY } from '$env/static/private';
-import { Sec_pb_key, Sec_pv_key, User } from '$lib/server/db/schema/entities/system';
+import {
+  Sec_pb_key,
+  Sec_pv_key,
+  User,
+  users_view,
+} from '$lib/server/db/schema/entities/system';
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
 import { and, eq } from 'drizzle-orm';
-import { people_view } from '../schema/entities/people';
+import {
+  People_contact_information,
+  people_view,
+  Person,
+  Person_IdDoc,
+} from '../schema/entities/people';
 import type { NewUserDataT } from './types';
+import { getBirthdateFromNationalId, getGenderFromNationalId } from './utils';
 
 const SALT_ROUNDS = 12;
 
@@ -41,13 +52,51 @@ export async function createUser(newUserData: NewUserDataT) {
         .values({ key: encryptedPvKey })
         .returning();
 
+      const [new_person] = await tx
+        .insert(Person)
+        .values({
+          gender: getGenderFromNationalId(newUserData.national_id),
+          birthdate: getBirthdateFromNationalId(newUserData.national_id),
+          ...newUserData,
+        })
+        .returning();
+
+      const [newIdDoc] = await tx
+        .insert(Person_IdDoc)
+        .values({
+          person_id: new_person.id,
+          document_type: 1,
+          document_number: newUserData.national_id,
+        })
+        .returning();
+
+      const [newEmail] = await tx
+        .insert(People_contact_information)
+        .values({
+          person_id: new_person.id,
+          contact_type: 3,
+          contact_string: newUserData.email,
+        })
+        .returning();
+
+      const [newPhoneNumber] = await tx
+        .insert(People_contact_information)
+        .values({
+          person_id: new_person.id,
+          contact_type: 1,
+          contact_string: newUserData.phone_number,
+        })
+        .returning();
+
       const [user] = await tx
         .insert(User)
         .values({
+          username: newUserData.username,
           hashed_pw: passwordHash,
           pb_key_id: new_pb_key.id,
           pv_key_id: new_pv_key.id,
-          ...newUserData,
+          person_id: new_person.id,
+          role: 0,
         })
         .returning();
 
@@ -99,21 +148,37 @@ export async function isUniqueContactString(
   field: 'email' | 'phone_number',
   value: string
 ) {
-  const result = await db.$count(
+  const usersCountWithSameContact = await db.$count(
+    users_view,
+    and(eq(users_view.contact_type, field), eq(users_view.contact_string, value))
+  );
+
+  const peopleCountWithSameContact = await db.$count(
     people_view,
     and(eq(people_view.contact_type, field), eq(people_view.contact_string, value))
   );
 
-  return result === 0;
+  return {
+    users: usersCountWithSameContact === 0,
+    people: peopleCountWithSameContact === 0,
+  };
 }
 
 export async function isUniqueNationalId(national_id: string) {
-  const result = await db.$count(
+  const usersCountWithSameNationalId = await db.$count(
+    users_view,
+    and(eq(users_view.id_doc_type, 'رقم قومي'), eq(users_view.id_doc_num, national_id))
+  );
+
+  const peopleCountWithSameNationalId = await db.$count(
     people_view,
     and(eq(people_view.id_doc_type, 'رقم قومي'), eq(people_view.id_doc_num, national_id))
   );
 
-  return result === 0;
+  return {
+    users: usersCountWithSameNationalId === 0,
+    people: peopleCountWithSameNationalId === 0,
+  };
 }
 
 export async function changePassword(userId: number, newPassword: string) {
