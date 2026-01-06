@@ -8,6 +8,7 @@ declare global {
         id: number;
         username: string;
         name: string;
+        first_name: string;
         phone_number: string;
         email: string | null;
         national_id: string | null;
