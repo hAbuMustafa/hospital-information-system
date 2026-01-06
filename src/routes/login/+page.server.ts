@@ -8,7 +8,7 @@ import {
 } from '$lib/utils/auth/jwt';
 import { createTokens } from '$lib/server/db/operations/auth';
 import { usernamePattern } from '$lib/stores/patterns';
-import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
+import { getGravatarLinkFromEmail } from '$lib/utils/gravatar';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export function load({ locals }) {
@@ -67,7 +67,7 @@ export const actions: Actions = {
     const result = await createTokens(
       {
         ...userData,
-        gravatar: getGravatarLinkFromUserRecord(userData),
+        gravatar: getGravatarLinkFromEmail(userData),
       },
       sessionMaxAge
     );
