@@ -31,7 +31,7 @@ export const people_view = People.view('people_view', {
   person_id: integer(),
   person_name: text(),
   id_doc_type: varchar({ length: 16 }),
-  id_doc_num: varchar({ length: 45 }),
+  id_doc_number: varchar({ length: 45 }),
   gender: boolean(),
   birthdate: date(),
   race: varchar({ length: 16 }),
