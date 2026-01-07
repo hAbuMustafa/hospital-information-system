@@ -9,6 +9,7 @@ import {
   Person_IdDoc,
 } from '../../schema/entities/people';
 import { Staff } from '../../schema/entities/hospital';
+import { getBirthdateFromNationalId, getGenderFromNationalId } from '../utils';
 
 const SALT_ROUNDS = 12;
 
@@ -66,6 +67,8 @@ export async function seedUser(newUserData: seedUserDataT) {
           father_name: newUserData.father_name,
           grandfather_name: newUserData.grandfather_name,
           family_name: newUserData.family_name,
+          gender: getGenderFromNationalId(newUserData.national_id),
+          birthdate: getBirthdateFromNationalId(newUserData.national_id),
         })
         .returning();
 
