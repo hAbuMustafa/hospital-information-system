@@ -67,7 +67,7 @@ export const users_view = Security.view('users_view', {
   first_name: varchar({ length: 45 }).notNull(),
   person_name: text().notNull(),
   id_doc_type: varchar({ length: 16 }).notNull(),
-  id_doc_num: varchar({ length: 45 }).notNull(),
+  id_doc_number: varchar({ length: 45 }).notNull(),
   gender: boolean().notNull(),
   birthdate: date().notNull(),
   race: varchar({ length: 16 }),
