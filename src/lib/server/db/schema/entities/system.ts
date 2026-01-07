@@ -11,7 +11,7 @@ import {
   smallint,
   date,
 } from 'drizzle-orm/pg-core';
-import { Person } from './people';
+import { People_contact_information, Person } from './people';
 import { Staff } from './hospital';
 import { sql } from 'drizzle-orm';
 
@@ -74,8 +74,10 @@ export const users_view = Security.view('users_view', {
   marital_status: boolean(),
   religion: varchar({ length: 15 }),
   occupation: varchar({ length: 45 }),
-  contact_type: varchar({ length: 15 }).notNull(),
-  contact_string: varchar({ length: 100 }).notNull(),
+  email_id: integer().references(() => People_contact_information.id),
+  email: varchar({ length: 100 }).notNull(),
+  phone_number_id: integer().references(() => People_contact_information.id),
+  phone_number: varchar({ length: 100 }).notNull(),
   username: varchar({ length: 45 }).notNull().unique(),
   hashed_pw: text().notNull(),
   role: integer().notNull(),
@@ -89,17 +91,19 @@ SELECT
   u.id AS user_id,
   u.person_id,
   pr.first_name,
-  CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "person_name",
-  doctype.name as id_doc_type,
-	doc.document_number as id_doc_number,
-	pr.gender,
-	pr.birthdate,
-	pr.race,
-	pr.marital_status,
-	pr.religion,
-	pr.occupation,
-	ct.name as contact_type,
-	con.contact_string,
+  CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) AS "person_name",
+  doctype.name AS id_doc_type,
+  doc.document_number AS id_doc_number,
+  pr.gender,
+  pr.birthdate,
+  pr.race,
+  pr.marital_status,
+  pr.religion,
+  pr.occupation,
+  email.id as email_id,
+  email.contact_string as email,
+  phone_number.id as phone_number_id,
+  phone_number.contact_string as phone_number,
   u.username,
   u.hashed_pw,
   u.role,
@@ -110,8 +114,8 @@ SELECT
   u.password_reset_required
 FROM "Security"."User" u
   LEFT JOIN "People"."Person" pr ON u.person_id = pr.id
-  LEFT JOIN "People"."Person_IdDoc" doc on doc.person_id = pr.id
-  LEFT JOIN "People"."IdDoc_type" doctype on doc.document_type = doctype.id
-  LEFT JOIN "People"."People_contact_information" con on con.person_id = pr.id
-  LEFT JOIN "People"."Contact_type" ct on con.contact_type = ct.id
+  LEFT JOIN "People"."Person_IdDoc" doc ON doc.person_id = pr.id
+  LEFT JOIN "People"."IdDoc_type" doctype ON doc.document_type = doctype.id
+  LEFT JOIN "People"."People_contact_information" email ON email.person_id = pr.id AND email.contact_type = 3
+  LEFT JOIN "People"."People_contact_information" phone_number ON phone_number.person_id = pr.id AND phone_number.contact_type = 1
   `);
