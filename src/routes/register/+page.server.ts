@@ -167,6 +167,7 @@ export const actions: Actions = {
     });
 
     if (!registrationResult.success) {
+      console.error(registrationResult.error);
       return failWithMessages(['حدث خطأ غير متوقع']);
     }
 
