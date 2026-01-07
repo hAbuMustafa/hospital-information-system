@@ -34,7 +34,7 @@ export const RefreshToken = Security.table('RefreshToken', {
   user_id: integer()
     .notNull()
     .references(() => User.id),
-  token_hash: varchar({ length: 36 }).notNull(),
+  token_hash: varchar({ length: 64 }).notNull(),
   created_at: timestamp({ mode: 'date' }).notNull().defaultNow(),
   expires_at: timestamp({ mode: 'date' }).notNull(),
   last_used_at: timestamp({ mode: 'date' }).defaultNow(),
