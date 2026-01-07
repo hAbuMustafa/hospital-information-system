@@ -58,12 +58,16 @@ export async function createTokens(
   const accessToken = await generateAccessToken(accessPayload);
   const refreshToken = await generateRefreshToken(refreshPayload, sessionMaxAge);
 
-  await db.insert(RefreshToken).values({
-    id: tokenId,
-    user_id: userData.user_id,
-    token_hash: hashToken(refreshToken),
-    expires_at: sessionMaxAge,
-  });
+  try {
+    await db.insert(RefreshToken).values({
+      id: tokenId,
+      user_id: userData.user_id,
+      token_hash: hashToken(refreshToken),
+      expires_at: sessionMaxAge,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 
   return {
     success: true,
