@@ -34,7 +34,7 @@ export function getBirthdateFromNationalId(national_id: string) {
     .filter(Boolean)
     .map(Number);
 
-  return new Date((centuryIndex - 2 + 19) * 100 + yy, mm, dd);
+  return new Date((centuryIndex - 2 + 19) * 100 + yy, mm - 1, dd);
 }
 
 export function getGenderFromNationalId(national_id: string) {
