@@ -48,7 +48,7 @@ export async function createTokens(
     userId: userData.user_id,
   };
 
-  const accessToken = await generateAccessToken({ userId: userData.user_id });
+  const accessToken = await generateAccessToken(accessPayload);
   const refreshToken = await generateRefreshToken(refreshPayload, sessionMaxAge);
 
   await db.insert(RefreshToken).values({
