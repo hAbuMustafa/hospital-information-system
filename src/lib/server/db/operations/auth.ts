@@ -12,6 +12,15 @@ import {
   type AccessTokenPayload,
 } from '$lib/utils/auth/jwt';
 
+export async function getUserById(user_id: number) {
+  const [user] = await db
+    .select()
+    .from(users_view)
+    .where(eq(users_view.user_id, user_id));
+
+  return user;
+}
+
 export async function validateLogin(username: string, password: string) {
   const [user] = await db
     .select()
@@ -116,7 +125,7 @@ export async function refreshAccessToken(refreshToken: string) {
 
   return {
     accessToken: newAccessToken,
-    user: accessPayload,
+    user: records.user,
   };
 }
 
