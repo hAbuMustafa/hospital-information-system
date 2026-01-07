@@ -150,7 +150,7 @@ export async function isUniqueContactString(
 ) {
   const usersCountWithSameContact = await db.$count(
     users_view,
-    and(eq(users_view.contact_type, field), eq(users_view.contact_string, value))
+    eq(users_view[field], field)
   );
 
   const peopleCountWithSameContact = await db.$count(
@@ -167,12 +167,15 @@ export async function isUniqueContactString(
 export async function isUniqueNationalId(national_id: string) {
   const usersCountWithSameNationalId = await db.$count(
     users_view,
-    and(eq(users_view.id_doc_type, 'رقم قومي'), eq(users_view.id_doc_num, national_id))
+    and(eq(users_view.id_doc_type, 'رقم قومي'), eq(users_view.id_doc_number, national_id))
   );
 
   const peopleCountWithSameNationalId = await db.$count(
     people_view,
-    and(eq(people_view.id_doc_type, 'رقم قومي'), eq(people_view.id_doc_num, national_id))
+    and(
+      eq(people_view.id_doc_type, 'رقم قومي'),
+      eq(people_view.id_doc_number, national_id)
+    )
   );
 
   return {
