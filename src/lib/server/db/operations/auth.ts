@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { RefreshToken, User } from '$lib/server/db/schema/entities/system';
+import { RefreshToken, users_view } from '$lib/server/db/schema/entities/system';
 import { and, eq, gt, lt } from 'drizzle-orm';
-import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
 import {
   generateTokenId,
   generateAccessToken,
@@ -14,7 +13,10 @@ import {
 } from '$lib/utils/auth/jwt';
 
 export async function validateLogin(username: string, password: string) {
-  const [user] = await db.select().from(User).where(eq(User.username, username));
+  const [user] = await db
+    .select()
+    .from(users_view)
+    .where(eq(users_view.username, username));
 
   if (!user) {
     return null;
@@ -32,22 +34,26 @@ export async function validateLogin(username: string, password: string) {
 }
 
 export async function createTokens(
-  userData: NonNullable<App.Locals['user']>,
+  userData: typeof users_view.$inferSelect,
   sessionMaxAge: Date
 ) {
   const tokenId = generateTokenId();
 
   const refreshPayload: RefreshTokenPayload = {
-    userId: userData.id,
+    userId: userData.user_id,
     tokenId,
   };
 
-  const accessToken = await generateAccessToken(userData);
+  const accessPayload: AccessTokenPayload = {
+    userId: userData.user_id,
+  };
+
+  const accessToken = await generateAccessToken({ userId: userData.user_id });
   const refreshToken = await generateRefreshToken(refreshPayload, sessionMaxAge);
 
   await db.insert(RefreshToken).values({
     id: tokenId,
-    user_id: userData.id,
+    user_id: userData.user_id,
     token_hash: hashToken(refreshToken),
     expires_at: sessionMaxAge,
   });
@@ -67,19 +73,31 @@ export async function refreshAccessToken(refreshToken: string) {
   }
 
   const tokenHash = hashToken(refreshToken);
-  const tokenRecord = await db.query.RefreshToken.findFirst({
-    where: and(
-      eq(RefreshToken.id, refreshTokenPayload.tokenId),
-      eq(RefreshToken.user_id, refreshTokenPayload.userId),
-      eq(RefreshToken.token_hash, tokenHash),
-      gt(RefreshToken.expires_at, new Date())
-    ),
-    with: {
-      User: true,
-    },
+  const records = await db.transaction(async (tx) => {
+    const [tokenRecord] = await tx
+      .select()
+      .from(RefreshToken)
+      .where(
+        and(
+          eq(RefreshToken.id, refreshTokenPayload.tokenId),
+          eq(RefreshToken.user_id, refreshTokenPayload.userId),
+          eq(RefreshToken.token_hash, tokenHash),
+          gt(RefreshToken.expires_at, new Date())
+        )
+      );
+
+    const [userRecord] = await tx
+      .select()
+      .from(users_view)
+      .where(eq(users_view.user_id, tokenRecord.user_id));
+
+    return {
+      token: tokenRecord,
+      user: userRecord,
+    };
   });
 
-  if (!tokenRecord) {
+  if (!records.token) {
     throw new Error('Refresh token not found or expired');
   }
 
@@ -91,17 +109,7 @@ export async function refreshAccessToken(refreshToken: string) {
     .where(eq(RefreshToken.id, refreshTokenPayload.tokenId));
 
   const accessPayload: AccessTokenPayload = {
-    id: refreshTokenPayload.userId,
-    username: tokenRecord.User.username,
-    name: tokenRecord.User.name,
-    created_at: tokenRecord.User.created_at,
-    password_reset_required: tokenRecord.User.password_reset_required,
-    phone_number: tokenRecord.User.phone_number,
-    national_id: tokenRecord.User.national_id,
-    role: tokenRecord.User.role,
-    last_login: tokenRecord.User.last_login,
-    gravatar: getGravatarLinkFromUserRecord(tokenRecord.User),
-    email: tokenRecord.User.email,
+    userId: records.user.user_id,
   };
 
   const newAccessToken = await generateAccessToken(accessPayload);
@@ -132,18 +140,16 @@ export async function rotateRefreshToken(oldRefreshToken: string, sessionMaxAge:
 
   await db.delete(RefreshToken).where(eq(RefreshToken.id, payload.tokenId));
 
-  const user = await db.query.User.findFirst({ where: eq(User.id, payload.userId) });
+  const [user] = await db
+    .select()
+    .from(users_view)
+    .where(eq(users_view.user_id, payload.userId));
 
   if (!user) {
     throw new Error('User not found');
   }
 
-  const userData = {
-    ...user,
-    gravatar: getGravatarLinkFromUserRecord(user),
-  };
-
-  return await createTokens(userData, sessionMaxAge);
+  return await createTokens(user, sessionMaxAge);
 }
 
 async function deleteAllExpiredRefreshTokens() {
