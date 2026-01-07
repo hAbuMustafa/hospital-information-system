@@ -37,9 +37,7 @@ export async function validateLogin(username: string, password: string) {
     return null;
   }
 
-  const { hashed_pw: droppedPwHash, ...otherUserData } = user;
-
-  return otherUserData;
+  return user;
 }
 
 export async function createTokens(
