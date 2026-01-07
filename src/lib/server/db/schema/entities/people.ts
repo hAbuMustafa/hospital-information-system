@@ -67,6 +67,7 @@ export const Contact_type = People.table('Contact_type', {
 });
 
 export const People_contact_information = People.table('People_contact_information', {
+  id: serial().primaryKey(),
   person_id: integer()
     .notNull()
     .references(() => Person.id),
