@@ -29,7 +29,7 @@ export const Person = People.table('Person', {
 
 export const people_view = People.view('people_view', {
   person_id: integer(),
-  person_name: text(),
+  full_name: text(),
   id_doc_type: varchar({ length: 16 }),
   id_doc_number: varchar({ length: 45 }),
   gender: boolean(),
@@ -43,7 +43,7 @@ export const people_view = People.view('people_view', {
 }).as(sql`
 SELECT 
 	pr.id as person_id,
-	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "person_name",
+	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "full_name",
 	doctype.name as id_doc_type,
 	doc.document_number as id_doc_number,
 	pr.gender,
