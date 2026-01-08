@@ -10,10 +10,6 @@ declare global {
       user:
         | (typeof users_view.$inferSelect & {
             gravatar?: string;
-            father_name?: string;
-            grandfather_name?: string;
-            family_name?: string;
-            national_id?: string;
           })
         | null;
     }
