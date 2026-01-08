@@ -9,7 +9,7 @@ import { redirect } from '@sveltejs/kit';
 
 export async function GET({ cookies, locals }) {
   if (locals.user) {
-    await logoutAllDevices(locals.user.id);
+    await logoutAllDevices(locals.user.user_id);
   }
 
   cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
