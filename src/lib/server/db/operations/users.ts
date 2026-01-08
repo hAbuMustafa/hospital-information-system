@@ -123,7 +123,7 @@ export async function updateUser(
   try {
     const [user] = await db
       .update(User)
-      .set(values as any)
+      .set(values)
       .where(eq(User.id, userId))
       .returning();
 
