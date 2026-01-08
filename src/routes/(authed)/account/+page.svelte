@@ -90,12 +90,12 @@
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/national_id" use:enhance>
-    <label for="national_id">الرقم القومي</label>
+  <form method="POST" action="?/id_doc_number" use:enhance>
+    <label for="id_doc_number">الرقم القومي</label>
     <input
       type="text"
-      id="national_id"
-      name="national_id"
+      id="id_doc_number"
+      name="id_doc_number"
       value={data.user?.id_doc_number}
       pattern={nationalIdPattern.source}
     />

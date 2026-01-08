@@ -11,7 +11,6 @@ import {
 } from '$lib/server/db/operations/users';
 import {
   arabicNamePattern,
-  arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
   emailPattern,
   nationalIdPattern,
@@ -33,7 +32,7 @@ const changeableFields = [
   'username',
   'phone_number',
   'email',
-  'national_id',
+  'id_doc_number',
 ] as const;
 
 export const actions = {
@@ -70,7 +69,7 @@ export const actions = {
   ),
   phone_number: createAction('phone_number', 'رقم الموبايل', egyptianMobileNumberPattern),
   email: createAction('email', 'البريد الإلكتروني', emailPattern),
-  national_id: createAction('national_id', 'الرقم القومي', nationalIdPattern),
+  id_doc_number: createAction('id_doc_number', 'الرقم القومي', nationalIdPattern),
 };
 
 function createAction(
@@ -101,7 +100,7 @@ function createAction(
       let isUnique = false;
 
       switch (fieldName) {
-        case 'national_id':
+        case 'id_doc_number':
           const natIdCheckResult = await isUniqueNationalId(fieldValue);
           isUnique = natIdCheckResult.people;
           break;
@@ -132,7 +131,7 @@ function createAction(
         result = await updateContactInfo(oldValue, fieldValue);
         break;
 
-      case 'national_id':
+      case 'id_doc_number':
         result = await updateIdDocNumber(oldValue, fieldValue);
         break;
 
