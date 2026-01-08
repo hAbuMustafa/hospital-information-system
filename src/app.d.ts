@@ -7,7 +7,7 @@ declare global {
   namespace App {
     // interface Error {}
     interface Locals {
-      user: typeof users_view.$inferSelect | null;
+      user: (typeof users_view.$inferSelect & { gravatar?: string }) | null;
     }
     // interface PageData {}
     // interface PageState {}

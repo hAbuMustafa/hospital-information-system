@@ -6,6 +6,7 @@ import {
   REFRESH_COOKIE_NAME,
   verifyAccessToken,
 } from '$lib/utils/auth/jwt';
+import { getGravatarLinkFromEmail } from '$lib/utils/gravatar';
 import { redirect } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {
@@ -57,6 +58,8 @@ export async function handle({ event, resolve }) {
   } else {
     event.locals.user = await getUserById(userInAccToken.userId);
   }
+
+  event.locals.user.gravatar = getGravatarLinkFromEmail(event.locals.user.email);
 
   if (
     event.locals.user.password_reset_required &&
