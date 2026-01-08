@@ -16,6 +16,7 @@ import {
   nationalIdPattern,
   usernamePattern,
 } from '$lib/stores/patterns';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id.js';
 import { fail, type Action } from '@sveltejs/kit';
 
 export function load() {
@@ -101,6 +102,16 @@ function createAction(
 
       switch (fieldName) {
         case 'id_doc_number':
+          // fix: validation is broken
+          let isValidNatId;
+          try {
+            isValidNatId = verifyEgyptianNationalId(fieldValue);
+          } catch (err) {
+            console.error(err);
+          }
+
+          if (!isValidNatId) return fail(400, 'رقم قومي غير صحيح');
+
           const natIdCheckResult = await isUniqueNationalId(fieldValue);
           isUnique = natIdCheckResult.people;
           break;
