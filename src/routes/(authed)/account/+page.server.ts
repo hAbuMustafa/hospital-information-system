@@ -1,5 +1,16 @@
-import { isUniqueContactString, updateUser } from '$lib/server/db/operations/users';
 import {
+  updateContactInfo,
+  updateIdDocNumber,
+  updatePerson,
+} from '$lib/server/db/operations/people.js';
+import {
+  isUniqueUsername,
+  isUniqueContactString,
+  isUniqueNationalId,
+  updateUser,
+} from '$lib/server/db/operations/users';
+import {
+  arabicNamePattern,
   arabicTriadicNamesPattern,
   egyptianMobileNumberPattern,
   emailPattern,
@@ -15,7 +26,10 @@ export function load() {
 }
 
 const changeableFields = [
-  'name',
+  'first_name',
+  'father_name',
+  'grandfather_name',
+  'family_name',
   'username',
   'phone_number',
   'email',
@@ -30,11 +44,29 @@ export const actions = {
     'ينبغي أن يكون من حروف إنجليزية فقط أو شرطات "-"',
     true
   ),
-  name: createAction(
-    'name',
+  first_name: createAction(
+    'first_name',
     'اسم الموظف',
-    arabicTriadicNamesPattern,
-    'يجب أن يكون اسما عربيا ثلاثيا على الأقل'
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا'
+  ),
+  father_name: createAction(
+    'father_name',
+    'اسم الأب',
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا'
+  ),
+  grandfather_name: createAction(
+    'grandfather_name',
+    'اسم الجد',
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا'
+  ),
+  family_name: createAction(
+    'family_name',
+    'اسم العائلة',
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا'
   ),
   phone_number: createAction('phone_number', 'رقم الموبايل', egyptianMobileNumberPattern),
   email: createAction('email', 'البريد الإلكتروني', emailPattern),
@@ -66,7 +98,20 @@ function createAction(
       return fail(401, { message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️' });
 
     if (mustBeUnique) {
-      const isUnique = await isUniqueContactString(fieldName, fieldValue);
+      let isUnique = false;
+
+      switch (fieldName) {
+        case 'national_id':
+          const natIdCheckResult = await isUniqueNationalId(fieldValue);
+          isUnique = natIdCheckResult.people;
+          break;
+        case 'username':
+          isUnique = await isUniqueUsername(fieldValue);
+          break;
+
+        default:
+          await isUniqueContactString(fieldName as 'email' | 'phone_number', fieldValue);
+      }
 
       if (!isUnique)
         return fail(401, {
@@ -77,11 +122,33 @@ function createAction(
     const newFields: Partial<{ [K in (typeof changeableFields)[number]]: string }> = {};
     newFields[fieldName] = fieldValue;
 
-    const result = await updateUser(locals.user!.id, newFields);
+    const oldValue = locals.user?.[fieldName]!;
 
-    if (!result.success) return fail(401, { message: 'حدث خطأ غير متوقع.' });
+    let result: { success?: boolean; data?: any; error?: any };
 
-    const oldValue = locals.user?.[fieldName];
+    switch (fieldName) {
+      case 'email':
+      case 'phone_number':
+        result = await updateContactInfo(oldValue, fieldValue);
+        break;
+
+      case 'national_id':
+        result = await updateIdDocNumber(oldValue, fieldValue);
+        break;
+
+      case 'username':
+        result = await updateUser(locals.user?.user_id!, { username: fieldValue });
+        break;
+
+      default:
+        result = await updatePerson(locals.user?.person_id!, newFields);
+        break;
+    }
+
+    if (!result.success) {
+      console.error(result.error);
+      return fail(401, { message: 'حدث خطأ غير متوقع.' });
+    }
 
     locals.user![fieldName] = fieldValue;
 
