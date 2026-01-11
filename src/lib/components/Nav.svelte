@@ -1,60 +1,94 @@
-<script>
+<script lang="ts">
+  import NavLogo from './NavLogo.svelte';
+  import NavMenu from './NavMenu.svelte';
+
   const { user } = $props();
+
+  type MenuT = {
+    label?: string;
+    name?: string;
+    links: (
+      | {
+          href: string;
+          label: string;
+          permission?: ({ role: number } | { affiliation: number })[];
+        }
+      | 'separator'
+    )[];
+    permission?: ({ role: number } | { affiliation: number })[];
+  };
+
+  const menus: MenuT[] = [
+    {
+      label: 'المرضى',
+      name: 'patient',
+      links: [
+        {
+          href: '/patient/admission',
+          label: 'تسجيل حالة دخول',
+        },
+        { href: '/patient/discharge', label: 'تسجيل خروج مريض' },
+        { href: '/patient/transfer', label: 'تحويل مريض إلى قسم' },
+        'separator',
+        { href: '/patient/', label: 'استعلام عن مريض' },
+        { href: '/patient/report', label: 'تقرير المرضى بالأقسام' },
+        'separator',
+        { href: '/patient/occupation-report', label: 'بيان الإشغال' },
+        { href: '/patient/monthly-report', label: ' تقرير الإشغال الشهري ' },
+      ],
+    },
+    {
+      label: 'الصيدلية',
+      name: 'pharmacy',
+      links: [
+        { href: '/pharmacy/dispense', label: 'صرف لمريض' },
+        { href: '/pharmacy/return', label: 'مرتجع مريض' },
+        { href: '/pharmacy/manual-bill', label: 'تسعير فاتورة لمريض' },
+        'separator',
+        { href: '/pharmacy/antibiotics-report', label: 'إحصائية المضادات الحيوية' },
+        { href: '/pharmacy/daily-report', label: 'المنصرف اليومي' },
+      ],
+    },
+    {
+      label: 'المخزون',
+      name: 'stock',
+      links: [
+        { href: '/stock/dispense', label: 'صرف لجهة' },
+        { href: '/stock/receive', label: 'استلام طلبية' },
+        { href: '/stock/edit-stock', label: 'تعديل أرصدة' },
+        { href: '/stock/stock-report', label: 'تقرير المخزون' },
+      ],
+    },
+  ];
+
+  const accountMenu: MenuT = {
+    name: 'account',
+    links: [
+      { href: '/account', label: 'الحساب' },
+      { href: '/logout', label: 'تسجيل الخروج' },
+    ],
+  };
+
+  const loggedOutMenu: MenuT = {
+    links: [
+      { href: '/register', label: 'إنشاء حساب' },
+      { href: '/login', label: 'تسجيل الدخول' },
+    ],
+  };
 </script>
 
 <nav aria-label="Primary Navigation">
-  <a href="/" id="logo">
-    <img src="/favicon.png" alt="مستشفى 23 يوليو للأمراض الصدرية" width="80" />
-  </a>
+  <NavLogo />
+
   {#if user}
     <ul>
-      <li>
-        <span>المرضى</span>
-
-        <ul>
-          <li><a href="/patient/admission">تسجيل حالة دخول</a></li>
-          <li><a href="/patient/discharge">تسجيل خروج مريض</a></li>
-          <li><a href="/patient/transfer">تحويل مريض إلى قسم</a></li>
-          <hr />
-          <li><a href="/patient/">استعلام عن مريض</a></li>
-          <li><a href="/patient/report">تقرير المرضى بالأقسام</a></li>
-          <hr />
-          <li><a href="/patient/occupation-report">بيان الإشغال</a></li>
-          <li>
-            <a href="/patient/monthly-report"> تقرير الإشغال الشهري </a>
-          </li>
-        </ul>
-      </li>
-
-      <li>
-        <span>الصيدلية</span>
-
-        <ul>
-          <li><a href="/pharmacy/dispense">صرف لمريض</a></li>
-          <li><a href="/pharmacy/return">مرتجع مريض</a></li>
-          <li><a href="/pharmacy/manual-bill">تسعير فاتورة لمريض</a></li>
-          <hr />
-          <li>
-            <a href="/pharmacy/antibiotics-report">إحصائية المضادات الحيوية</a>
-          </li>
-          <li><a href="/pharmacy/daily-report">المنصرف اليومي</a></li>
-        </ul>
-      </li>
-
-      <li>
-        <span>المخزون</span>
-
-        <ul>
-          <li><a href="/stock/dispense">صرف لجهة</a></li>
-          <li><a href="/stock/receive">استلام طلبية</a></li>
-          <hr />
-          <li><a href="/stock/edit-stock">تعديل أرصدة</a></li>
-          <li><a href="/stock/stock-report">تقرير المخزون</a></li>
-        </ul>
-      </li>
+      {#each menus as menu, i (i)}
+        <NavMenu {...menu} />
+      {/each}
     </ul>
+
     <ul>
-      <li>
+      <NavMenu {...accountMenu}>
         <img
           class="gravatar"
           src={'/api/proxy-images/?url=' + user.gravatar}
@@ -62,18 +96,10 @@
           width="40px"
           height="40px"
         />
-
-        <ul>
-          <li><a href="/account">الحساب</a></li>
-          <li><a href="/logout">تسجيل الخروج</a></li>
-        </ul>
-      </li>
+      </NavMenu>
     </ul>
   {:else}
-    <ul>
-      <li><a href="/register">إنشاء حساب</a></li>
-      <li><a href="/login">تسجيل الدخول</a></li>
-    </ul>
+    <NavMenu {...loggedOutMenu} />
   {/if}
 </nav>
 
@@ -83,112 +109,26 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
+
     background-color: light-dark(
       hsl(from var(--main-bg-color) h s 80%),
       hsl(from var(--main-bg-color) h s 20%)
     );
-  }
-
-  nav,
-  a {
     color: light-dark(
       hsl(from var(--main-text-color) h s 20%),
       hsl(from var(--main-text-color) h s 80%)
     );
-    font-size: 1.1rem;
-    text-decoration: none;
-  }
-
-  li:is(:hover, :focus, :focus-within):not(:has(.gravatar)) {
-    background-color: hsl(from var(--main-bg-color) h s 50%);
-  }
-
-  nav > ul {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-    align-items: center;
-
-    li {
-      border-radius: 0.25rem;
-      padding: 0.25rem 0.2rem;
-    }
-
-    @media print {
-      display: none;
-    }
-  }
-
-  nav a:focus {
-    outline: 2px solid;
-    outline-offset: 0.5rem;
-    border-radius: 0.25rem;
-  }
-
-  li:has(ul) {
-    position: relative;
-
-    &:not(:has(.gravatar))::after {
-      content: '▼';
-      font-size: 0.7rem;
-      margin-inline-start: 0.25rem;
-      position: absolute;
-      inset-block: 40%;
-      height: fit-content;
-    }
 
     ul {
       display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      z-index: 1;
+      gap: 1.5rem;
+      list-style: none;
+      align-items: center;
 
-      hr {
-        margin-block: 0;
-        width: 100%;
+      @media print {
+        display: none;
       }
     }
-
-    & > ul > li {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  li > ul {
-    list-style: none;
-    position: absolute;
-    inset-block-start: 100%;
-    inset-inline-start: 0;
-    transform: translateY(-10px);
-
-    padding: 1rem;
-
-    background-color: var(--main-bg-color);
-    border: var(--main-border);
-    border-radius: 0.25rem;
-    opacity: 0;
-    box-shadow: black 10px 10px 25px;
-
-    transition-property: position, opacity;
-    transition-duration: 0.5s;
-    transition-timing-function: ease-in-out;
-
-    pointer-events: none;
-
-    li {
-      text-wrap: nowrap;
-    }
-  }
-
-  li:has(.gravatar) ul {
-    inset-inline-start: -200%;
-  }
-
-  li:has(:hover, :focus-within, :focus) > ul,
-  li > ul:has(:hover, :focus-within, :focus) {
-    opacity: 1;
-    pointer-events: all;
   }
 
   .gravatar {
