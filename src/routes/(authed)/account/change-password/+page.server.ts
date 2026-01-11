@@ -13,9 +13,9 @@ export const actions = {
   default: async ({ request, locals }) => {
     const data = await request.formData();
 
-    const oldPassword = data.get('old_password');
-    const newPassword = data.get('new_password');
-    const confirmNewPassword = data.get('confirm_new_password');
+    const oldPassword = data.get('old_password') as unknown as string;
+    const newPassword = data.get('new_password') as unknown as string;
+    const confirmNewPassword = data.get('confirm_new_password') as unknown as string;
 
     if (!oldPassword || !newPassword || !confirmNewPassword) {
       return fail(401, {
@@ -31,17 +31,17 @@ export const actions = {
         message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️',
       });
 
-    const userData = await validateLogin(locals.user?.username!, oldPassword as string);
+    const userData = await validateLogin(locals.user?.username!, oldPassword);
 
     if (!userData) return fail(401, { message: 'كلمة السر القديمة غير صحيحة' });
 
-    if (!passwordPattern.test(newPassword as string))
+    if (!passwordPattern.test(newPassword))
       return fail(401, {
         message:
           'كلمة السر ضعيفة جدا. يجب أن تحتوي على أحرف وأرقام وأحد الرموز (@$!%*?&)، وأن تكون على الأقل من 8 محارف',
       });
 
-    const result = await changePassword(locals.user?.id!, newPassword as string);
+    const result = await changePassword(locals.user?.user_id!, newPassword);
 
     if (!result.success) return fail(401, { message: 'حدث خطأ غير متوقع' });
 
