@@ -13,7 +13,7 @@ import {
   createContactType,
 } from '../../src/lib/server/db/operations/menus';
 import {
-  seedPatient,
+  seedPatientAdmission,
   seedPatientTransfer,
   seedPatientDischarge,
 } from '../../src/lib/server/db/operations/seed/patients';
@@ -32,7 +32,7 @@ import {
 } from '../../src/lib/server/db/menus';
 
 async function seed(items, insertFunction) {
-  const seedName = insertFunction.name.replace('create', '');
+  const seedName = insertFunction.name.replace('create', '').replace('seed','');
 
   console.warn('\nStarting ' + seedName + ' seed..');
 
@@ -91,7 +91,7 @@ export async function beginSeed() {
 
   // Seed Initial Data
   if (config.all || config.data || config.patients || config.patientAdmissions)
-    await seed(new_PatientAdmissions, seedPatient);
+    await seed(new_PatientAdmissions, seedPatientAdmission);
   if (config.all || config.data || config.patients || config.patientTransfers)
     await seed(new_PatientTransfers, seedPatientTransfer);
   if (config.all || config.data || config.patients || config.patientDischarges)

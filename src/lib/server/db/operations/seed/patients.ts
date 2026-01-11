@@ -14,32 +14,32 @@ import { eq, and } from 'drizzle-orm';
 import { createDiagnosis } from '$lib/server/db/operations/menus';
 import type { PatientSeedT, seedDischargeT, seedTransferT } from '../types';
 
-export async function seedPatient(patient: PatientSeedT) {
+export async function seedPatientAdmission(admission: PatientSeedT) {
   try {
     const new_patient = await db.transaction(async (tx) => {
       let foundPersonId: number | null = null;
 
-      if (patient.id_doc_num) {
+      if (admission.id_doc_num) {
         let [firstResult] = await tx
           .select({ id: Person_IdDoc.person_id })
           .from(Person_IdDoc)
-          .where(eq(Person_IdDoc.document_number, patient.id_doc_num));
+          .where(eq(Person_IdDoc.document_number, admission.id_doc_num));
         foundPersonId = firstResult?.id;
       }
 
       if (!foundPersonId) {
         let numberValidity;
 
-        if (patient.id_doc_type === 1 && patient.id_doc_num) {
+        if (admission.id_doc_type === 1 && admission.id_doc_num) {
           try {
-            numberValidity = verifyEgyptianNationalId(patient.id_doc_num);
-            if (!numberValidity) patient.id_doc_num = patient.id_doc_num + ' INVALID';
+            numberValidity = verifyEgyptianNationalId(admission.id_doc_num);
+            if (!numberValidity) admission.id_doc_num = admission.id_doc_num + ' INVALID';
           } catch (e) {
-            patient.id_doc_num = patient.id_doc_num + ' INVALID';
+            admission.id_doc_num = admission.id_doc_num + ' INVALID';
           }
         }
 
-        const { name: patient_name, ...restOfPatientData } = patient;
+        const { name: patient_name, ...restOfPatientData } = admission;
         const [first_name, father_name, grandfather_name, ...family_name] =
           patient_name.split(' ');
         let [newPersonInsert] = await tx
@@ -54,39 +54,39 @@ export async function seedPatient(patient: PatientSeedT) {
           .returning();
         foundPersonId = newPersonInsert.id;
 
-        if (patient.id_doc_num) {
+        if (admission.id_doc_num) {
           await tx.insert(Person_IdDoc).values({
             person_id: foundPersonId,
-            document_type: patient.id_doc_type,
-            document_number: patient.id_doc_num,
+            document_type: admission.id_doc_type,
+            document_number: admission.id_doc_num,
           });
         }
       }
 
-      patient.person_id = foundPersonId;
+      admission.person_id = foundPersonId;
 
-      if (patient.admission_notes?.includes('مسجون')) {
-        patient.security_status = true;
-        patient.admission_notes?.replace('مسجون', '');
+      if (admission.admission_notes?.includes('مسجون')) {
+        admission.security_status = true;
+        admission.admission_notes?.replace('مسجون', '');
       }
 
       const [newPatient] = await tx
         .insert(InPatient)
         .values({
           person_id: foundPersonId,
-          security_status: patient.security_status,
-          recent_ward: patient.admission_ward,
+          security_status: admission.security_status,
+          recent_ward: admission.admission_ward,
         })
         .returning();
 
       await tx.insert(Transfer).values({
         patient_id: newPatient.id,
-        to_ward_id: patient.admission_ward,
-        timestamp: patient.admission_date,
+        to_ward_id: admission.admission_ward,
+        timestamp: admission.admission_date,
         notes: 'admission',
       });
 
-      const [admYear, admFileNumber] = patient.file_id.split('/').map(Number);
+      const [admYear, admFileNumber] = admission.file_id.split('/').map(Number);
 
       const [newFile] = await tx
         .insert(InPatient_file)
@@ -97,14 +97,14 @@ export async function seedPatient(patient: PatientSeedT) {
         })
         .returning();
 
-      if (patient.health_insurance) {
+      if (admission.health_insurance) {
         await tx.insert(Insurance_Doc).values({
           patient_id: newPatient.id,
           insurance_entity: 'الهيئة العامة للتأمين الصحي',
         });
       }
 
-      const pDiagnoses = patient.diagnosis.split('+').map((d) => d.trim());
+      const pDiagnoses = admission.diagnosis.split('+').map((d) => d.trim());
 
       for (let i = 0; i < pDiagnoses.length; i++) {
         const currentDiagnosisText = pDiagnoses[i];
@@ -129,7 +129,7 @@ export async function seedPatient(patient: PatientSeedT) {
               currentDiagnosisText,
               'for patient',
               newPatient.id,
-              patient.name
+              admission.name
             );
             continue;
           }
@@ -138,7 +138,7 @@ export async function seedPatient(patient: PatientSeedT) {
         await tx.insert(Patient_diagnosis).values({
           patient_id: newPatient.id,
           diagnosis_id: diagnosis.id,
-          timestamp: patient.admission_date,
+          timestamp: admission.admission_date,
           type: 'Initial',
         });
       }
