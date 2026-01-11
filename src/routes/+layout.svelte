@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import Nav from '$lib/components/Nav.svelte';
+  import Nav from '$lib/components/Nav/Nav.svelte';
   import { toast, Toaster } from 'svelte-sonner';
   import './styles.css';
   const { data, children } = $props();
