@@ -5,7 +5,7 @@
   import { formatDate } from '$lib/utils/date-format';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
-  import { Person } from '$lib/server/db/schema/entities/people';
+  import type { Person } from '$lib/server/db/schema/entities/people';
   import Picker from '$lib/components/Forms/Picker.svelte';
 
   type FetchedPersonT = typeof Person.$inferSelect;
