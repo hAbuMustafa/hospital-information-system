@@ -2,13 +2,70 @@ import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import {
   People_contact_information,
+  people_view,
   Person,
   Person_IdDoc,
 } from '../schema/entities/people';
+import type { newPersonT } from './types';
+
+export async function createPerson(person: newPersonT) {
+  try {
+    const resultingPerson = await db.transaction(async (tx) => {
+      if (person.id_doc_type !== 6) {
+        const [foundPerson] = await tx
+          .select()
+          .from(people_view)
+          .where(eq(people_view.id_doc_number, person.id_doc_num));
+
+        if (foundPerson) {
+          return foundPerson;
+        }
+      }
+
+      const [newPerson] = await tx.insert(Person).values(person).returning();
+
+      if (person.id_doc_num) {
+        const [newIdDoc] = await tx
+          .insert(Person_IdDoc)
+          .values({
+            person_id: newPerson.id,
+            document_type: person.id_doc_type,
+            document_number: person.id_doc_num,
+          })
+          .returning();
+      }
+
+      const [insertPerson] = await tx
+        .select()
+        .from(people_view)
+        .where(eq(people_view.person_id, newPerson.id));
+
+      return insertPerson;
+    });
+
+    return {
+      success: true,
+      data: resultingPerson,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
+export async function getPerson(personId: number) {
+  const [foundPerson] = await db
+    .select()
+    .from(people_view)
+    .where(eq(people_view.person_id, personId));
+
+  return foundPerson;
+}
 
 export async function updatePerson(
   personId: number,
-  values: Omit<Partial<typeof Person.$inferSelect>, 'id'>
+  values: Omit<Partial<typeof Person.$inferInsert>, 'id'>
 ) {
   try {
     const [person] = await db

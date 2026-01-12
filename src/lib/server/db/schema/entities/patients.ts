@@ -148,7 +148,6 @@ export const Admission_Order = Patient.table('Admission_Order', {
     .notNull(),
   notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  referred_from: varchar({ length: 100 }).default('reception'),
   admitting_phys: smallint()
     .references(() => Staff.id)
     .notNull(),
@@ -159,12 +158,13 @@ export const Admission_Order = Patient.table('Admission_Order', {
 });
 
 export const Admission = Patient.table('Admission', {
-  id: integer().primaryKey(),
+  id: serial().primaryKey(),
   patient_id: integer()
     .references(() => InPatient.id)
     .notNull(),
   admission_order_id: integer().references(() => Admission_Order.id),
   admission_notes: text(),
+  referred_from: varchar({ length: 100 }).default('reception'),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
   registrar: smallint().references(() => Staff.id),
 });

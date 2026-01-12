@@ -1,15 +1,24 @@
-export type newPatientT = {
-  id: string;
-  name: string;
+export type newPersonT = {
+  first_name: string;
+  father_name: string;
+  grandfather_name: string;
+  family_name?: string;
   id_doc_type: number;
   id_doc_num: string;
+  gender: boolean;
+  birthdate: Date;
+};
+
+export type newPatientT = {
+  file_number: number;
+  person_id: number;
   admission_ward: number;
   admission_date: Date;
   admission_notes: string;
   diagnosis: string[];
   security_status: boolean;
   referred_from: string;
-  person_id?: number;
+  health_insurance: boolean;
 };
 
 export type NewUserDataT = {

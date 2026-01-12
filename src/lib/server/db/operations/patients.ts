@@ -5,46 +5,52 @@ import {
   Diagnosis,
   Patient_diagnosis,
   InPatient_file,
+  Admission,
+  Insurance_Doc,
 } from '$lib/server/db/schema/entities/patients';
 import { Person } from '$lib/server/db/schema/entities/people';
 import { eq, max } from 'drizzle-orm';
 import type { newPatientT } from './types';
+import { createDiagnosis } from './menus';
 
-export async function createPatient(patient: newPatientT) {
+export async function createAdmission(patient: newPatientT) {
   try {
     const new_patient = await db.transaction(async (tx) => {
-      let foundPerson: typeof Person.$inferSelect | null = null;
-
-      if (!patient.person_id) {
-        if (patient.id_doc_num) {
-          [foundPerson] = await tx
-            .select()
-            .from(Person)
-            .where(eq(Person.id_doc_num, patient.id_doc_num));
-        }
-
-        if (!foundPerson) {
-          const { id: droppedPatientId, ...restOfPatientData } = patient;
-          [foundPerson] = await tx.insert(Person).values(restOfPatientData).returning();
-        }
-
-        patient.person_id = foundPerson.id;
-      }
-
       const [newPatient] = await tx
         .insert(InPatient)
-        .values({ ...patient, recent_ward: patient.admission_ward } as App.Require<
-          newPatientT,
-          'person_id'
-        >)
+        .values({
+          person_id: patient.person_id,
+          recent_ward: patient.admission_ward,
+          security_status: patient.security_status,
+        })
         .returning();
+
+      await tx.insert(InPatient_file).values({
+        number: patient.file_number,
+        patient_id: newPatient.id,
+        year: patient.admission_date.getFullYear() - 2000,
+      });
+
+      await tx.insert(Admission).values({
+        patient_id: newPatient.id,
+        admission_notes: patient.admission_notes,
+        timestamp: patient.admission_date,
+        referred_from: patient.referred_from,
+      });
 
       await tx.insert(Transfer).values({
         patient_id: newPatient.id,
-        ward: patient.admission_ward,
+        to_ward_id: patient.admission_ward,
         timestamp: patient.admission_date,
         notes: 'admission',
       });
+
+      if (patient.health_insurance) {
+        await tx.insert(Insurance_Doc).values({
+          patient_id: newPatient.id,
+          insurance_entity: 'الهيئة العامة للتأمين الصحي',
+        });
+      }
 
       for (let i = 0; i < patient.diagnosis.length; i++) {
         const currentDiagnosisText = patient.diagnosis[i];
@@ -59,17 +65,16 @@ export async function createPatient(patient: newPatientT) {
         if (foundDiagnosis) {
           diagnosis = foundDiagnosis;
         } else {
-          const newRow = await createDiagnosis(currentDiagnosisText, tx);
+          const newDiagnosis = await createDiagnosis(currentDiagnosisText, tx);
 
-          if (newRow.success) {
-            diagnosis = newRow.data;
+          if (newDiagnosis.success) {
+            diagnosis = newDiagnosis.data;
           } else {
             console.error(
               'failed creating diagnosis',
               currentDiagnosisText,
               'for patient',
-              newPatient.id,
-              foundPerson?.name
+              newPatient.id
             );
             continue;
           }

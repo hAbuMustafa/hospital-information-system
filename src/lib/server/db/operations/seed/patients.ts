@@ -7,6 +7,7 @@ import {
   Discharge,
   Insurance_Doc,
   InPatient_file,
+  Admission,
 } from '$lib/server/db/schema/entities/patients';
 import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
@@ -78,6 +79,12 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
           recent_ward: admission.admission_ward,
         })
         .returning();
+
+      await tx.insert(Admission).values({
+        patient_id: newPatient.id,
+        admission_notes: admission.admission_notes,
+        timestamp: admission.admission_date,
+      });
 
       await tx.insert(Transfer).values({
         patient_id: newPatient.id,

@@ -3,18 +3,39 @@ import { Diagnosis, inPatient_view } from '$lib/server/db/schema/entities/patien
 import { and, eq, isNull } from 'drizzle-orm';
 import { nationalIdPattern } from '$lib/stores/patterns';
 
-export async function isAdmitted(idDocType: number, idDocNum: string) {
-  const [foundAdmitted] = await db
-    .select()
-    .from(inPatient_view)
-    .where(
-      and(
-        eq(inPatient_view.id_doc_type, idDocType),
-        eq(inPatient_view.id_doc_number, idDocNum),
-        isNull(inPatient_view.discharge_time)
-      )
-    );
-  return foundAdmitted;
+export async function isAdmitted(
+  idDocType: number,
+  idDocNum: string
+): Promise<typeof inPatient_view.$inferSelect>;
+export async function isAdmitted(
+  person_id: number
+): Promise<typeof inPatient_view.$inferSelect>;
+
+export async function isAdmitted(num: number, idDocNum?: string) {
+  if (idDocNum) {
+    const [foundAdmitted] = await db
+      .select()
+      .from(inPatient_view)
+      .where(
+        and(
+          eq(inPatient_view.id_doc_type, num /* an id_doc_number */),
+          eq(inPatient_view.id_doc_number, idDocNum),
+          isNull(inPatient_view.discharge_time)
+        )
+      );
+    return foundAdmitted;
+  } else {
+    const [foundAdmitted] = await db
+      .select()
+      .from(inPatient_view)
+      .where(
+        and(
+          eq(inPatient_view.person_id, num /* a person id */),
+          isNull(inPatient_view.discharge_time)
+        )
+      );
+    return foundAdmitted;
+  }
 }
 
 export async function getDiagnoses() {

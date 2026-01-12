@@ -1,8 +1,5 @@
 <script lang="ts">
-  import ListMaker from '$lib/components/Forms/ListMaker.svelte';
-
   import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
-  import { formatDate } from '$lib/utils/date-format';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
   import type { people_view } from '$lib/server/db/schema/entities/people';
@@ -12,8 +9,11 @@
 
   const { data, form } = $props();
 
-  let patientFileNumber = $state(form?.patientFileNumber ?? '');
-  let patientName = $state(form?.patientName ?? '');
+  let personName = $state('');
+  let firstName = $state(form?.firstName ?? '');
+  let fatherName = $state(form?.fatherName ?? '');
+  let grandfatherName = $state(form?.grandfatherName ?? '');
+  let familyName = $state(form?.familyName ?? '');
   let idDocType = $state(form?.idDocType ? Number(form.idDocType) : 1);
   let idDocNum = $state(form?.idDocNum ?? '');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
@@ -34,23 +34,12 @@
     }
     return form?.birthdate;
   });
-  let healthInsurance = $state(form?.heathInsurance === true);
 
-  let returnedDiagnosesOnFormError = form?.diagnosis ? form.diagnosis : null;
-  let diagnoses = $state<string[]>(returnedDiagnosesOnFormError ?? []);
-  let diagnosisText = $state('');
+  let selectedPersonId = $state(0);
 
-  let admissionWard = $state(form?.admissionWard ? Number(form.admissionWard) : null);
+  let hasAName = $derived(!firstName && !fatherName && !grandfatherName && !familyName);
 
-  let admissionDate = $state(
-    form?.admissionDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
-  );
-
-  let hasSelectedPerson = $state(!!form?.personId || false);
-  let selectedPersonId = $state(form?.personId ? Number(form?.personId) : 0);
-
-  let referredFrom = $state('reception');
-  let securityStatus = $state(0);
+  let hasSelectedPerson = $state(false);
 
   function selectPerson(person: FetchedPersonT) {
     hasSelectedPerson = true;
@@ -61,6 +50,8 @@
 
     idDocNum = person.id_doc_number ?? '';
 
+    birthdate = person.birthdate?.toString();
+
     if (person.gender !== null) {
       gender = person.gender;
     }
@@ -68,54 +59,86 @@
 </script>
 
 <form method="POST" class="flex-form">
-  <div class="input-pair">
-    <label for="patient_file_number">رقم الملف</label>
-    <div class="patient_file_number_input">
-      <!-- svelte-ignore a11y_autofocus -->
-      <input
-        type="number"
-        name="patient_file_number"
-        id="patient_file_number"
-        placeholder={String(data.nextFileNumber)}
+  {#if hasAName}
+    <div class="input-pair">
+      <label for="name" class={hasSelectedPerson ? 'locked' : ''}>بحث عن مريض </label>
+      <ISelect
+        endpoint="/api/people/"
+        type="text"
+        id="name"
+        bind:done={hasSelectedPerson}
+        bind:value={personName}
+        pattern={arabicTriadicNamesPattern.source}
+        onclear={() => {
+          selectedPersonId = 0;
+          firstName = '';
+          fatherName = '';
+          grandfatherName = '';
+          familyName = '';
+        }}
+        readonly={hasSelectedPerson}
+        autocomplete="off"
         autofocus
-        bind:value={patientFileNumber}
+      >
+        {#snippet optionSnippet(person: FetchedPersonT)}
+          <PersonButton {person} onclick={() => selectPerson(person)} />
+        {/snippet}
+      </ISelect>
+    </div>
+  {/if}
+
+  <div class="input-pair">
+    <label for="first_name">اسم المريض</label>
+    <div class="input-group">
+      <input
+        type="text"
+        name="first_name"
+        id="first_name"
+        placeholder="الاسم الأول"
+        bind:value={firstName}
         required
       />
-      {#if !patientFileNumber}
-        <button
-          type="button"
-          onclick={() => {
-            patientFileNumber = data.nextFileNumber;
-          }}
-        >
-          {String(data.nextFileNumber)}
-        </button>
-      {/if}
+      <input
+        type="text"
+        name="father_name"
+        id="father_name"
+        placeholder="اسم الأب"
+        bind:value={fatherName}
+        required
+      />
+      <input
+        type="text"
+        name="grandfather_name"
+        id="grandfather_name"
+        placeholder="اسم الجد"
+        bind:value={grandfatherName}
+        required
+      />
+      <input
+        type="text"
+        name="family_name"
+        id="family_name"
+        placeholder="اسم العائلة"
+        bind:value={familyName}
+        required
+      />
+
+      <button
+        type="button"
+        disabled={hasAName}
+        onclick={() => {
+          firstName = '';
+          fatherName = '';
+          grandfatherName = '';
+          familyName = '';
+        }}
+      >
+        مسح
+      </button>
     </div>
   </div>
 
-  <div class="input-pair">
-    <label for="name" class={hasSelectedPerson ? 'locked' : ''}> اسم المريض </label>
-    <ISelect
-      endpoint="/api/people/"
-      name="name"
-      type="text"
-      id="name"
-      bind:done={hasSelectedPerson}
-      bind:value={patientName}
-      pattern={arabicTriadicNamesPattern.source}
-      readonly={hasSelectedPerson}
-      onclear={() => {
-        selectedPersonId = 0;
-      }}
-      autocomplete="off"
-      required
-    >
-      {#snippet optionSnippet(person: FetchedPersonT)}
-        <PersonButton {person} onclick={() => selectPerson(person)} />
-      {/snippet}
-    </ISelect>
-  </div>
+  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
   <Picker
     label="نوع الهوية"
@@ -162,82 +185,13 @@
     />
   </div>
 
-  <hr />
-
-  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
-
-  <!-- todo: use ISelect to insert diagnoses -->
-  <ListMaker
-    name="diagnosis"
-    label="التشخيص"
-    bind:value={diagnosisText}
-    bind:list={diagnoses}
-    datalist={data.diagnoses_list}
-  />
-
-  <Picker
-    name="admission_ward"
-    label="قسم الدخول"
-    options={data.wards_list}
-    bind:value={admissionWard}
-    dividerList={data.floors_list}
-    dividerKey="floor"
-  />
-
-  <Picker
-    name="health_insurance"
-    label="التأمين الصحي"
-    options={[
-      { id: true, name: 'مؤمن عليه' },
-      { id: false, name: 'غير مؤمن عليه' },
-    ]}
-    bind:value={healthInsurance}
-  />
-
-  <Picker
-    name="referred_from"
-    label="محول من"
-    options={[{ id: 'reception', name: 'الاستقبال' }]}
-    bind:value={referredFrom}
-    other
-  />
-
-  <Picker
-    name="security_status"
-    label="الوضع الأمني"
-    options={[
-      { id: false, name: 'حر' },
-      { id: true, name: 'مسجون' },
-    ]}
-    bind:value={securityStatus}
-  />
-
-  <div class="input-pair">
-    <label for="admission_date">وقت وتاريخ الدخول</label>
-    <input
-      type="datetime-local"
-      name="admission_date"
-      id="admission_date"
-      bind:value={admissionDate}
-      required
-    />
-  </div>
-
-  <div class="input-pair">
-    <label for="admission_notes">ملاحظات</label>
-    <textarea name="admission_notes" id="admission_notes" required={idDocType === 6}
-    ></textarea>
-  </div>
-
-  <input type="submit" value="تسجيل" />
+  <input type="submit" value="تسجيل البيانات الشخصية" />
 </form>
 
 <style>
-  form {
-    div.patient_file_number_input {
-      display: grid;
-      grid-template-columns: 1fr max-content;
-      gap: 0.25rem;
-    }
+  .input-group {
+    display: grid;
+    grid-template-columns: repeat(4, 3fr) 1fr;
+    gap: 0.5rem;
   }
 </style>
