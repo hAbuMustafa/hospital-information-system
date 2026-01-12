@@ -30,6 +30,10 @@ export const Person = People.table('Person', {
 export const people_view = People.view('people_view', {
   person_id: integer().notNull(),
   full_name: text().notNull(),
+  first_name: varchar({ length: 45 }).notNull(),
+  father_name: varchar({ length: 45 }).notNull(),
+  grandfather_name: varchar({ length: 45 }).notNull(),
+  family_name: varchar({ length: 45 }),
   id_doc_type_id: smallint().references(() => IdDoc_type.id),
   id_doc_type: varchar({ length: 16 }),
   id_doc_number: varchar({ length: 45 }),
@@ -45,6 +49,10 @@ export const people_view = People.view('people_view', {
 SELECT 
 	pr.id as person_id,
 	CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) as "full_name",
+  pr.first_name,
+  pr.father_name,
+  pr.grandfather_name,
+  pr.family_name,
   doctype.id as id_doc_type_id,
 	doctype.name as id_doc_type,
 	doc.document_number as id_doc_number,

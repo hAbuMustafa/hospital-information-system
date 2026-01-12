@@ -92,7 +92,7 @@ export const actions = {
     if (foundAdmitted) {
       return failWithMessages([
         {
-          message: `المريض "${foundAdmitted.patient_name}" محجوز بالفعل في "${foundAdmitted.ward_name}"`,
+          message: `المريض "${foundAdmitted.full_name}" محجوز بالفعل في "${foundAdmitted.ward_name}"`,
           type: 'error',
         },
       ]);

@@ -2,10 +2,10 @@
   import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
-  import type { people_view } from '$lib/server/db/schema/entities/people';
+  import type { inPatient_view } from '$server/db/schema/entities/patients.js';
   import Picker from '$lib/components/Forms/Picker.svelte';
 
-  type FetchedPersonT = typeof people_view.$inferSelect;
+  type FetchedPersonT = typeof inPatient_view.$inferSelect;
 
   const { data, form } = $props();
 
@@ -46,7 +46,12 @@
 
     selectedPersonId = person.person_id;
 
-    idDocType = person.id_doc_type_id ?? 1;
+    firstName = person.first_name;
+    fatherName = person.father_name;
+    grandfatherName = person.grandfather_name;
+    if (person.family_name) familyName = person.family_name;
+
+    idDocType = person.id_doc_type ?? 1;
 
     idDocNum = person.id_doc_number ?? '';
 
@@ -96,6 +101,7 @@
         id="first_name"
         placeholder="الاسم الأول"
         bind:value={firstName}
+        readonly={hasSelectedPerson}
         required
       />
       <input
@@ -104,6 +110,7 @@
         id="father_name"
         placeholder="اسم الأب"
         bind:value={fatherName}
+        readonly={hasSelectedPerson}
         required
       />
       <input
@@ -112,6 +119,7 @@
         id="grandfather_name"
         placeholder="اسم الجد"
         bind:value={grandfatherName}
+        readonly={hasSelectedPerson}
         required
       />
       <input
@@ -120,6 +128,7 @@
         id="family_name"
         placeholder="اسم العائلة"
         bind:value={familyName}
+        readonly={hasSelectedPerson}
         required
       />
 

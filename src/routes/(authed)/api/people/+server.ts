@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db/';
-import { People } from '$lib/server/db/schema/entities';
+import { inPatient_view } from '$lib/server/db/schema/entities/patients.js';
 import { regexp } from '$lib/utils/drizzle';
 import { regexifiedPersonName } from '$lib/utils/querying';
 import { json } from '@sveltejs/kit';
@@ -14,15 +14,19 @@ export async function GET({ url }) {
 
   const isIdNumber = /\d/g.test(query);
 
-  const matchedPeople = await db
-    .select()
-    .from(People)
-    .where(
-      isIdNumber
-        ? like(People.id_doc_num, `%${query}%`)
-        : regexp('name', regexifiedPersonName(query))
-    );
+  try {
+    const matchedPeople = await db
+      .selectDistinctOn([inPatient_view.person_id])
+      .from(inPatient_view)
+      .where(
+        isIdNumber
+          ? like(inPatient_view.id_doc_number, `%${query}%`)
+          : regexp('full_name', regexifiedPersonName(query))
+      );
 
-  // return people data
-  return json(matchedPeople);
+    // return people data
+    return json(matchedPeople);
+  } catch (error) {
+    console.error(error);
+  }
 }
