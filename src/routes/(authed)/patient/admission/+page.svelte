@@ -132,8 +132,8 @@
     name="gender"
     label="النوع"
     options={[
-      { id: 1, name: 'ذكر' },
-      { id: 0, name: 'أنثى' },
+      { id: true, name: 'ذكر' },
+      { id: false, name: 'أنثى' },
     ]}
     bind:value={gender}
     locked={hasSelectedPerson}
