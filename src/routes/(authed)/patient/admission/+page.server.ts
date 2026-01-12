@@ -10,7 +10,7 @@ export async function load() {
 
   return {
     title: 'تسجيل دخول مريض',
-    id_doc_type_list: id_doc_type_list,
+    id_doc_type_list,
     wards_list: ward_list,
     floors_list: floors,
     diagnoses_list,
