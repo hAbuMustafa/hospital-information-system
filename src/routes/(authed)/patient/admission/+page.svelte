@@ -34,7 +34,7 @@
     }
     return form?.birthdate;
   });
-  let healthInsurance = $state(form?.heathInsurance ? Number(form.heathInsurance) : 0);
+  let healthInsurance = $state(form?.heathInsurance === true);
 
   let returnedDiagnosesOnFormError = form?.diagnosis ? form.diagnosis : null;
   let diagnoses = $state<string[]>(returnedDiagnosesOnFormError ?? []);
@@ -177,8 +177,8 @@
     name="health_insurance"
     label="التأمين الصحي"
     options={[
-      { id: 1, name: 'مؤمن عليه' },
-      { id: 0, name: 'غير مؤمن عليه' },
+      { id: true, name: 'مؤمن عليه' },
+      { id: false, name: 'غير مؤمن عليه' },
     ]}
     bind:value={healthInsurance}
   />
@@ -195,8 +195,8 @@
     name="security_status"
     label="الوضع الأمني"
     options={[
-      { id: 0, name: 'حر' },
-      { id: 1, name: 'مسجون' },
+      { id: false, name: 'حر' },
+      { id: true, name: 'مسجون' },
     ]}
     bind:value={securityStatus}
   />
