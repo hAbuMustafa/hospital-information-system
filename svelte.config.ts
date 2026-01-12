@@ -8,6 +8,9 @@ const config: Config = {
 
   kit: {
     adapter: adapter(),
+    alias: {
+      $server: './src/lib/server',
+    },
   },
 };
 
