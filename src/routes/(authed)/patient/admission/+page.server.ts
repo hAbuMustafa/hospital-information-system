@@ -1,12 +1,16 @@
 import { floors, id_doc_type_list, ward_list } from '$lib/server/db/menus';
 import { getDiagnoses, isAdmitted } from '$lib/server/db/operations/utils';
-import { createPatient } from '$lib/server/db/operations/patients';
+import {
+  createPatient,
+  getLastPatientFileNumber,
+} from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
 import { DrizzleQueryError } from 'drizzle-orm';
 
 export async function load() {
   const diagnoses_list = await getDiagnoses();
+  const nextFileNumber = (await getLastPatientFileNumber(new Date().getFullYear())) + 1;
 
   return {
     title: 'تسجيل دخول مريض',
@@ -14,6 +18,7 @@ export async function load() {
     wards_list: ward_list,
     floors_list: floors,
     diagnoses_list,
+    nextFileNumber,
   };
 }
 

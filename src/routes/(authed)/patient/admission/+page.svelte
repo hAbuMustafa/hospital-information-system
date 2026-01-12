@@ -76,10 +76,21 @@
         type="number"
         name="patient_file_number"
         id="patient_file_number"
+        placeholder={String(data.nextFileNumber)}
         autofocus
         bind:value={patientFileNumber}
         required
       />
+      {#if !patientFileNumber}
+        <button
+          type="button"
+          onclick={() => {
+            patientFileNumber = data.nextFileNumber;
+          }}
+        >
+          {String(data.nextFileNumber)}
+        </button>
+      {/if}
     </div>
   </div>
 
@@ -226,6 +237,7 @@
     div.patient_file_number_input {
       display: grid;
       grid-template-columns: 1fr max-content;
+      gap: 0.25rem;
     }
   }
 </style>
