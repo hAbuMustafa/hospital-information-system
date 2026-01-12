@@ -5,10 +5,10 @@
   import { formatDate } from '$lib/utils/date-format';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
-  import type { Person } from '$lib/server/db/schema/entities/people';
+  import type { people_view } from '$lib/server/db/schema/entities/people';
   import Picker from '$lib/components/Forms/Picker.svelte';
 
-  type FetchedPersonT = typeof Person.$inferSelect;
+  type FetchedPersonT = typeof people_view.$inferSelect;
 
   const { data, form } = $props();
 
@@ -19,9 +19,9 @@
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
-      return Number(idDocNum.slice(12, 13)) % 2 ? 1 : 0;
+      return Number(idDocNum.slice(12, 13)) % 2 === 1;
     }
-    return form?.gender ? Number(form.gender) : null;
+    return form?.gender;
   });
   let birthdate = $derived.by(() => {
     if (isNationalId) {
@@ -55,22 +55,14 @@
   function selectPerson(person: FetchedPersonT) {
     hasSelectedPerson = true;
 
-    patientName = [
-      person.first_name,
-      person.father_name,
-      person.grandfather_name,
-      person.family_name,
-    ].join(' ');
+    selectedPersonId = person.person_id;
 
-    selectedPersonId = person.id;
+    idDocType = person.id_doc_type_id ?? 1;
 
-    // fix: uncomment these when a People VIEW is used for the lookup
-    // idDocType = person.id_doc_type ?? 1;
+    idDocNum = person.id_doc_number ?? '';
 
-    // idDocNum = person.id_doc_num ?? '';
-
-    if (person.gender) {
-      gender = Number(person.gender);
+    if (person.gender !== null) {
+      gender = person.gender;
     }
   }
 </script>
