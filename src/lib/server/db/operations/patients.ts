@@ -157,7 +157,7 @@ export async function getLastPatientFileNumber(year: number) {
   const [num] = await db
     .select({ number: max(InPatient_file.number) })
     .from(InPatient_file)
-    .where(eq(InPatient_file.year, year));
+    .where(eq(InPatient_file.year, year - 2000));
 
   return num?.number || 0;
 }
