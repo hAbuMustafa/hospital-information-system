@@ -7,6 +7,7 @@ import {
   InPatient_file,
   Admission,
   Insurance_Doc,
+  transfers_view,
 } from '$lib/server/db/schema/entities/patients';
 import { Person } from '$lib/server/db/schema/entities/people';
 import { eq, max } from 'drizzle-orm';
@@ -108,10 +109,15 @@ export async function transferPatient(transfer: typeof Transfer.$inferInsert) {
 
       await tx
         .update(InPatient)
-        .set({ recent_ward: transfer.ward })
+        .set({ recent_ward: transfer.to_ward_id })
         .where(eq(InPatient.id, transfer.patient_id));
 
-      return transferInsert;
+      const [afterInsert] = await tx
+        .select()
+        .from(transfers_view)
+        .where(eq(transfers_view.id, transferInsert.id));
+
+      return afterInsert;
     });
 
     return {

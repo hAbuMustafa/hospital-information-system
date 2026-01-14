@@ -45,7 +45,7 @@ export const actions = {
   default: async ({ request }) => {
     const formData = await request.formData();
 
-    const patientId = formData.get('patient_id') as unknown as string;
+    let patientId = formData.get('patient_id') as unknown as number;
     let selectedPatientRecentWardId = formData.get(
       'patient_recent_ward'
     ) as unknown as number;
@@ -72,6 +72,7 @@ export const actions = {
     if (failMessages.length) return failWithMessages(failMessages);
 
     try {
+      patientId = Number(patientId);
       transferTime = new Date(transferTime);
       transferTo = Number(transferTo);
       selectedPatientRecentWardId = Number(selectedPatientRecentWardId);
@@ -81,7 +82,8 @@ export const actions = {
 
     const result = await transferPatient({
       patient_id: patientId,
-      ward: transferTo,
+      from_ward_id: selectedPatientRecentWardId,
+      to_ward_id: transferTo,
       timestamp: transferTime,
       notes: transferNotes,
     });
@@ -95,9 +97,7 @@ export const actions = {
 
     return {
       success: true,
-      message: `تم تحويل المريض "${patientName}" من "${
-        ward_list.find((w) => w.id === selectedPatientRecentWardId)?.name
-      }" إلى "${ward_list.find((w) => w.id === transferTo)?.name}"`,
+      message: `تم تحويل المريض "${patientName}" من "${result.data.from_ward}" إلى "${result.data.to_ward}"`,
     };
   },
 };
