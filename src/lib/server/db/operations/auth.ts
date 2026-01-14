@@ -44,6 +44,11 @@ export async function createTokens(
   userData: typeof users_view.$inferSelect,
   sessionMaxAge: Date
 ) {
+  if (!userData) {
+    console.error('User logged out');
+    return;
+  }
+
   const tokenId = generateTokenId();
 
   const refreshPayload: RefreshTokenPayload = {
