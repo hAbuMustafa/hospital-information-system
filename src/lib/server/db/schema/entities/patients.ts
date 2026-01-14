@@ -70,6 +70,9 @@ export const inPatient_view = Patient.view('inPatient_view', {
   security_status: boolean(),
   gender: boolean(),
   birthdate: date(),
+  admission_time: timestamp(),
+  admission_notes: text(),
+  admitted_from: varchar({ length: 100 }),
   discharge_order_id: integer(),
   discharge_time: timestamp(),
   discharge_reason: varchar({ length: 15 }),
@@ -95,6 +98,9 @@ w.tags AS ward_tags,
 p.security_status,
 pr.gender,
 pr.birthdate,
+adm.timestamp as admission_time,
+adm.admission_notes,
+adm.referred_from as admitted_from,
 d.discharge_order_id,
 d."timestamp" AS discharge_time,
 r.name AS discharge_reason,
@@ -107,6 +113,7 @@ FROM "Patient"."InPatient" p
  LEFT JOIN "Hospital"."Ward" w ON p.recent_ward = w.id
  LEFT JOIN "Patient"."Discharge" d ON d.patient_id = p.id
  LEFT JOIN "Patient"."Discharge_Reason" r ON d.discharge_reason = r.id
+ LEFT JOIN "Patient"."Admission" adm ON p.id = adm.patient_id
 ORDER BY p.id
 `
 );

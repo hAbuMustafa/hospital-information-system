@@ -7,24 +7,31 @@ export async function load({ fetch, url }) {
     title: 'تحويل مريض إلى قسم',
     wards: ward_list,
   };
-  const patientId = url.searchParams.get('patientId');
+  const patientFileId = url.searchParams.get('patient_file_id');
+  const patientId = url.searchParams.get('patient_id');
 
-  if (!patientId) return pageProps;
+  if (!patientFileId && !patientId) return pageProps;
 
-  if (!/\d{2}\/\d+/.test(patientId)) {
-    return { ...pageProps, message: 'رقم القيد غير صحيح' };
+  if (patientFileId && !/\d{2}\/\d+/.test(patientFileId)) {
+    return { ...pageProps, message: 'رقم ملف المريض غير صحيح' };
   }
 
-  const patientData = await fetch(`/api/patients/patient?id=${patientId}`).then((r) => {
-    if (r.ok) {
-      return r.json();
+  if (patientId && !/\d{2}\/\d+/.test(patientId)) {
+    return { ...pageProps, message: 'رقم المريض غير صحيح' };
+  }
+
+  const patientData = await fetch(`/api/patients/patient?id=${patientFileId}`).then(
+    (r) => {
+      if (r.ok) {
+        return r.json();
+      }
     }
-  });
+  );
 
   if (!patientData)
     return {
       ...pageProps,
-      title: `لا يوجد مريض بالرقم ${patientId}`,
+      message: `لا يوجد مريض بالرقم ${patientFileId || patientId}`,
     };
 
   return {

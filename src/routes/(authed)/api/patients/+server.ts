@@ -1,9 +1,9 @@
 import { db } from '$lib/server/db';
-import { People, Patients, Wards } from '$lib/server/db/schema/entities';
+import { inPatient_view } from '$lib/server/db/schema/entities/patients';
 import { regexp } from '$lib/utils/drizzle';
 import { regexifiedPersonName } from '$lib/utils/querying';
 import { json } from '@sveltejs/kit';
-import { and, desc, eq, isNotNull, isNull, like, or } from 'drizzle-orm';
+import { and, desc, isNotNull, isNull, like, or } from 'drizzle-orm';
 
 export async function GET({ url }) {
   let query = url.searchParams.get('q') || '';
@@ -17,27 +17,22 @@ export async function GET({ url }) {
   const isNumber = /\d/g.test(query);
 
   const matchedPeople = await db
-    .select({
-      id: Patients.id,
-      name: People.name,
-      id_doc_num: People.id_doc_num,
-      admission_date: Patients.admission_date,
-      discharge_date: Patients.discharge_date,
-      recent_ward_id: Patients.recent_ward,
-      recent_ward: Wards.name,
-    })
-    .from(Patients)
-    .leftJoin(People, eq(Patients.person_id, People.id))
-    .leftJoin(Wards, eq(Patients.recent_ward, Wards.id))
+    .select()
+    .from(inPatient_view)
     .where(
       and(
-        currentResidentsOnly ? isNull(Patients.discharge_date) : isNotNull(Patients.id),
+        currentResidentsOnly
+          ? isNull(inPatient_view.discharge_time)
+          : isNotNull(inPatient_view.person_id),
         isNumber
-          ? or(like(Patients.id, `%${query}%`), like(People.id_doc_num, `%${query}%`))
-          : regexp(`"People"."name"`, regexifiedPersonName(query))
+          ? or(
+              like(inPatient_view.patient_file_number, `%${query}%`),
+              like(inPatient_view.id_doc_number, `%${query}%`)
+            )
+          : regexp(`full_name`, regexifiedPersonName(query))
       )
     )
-    .orderBy(desc(Patients.admission_date));
+    .orderBy(desc(inPatient_view.admission_time));
 
   return json(matchedPeople);
 }
