@@ -253,3 +253,35 @@ export const Transfer = Patient.table('Transfer', {
   notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });
+
+export const transfers_view = Patient.view('transfers_view', {
+  id: integer(),
+  patient_id: integer()
+    .notNull()
+    .references(() => InPatient.id),
+  from_ward_id: smallint().references(() => Ward.id),
+  from_ward: varchar({ length: 10 }),
+  to_ward_id: smallint()
+    .notNull()
+    .references(() => Ward.id),
+  to_ward: varchar({ length: 10 }),
+  transfer_order_id: integer().references(() => Transfer_Order.id),
+  notes: text(),
+  timestamp: timestamp({ mode: 'date' }).notNull(),
+}).as(
+  sql`
+    SELECT
+      t.id,
+      patient_id,
+      t.from_ward_id,
+      wf.name AS from_ward,
+      t.to_ward_id,
+      wt.name AS to_ward,
+      t.transfer_order_id,
+      t.notes,
+      t.timestamp
+    FROM "Patient"."Transfer" t
+    LEFT JOIN "Hospital"."Ward" wf ON t.from_ward_id = wf.id
+    LEFT JOIN "Hospital"."Ward" wt ON t.to_ward_id = wt.id
+  `
+);
