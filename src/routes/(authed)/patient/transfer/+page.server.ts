@@ -1,6 +1,7 @@
 import { ward_list } from '$lib/server/db/menus';
 import { transferPatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
+import type { inPatient_view } from '$server/db/schema/entities/patients.js';
 
 export async function load({ fetch, url }) {
   const pageProps = {
@@ -20,13 +21,13 @@ export async function load({ fetch, url }) {
     return { ...pageProps, message: 'رقم المريض غير صحيح' };
   }
 
-  const patientData = await fetch(`/api/patients/patient?id=${patientFileId}`).then(
-    (r) => {
-      if (r.ok) {
-        return r.json();
-      }
+  const patientData: typeof inPatient_view.$inferSelect = await fetch(
+    `/api/patients/patient?id=${patientFileId}`
+  ).then((r) => {
+    if (r.ok) {
+      return r.json();
     }
-  );
+  });
 
   if (!patientData)
     return {
