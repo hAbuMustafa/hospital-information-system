@@ -1,8 +1,9 @@
 <script lang="ts">
   import { formatDate } from '$lib/utils/date-format';
+  import type { inPatient_view } from '$server/db/schema/entities/patients';
 
   type PropsT = {
-    patient: any;
+    patient: typeof inPatient_view.$inferSelect;
     onclick?: Function;
     disableIfDischarged?: boolean;
   };
@@ -17,19 +18,33 @@
 
     onclick?.();
   }}
-  class:discharged={!!patient.discharge_date}
-  disabled={disableIfDischarged && !!patient.discharge_date}
+  class:discharged={!!patient.discharge_time}
+  disabled={disableIfDischarged && !!patient.discharge_time}
 >
-  <span>{patient.id}</span>
-  <strong>{patient.name}</strong>
-  <span>{patient.id_doc_num}</span>
-  <span class="residency_data">
-    <span>الدخول: {formatDate(patient.admission_date, 'YYYY/MM/DD')}</span>
-    {#if patient.discharge_date}
-      <span>الخروج: {formatDate(patient.discharge_date, 'YYYY/MM/DD')}</span>
+  <strong>{patient.full_name}</strong>
+  <dl>
+    <dt>الرقم الموحد</dt>
+    <dd>{patient.person_id}</dd>
+
+    <dt>رقم الملف</dt>
+    <dd>{patient.patient_file_number}</dd>
+
+    {#if patient.id_doc_number}
+      <dt>{patient.id_doc_type}</dt>
+      <dd>{patient.id_doc_number}</dd>
     {/if}
-  </span>
-  <span>{patient.recent_ward}</span>
+
+    <dt>الدخول</dt>
+    <dd>{formatDate(patient.admission_time, 'YYYY/MM/DD')}</dd>
+
+    {#if patient.discharge_time}
+      <dt>الخروج</dt>
+      <dd>{formatDate(patient.discharge_time, 'YYYY/MM/DD')}</dd>
+    {/if}
+
+    <dt>آخر قسم</dt>
+    <dd>{patient.ward_name}</dd>
+  </dl>
 </button>
 
 <style>
@@ -43,8 +58,16 @@
     }
   }
 
-  .residency_data {
-    display: flex;
-    gap: 0.5rem;
+  dl {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+
+    dt {
+      justify-self: end;
+    }
+
+    dd {
+      justify-self: start;
+    }
   }
 </style>
