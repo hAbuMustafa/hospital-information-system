@@ -70,7 +70,7 @@ export const inPatient_view = Patient.view('inPatient_view', {
   security_status: boolean(),
   gender: boolean(),
   birthdate: date(),
-  admission_time: timestamp(),
+  admission_time: timestamp().notNull(),
   admission_notes: text(),
   admitted_from: varchar({ length: 100 }),
   discharge_order_id: integer(),
