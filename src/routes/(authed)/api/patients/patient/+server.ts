@@ -31,7 +31,9 @@ export async function GET({ url }) {
   if (patient_id && !/^\d+$/.test(patient_id))
     return new Response('Bad Request', { status: 401 });
 
-  const patient_data = await getPatientQuery((patient_id || patient_file_id)!).execute();
+  const [patient_data] = await getPatientQuery(
+    (patient_id || patient_file_id)!
+  ).execute();
 
   if (!patient_data) return new Response('Bad Request', { status: 401 });
 
