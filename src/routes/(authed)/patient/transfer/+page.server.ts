@@ -13,11 +13,11 @@ export async function load({ fetch, url }) {
 
   if (!patientFileId && !patientId) return pageProps;
 
-  if (patientFileId && !/\d{2}\/\d+/.test(patientFileId)) {
+  if (patientFileId && !/^\d{2}\/\d+$/.test(patientFileId)) {
     return { ...pageProps, message: 'رقم ملف المريض غير صحيح' };
   }
 
-  if (patientId && !/\d{2}\/\d+/.test(patientId)) {
+  if (patientId && !/^\d+$/.test(patientId)) {
     return { ...pageProps, message: 'رقم المريض غير صحيح' };
   }
 
