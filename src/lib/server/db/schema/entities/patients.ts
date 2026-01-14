@@ -55,7 +55,7 @@ export const inPatient_view = Patient.view('inPatient_view', {
   patient_id: integer().notNull(),
   person_id: integer().notNull(),
   patient_file_number: varchar({ length: 8 }),
-  full_name: text(),
+  full_name: text().notNull(),
   first_name: varchar({ length: 45 }).notNull(),
   father_name: varchar({ length: 45 }).notNull(),
   grandfather_name: varchar({ length: 45 }).notNull(),
