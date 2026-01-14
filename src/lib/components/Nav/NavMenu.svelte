@@ -1,17 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  type PropsT = {
-    label?: string;
-    name?: string;
-    links: (
-      | {
-          href: string;
-          label: string;
-        }
-      | 'separator'
-    )[];
-    permission?: ({ role: number } | { affiliation: number })[];
+  type PropsT = MenuT & {
     children?: Snippet;
   };
 
