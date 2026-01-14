@@ -8,6 +8,7 @@ import {
   Insurance_Doc,
   InPatient_file,
   Admission,
+  inPatient_view,
 } from '$lib/server/db/schema/entities/patients';
 import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
@@ -167,20 +168,18 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
 export async function seedPatientTransfer(transfer: seedTransferT) {
   try {
     const new_transfer = await db.transaction(async (tx) => {
-      const [admYear, admFileNumber] = transfer.file_id.split('/').map(Number);
       const [patient] = await tx
         .select()
-        .from(InPatient_file)
-        .where(
-          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
-        );
+        .from(inPatient_view)
+        .where(and(eq(inPatient_view.patient_file_number, transfer.file_id)));
 
       const [transferInsert] = await tx
         .insert(Transfer)
         .values({
           patient_id: patient.patient_id,
-          timestamp: transfer.timestamp,
+          from_ward_id: patient.recent_ward_id,
           to_ward_id: transfer.ward,
+          timestamp: transfer.timestamp,
         })
         .returning();
 
