@@ -3,35 +3,22 @@
   import PatientButton from '$lib/components/Forms/PatientButton.svelte';
   import Picker from '$lib/components/Forms/Picker.svelte';
   import { formatDate } from '$lib/utils/date-format';
-
-  type PatientT = {
-    id: string;
-    name: string;
-    id_doc_num: string;
-    admission_date: Date;
-    recent_ward_id: number;
-  };
+  import type { inPatient_view } from '$server/db/schema/entities/patients.js';
 
   const { data, form } = $props();
 
-  let patientName = $state(data.patient?.Person?.name ?? form?.patientName ?? '');
-  let selectedPatientId = $state(data.patient?.id ?? form?.patientId ?? '');
-  let selectedPatientRecentWardId = $derived.by(() => {
-    if (data.patient?.recent_ward) {
-      return data.patient?.recent_ward;
-    } else if (form?.selectedPatientRecentWardId) {
-      return form?.selectedPatientRecentWardId;
-    } else {
-      return 0;
-    }
-  });
+  let patientName = $state(data.patient?.full_name ?? form?.patientName ?? '');
+  let selectedPatientId = $state(data.patient?.patient_id ?? form?.patientId ?? '');
+  let selectedPatientRecentWardId = $state(
+    data.patient?.recent_ward_id ?? form?.selectedPatientRecentWardId ?? 0
+  );
   let selectedWard = $state(form?.transferTo ? Number(form?.transferTo) : 0);
   let transferDate = $state(
     form?.transferTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
   );
 
   let hasSelectedPatient = $derived(
-    (form?.patientId?.length ?? 0) > 3 ? true : !!selectedPatientId
+    !!(data.patient?.patient_id ?? form?.patientId ?? selectedPatientId)
   );
 </script>
 
@@ -55,24 +42,26 @@
       required={Boolean(!selectedPatientId) ?? null}
       autofocus
     >
-      {#snippet optionSnippet(patient: PatientT)}
+      {#snippet optionSnippet(patient: typeof inPatient_view.$inferSelect)}
         <PatientButton
           {patient}
           onclick={() => {
-            selectedPatientId = patient.id;
-            patientName = patient.name;
+            selectedPatientId = patient.patient_id;
+            patientName = patient.full_name;
             selectedPatientRecentWardId = patient.recent_ward_id;
           }}
         />
       {/snippet}
     </ISelect>
-    <input type="hidden" name="patient_id" bind:value={selectedPatientId} required />
   </div>
+
+  <input type="hidden" name="patient_id" bind:value={selectedPatientId} required />
 
   <input
     type="hidden"
     name="patient_recent_ward"
     bind:value={selectedPatientRecentWardId}
+    required
   />
 
   <div class="input-pair">
@@ -96,11 +85,7 @@
 
   <div class="input-pair">
     <label for="transfer_notes">ملاحظات</label>
-    <textarea
-      name="transfer_notes"
-      id="transfer_notes"
-      required={[3, 9].some((id) => selectedWard === id)}
-    ></textarea>
+    <textarea name="transfer_notes" id="transfer_notes"></textarea>
   </div>
 
   <input type="submit" value="تسجيل" />
