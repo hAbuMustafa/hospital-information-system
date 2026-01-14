@@ -43,16 +43,16 @@ export async function load({ fetch, url }) {
 
 export const actions = {
   default: async ({ request }) => {
-    const data = await request.formData();
+    const formData = await request.formData();
 
-    const patientId = data.get('patient_id') as unknown as string;
-    let selectedPatientRecentWardId = data.get(
+    const patientId = formData.get('patient_id') as unknown as string;
+    let selectedPatientRecentWardId = formData.get(
       'patient_recent_ward'
     ) as unknown as number;
-    const patientName = data.get('patient_name') as unknown as string;
-    let transferDate = data.get('transfer_date') as unknown as Date;
-    let transferTo = data.get('ward') as unknown as number;
-    const transferNotes = data.get('transfer_notes') as unknown as string;
+    const patientName = formData.get('patient_name') as unknown as string;
+    let transferTime = formData.get('transfer_date') as unknown as Date;
+    let transferTo = formData.get('ward') as unknown as number;
+    const transferNotes = formData.get('transfer_notes') as unknown as string;
 
     const failMessages = [];
 
@@ -60,19 +60,19 @@ export const actions = {
       patientId,
       patientName,
       selectedPatientRecentWardId,
-      transferDate,
+      transferTime,
       transferTo,
       transferNotes,
     });
 
     if (!patientId) failMessages.push('لم يتم العثور على المريض');
-    if (!transferDate) failMessages.push('يجب إدخال تاريخ ووقت التحويل');
+    if (!transferTime) failMessages.push('يجب إدخال تاريخ ووقت التحويل');
     if (!transferTo) failMessages.push('يجب تحديد القسم المحول إليه');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
     try {
-      transferDate = new Date(transferDate);
+      transferTime = new Date(transferTime);
       transferTo = Number(transferTo);
       selectedPatientRecentWardId = Number(selectedPatientRecentWardId);
     } catch (error) {
@@ -82,7 +82,7 @@ export const actions = {
     const result = await transferPatient({
       patient_id: patientId,
       ward: transferTo,
-      timestamp: transferDate,
+      timestamp: transferTime,
       notes: transferNotes,
     });
 

@@ -27,7 +27,7 @@
   });
   let selectedWard = $state(form?.transferTo ? Number(form?.transferTo) : 0);
   let transferDate = $state(
-    form?.transferDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
+    form?.transferTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
   );
 
   let hasSelectedPatient = $derived(
