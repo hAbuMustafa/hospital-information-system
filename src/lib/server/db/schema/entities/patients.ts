@@ -52,7 +52,7 @@ export const InPatient_file = Patient.table(
 );
 
 export const inPatient_view = Patient.view('inPatient_view', {
-  patient_id: integer(),
+  patient_id: integer().notNull(),
   person_id: integer().notNull(),
   patient_file_number: varchar({ length: 8 }),
   full_name: text(),
@@ -63,7 +63,7 @@ export const inPatient_view = Patient.view('inPatient_view', {
   id_doc_type: smallint(),
   id_doc_number: varchar({ length: 45 }),
   meal_type: varchar({ length: 45 }),
-  recent_ward_id: smallint(),
+  recent_ward_id: smallint().notNull(),
   ward_name: varchar({ length: 10 }),
   ward_floor: integer(),
   ward_tags: text(),
