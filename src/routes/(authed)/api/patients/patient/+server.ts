@@ -23,6 +23,8 @@ export async function GET({ url }) {
   if (!patient_id && !patient_file_id)
     return new Response('Bad Request', { status: 401 });
 
+  if (patient_id && patient_file_id) return new Response('Bad Request', { status: 401 });
+
   if (patient_file_id && !/^\d{2}\/\d{1,}$/.test(patient_file_id))
     return new Response('Bad Request', { status: 401 });
 
