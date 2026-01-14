@@ -18,7 +18,7 @@ export async function isAdmitted(num: number, idDocNum?: string) {
       .from(inPatient_view)
       .where(
         and(
-          eq(inPatient_view.id_doc_type, num /* an id_doc_number */),
+          eq(inPatient_view.id_doc_type_id, num /* an id_doc_number */),
           eq(inPatient_view.id_doc_number, idDocNum),
           isNull(inPatient_view.discharge_time)
         )

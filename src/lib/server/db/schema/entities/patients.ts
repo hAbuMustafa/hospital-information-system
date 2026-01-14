@@ -60,7 +60,8 @@ export const inPatient_view = Patient.view('inPatient_view', {
   father_name: varchar({ length: 45 }).notNull(),
   grandfather_name: varchar({ length: 45 }).notNull(),
   family_name: varchar({ length: 45 }),
-  id_doc_type: smallint(),
+  id_doc_type_id: smallint(),
+  id_doc_type: varchar({ length: 16 }).notNull(),
   id_doc_number: varchar({ length: 45 }),
   meal_type: varchar({ length: 45 }),
   recent_ward_id: smallint().notNull(),
@@ -87,7 +88,8 @@ pr.first_name,
 pr.father_name,
 pr.grandfather_name,
 pr.family_name,
-doc.document_type AS id_doc_type,
+doc.document_type AS id_doc_type_id,
+doctype.name AS id_doc_type,
 doc.document_number AS id_doc_number,
 i.insurance_entity AS health_insurance,
 p.meal_type,
@@ -109,6 +111,7 @@ FROM "Patient"."InPatient" p
  LEFT JOIN "People"."Person" pr ON p.person_id = pr.id
  LEFT JOIN "Patient"."InPatient_file" pf ON p.id = pf.patient_id
  LEFT JOIN "People"."Person_IdDoc" doc ON doc.person_id = pr.id
+ LEFT JOIN "People"."IdDoc_type" doctype ON doctype.id = doc.document_type
  LEFT JOIN "Patient"."Insurance_Doc" i ON i.patient_id = p.id
  LEFT JOIN "Hospital"."Ward" w ON p.recent_ward = w.id
  LEFT JOIN "Patient"."Discharge" d ON d.patient_id = p.id

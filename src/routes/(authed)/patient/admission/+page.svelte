@@ -51,7 +51,7 @@
     grandfatherName = person.grandfather_name;
     if (person.family_name) familyName = person.family_name;
 
-    idDocType = person.id_doc_type ?? 1;
+    idDocType = person.id_doc_type_id ?? 1;
 
     idDocNum = person.id_doc_number ?? '';
 
