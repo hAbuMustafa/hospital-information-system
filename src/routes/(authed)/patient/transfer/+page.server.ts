@@ -22,7 +22,9 @@ export async function load({ fetch, url }) {
   }
 
   const patientData: typeof inPatient_view.$inferSelect = await fetch(
-    `/api/patients/patient?id=${patientFileId}`
+    `/api/patients/patient?${patientId ? 'patient_id' : 'patient_file_id'}=${
+      patientId ?? patientFileId
+    }`
   ).then((r) => {
     if (r.ok) {
       return r.json();
