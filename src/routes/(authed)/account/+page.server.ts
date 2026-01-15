@@ -108,7 +108,6 @@ function createAction(
 
       switch (fieldName) {
         case 'id_doc_number':
-          // fix: validation is broken
           let isValidNatId;
           try {
             isValidNatId = verifyEgyptianNationalId(fieldValue);
