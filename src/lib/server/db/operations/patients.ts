@@ -8,6 +8,7 @@ import {
   Admission,
   Insurance_Doc,
   transfers_view,
+  Discharge,
 } from '$lib/server/db/schema/entities/patients';
 import { Person } from '$lib/server/db/schema/entities/people';
 import { eq, max } from 'drizzle-orm';
@@ -131,31 +132,13 @@ export async function transferPatient(transfer: typeof Transfer.$inferInsert) {
   }
 }
 
-export async function dischargePatient(patientDischarge: {
-  id: string;
-  discharge_reason: number;
-  discharge_date: Date;
-  discharge_notes?: string;
-}) {
+export async function dischargePatient(patientDischarge: typeof Discharge.$inferInsert) {
   try {
-    const [patient] = await db
-      .update(InPatient)
-      .set({
-        discharge_date: patientDischarge.discharge_date,
-        discharge_reason: patientDischarge.discharge_reason,
-        discharge_notes: patientDischarge.discharge_notes ?? null,
-      })
-      .where(eq(InPatient.id, patientDischarge.id))
-      .returning({ id: InPatient.id, person_id: InPatient.person_id });
-
-    const [person] = await db
-      .select()
-      .from(Person)
-      .where(eq(Person.id, patient.person_id));
+    const [discharge] = await db.insert(Discharge).values(patientDischarge).returning();
 
     return {
       success: true,
-      data: { id: patient.id, name: person.name },
+      data: discharge,
     };
   } catch (error) {
     return {
