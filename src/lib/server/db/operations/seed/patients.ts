@@ -12,7 +12,7 @@ import {
 } from '$lib/server/db/schema/entities/patients';
 import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, like } from 'drizzle-orm';
 import { createDiagnosis } from '$lib/server/db/operations/menus';
 import type { PatientSeedT, seedDischargeT, seedTransferT } from '../types';
 
@@ -25,7 +25,7 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
         let [firstResult] = await tx
           .select({ id: Person_IdDoc.person_id })
           .from(Person_IdDoc)
-          .where(eq(Person_IdDoc.document_number, admission.id_doc_num));
+          .where(like(Person_IdDoc.document_number, `${admission.id_doc_num}%`));
         foundPersonId = firstResult?.id;
       }
 
