@@ -70,7 +70,13 @@ export const actions = {
   ),
   phone_number: createAction('phone_number', 'رقم الموبايل', egyptianMobileNumberPattern),
   email: createAction('email', 'البريد الإلكتروني', emailPattern),
-  id_doc_number: createAction('id_doc_number', 'الرقم القومي', nationalIdPattern),
+  id_doc_number: createAction(
+    'id_doc_number',
+    'الرقم القومي',
+    nationalIdPattern,
+    'صيغة الرقم القومي غير صحيحة',
+    true
+  ),
 };
 
 function createAction(
@@ -110,7 +116,7 @@ function createAction(
             console.error(err);
           }
 
-          if (!isValidNatId) return fail(400, 'رقم قومي غير صحيح');
+          if (!isValidNatId) return fail(400, { message: 'رقم قومي غير صحيح' });
 
           const natIdCheckResult = await isUniqueNationalId(fieldValue);
           isUnique = natIdCheckResult.people;
