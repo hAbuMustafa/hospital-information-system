@@ -63,6 +63,7 @@ export const inPatient_view = Patient.view('inPatient_view', {
   id_doc_type_id: smallint(),
   id_doc_type: varchar({ length: 16 }).notNull(),
   id_doc_number: varchar({ length: 45 }),
+  health_insurance: varchar({ length: 45 }),
   meal_type: varchar({ length: 45 }),
   recent_ward_id: smallint().notNull(),
   ward_name: varchar({ length: 10 }),
