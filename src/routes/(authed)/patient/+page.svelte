@@ -2,15 +2,7 @@
   import { goto } from '$app/navigation';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PatientButton from '$lib/components/Forms/PatientButton.svelte';
-
-  type PatientT = {
-    id: string;
-    name: string;
-    id_doc_num: string;
-    admission_date: Date;
-    discharge_date?: Date;
-    recent_ward: number;
-  };
+  import type { inPatient_view } from '$server/db/schema/entities/patients';
 </script>
 
 <ISelect
@@ -21,11 +13,11 @@
   autocomplete="off"
   autofocus
 >
-  {#snippet optionSnippet(patient: PatientT)}
+  {#snippet optionSnippet(patient: typeof inPatient_view.$inferSelect)}
     <PatientButton
       {patient}
       onclick={() => {
-        goto(`/patient/${patient.id}`);
+        goto(`/patient/${patient.patient_id}`);
       }}
     />
   {/snippet}
