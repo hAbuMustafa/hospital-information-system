@@ -14,17 +14,17 @@ export async function load() {
 
 export const actions = {
   default: async ({ request }) => {
-    const data = await request.formData();
+    const formData = await request.formData();
 
-    let personId = data.get('person_id') as unknown as number;
-    const firstName = data.get('first_name') as unknown as string;
-    const fatherName = data.get('father_name') as unknown as string;
-    const grandfatherName = data.get('grandfather_name') as unknown as string;
-    const familyName = data.get('family_name') as unknown as string | null;
-    let idDocType = data.get('id_doc_type') as unknown as number;
-    const idDocNum = data.get('id_doc_num') as unknown as string;
-    let gender = data.get('gender') as unknown as boolean;
-    let birthdate = data.get('birthdate') as unknown as Date;
+    let personId = formData.get('person_id') as unknown as number;
+    const firstName = formData.get('first_name') as unknown as string;
+    const fatherName = formData.get('father_name') as unknown as string;
+    const grandfatherName = formData.get('grandfather_name') as unknown as string;
+    const familyName = formData.get('family_name') as unknown as string | null;
+    let idDocType = formData.get('id_doc_type') as unknown as number;
+    const idDocNum = formData.get('id_doc_num') as unknown as string;
+    let gender = formData.get('gender') as unknown as boolean;
+    let birthdate = formData.get('birthdate') as unknown as Date;
 
     const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
       personId,
@@ -60,7 +60,7 @@ export const actions = {
 
       birthdate = new Date(birthdate);
     } catch (e) {
-      console.error(JSON.stringify(data, null, 4));
+      console.error(JSON.stringify(formData, null, 4));
       console.error(e);
       failWithMessages([
         { message: 'خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).', type: 'error' },
