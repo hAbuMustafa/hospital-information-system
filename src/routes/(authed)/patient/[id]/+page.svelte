@@ -105,7 +105,7 @@
           <li class="diagnosis_pair">
             <span class="diagnosis_name">{d}</span>
             <span class="diagnosis_time">
-              {diagnosis.diagnosis_type === 'initial'
+              {diagnosis.diagnosis_type === 'Initial'
                 ? '(أولي)'
                 : dateAndTime(diagnosis.timestamp)}
             </span>
