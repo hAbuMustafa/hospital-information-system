@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import {
   People_contact_information,
   people_view,
@@ -127,4 +127,13 @@ export async function updateIdDocNumber(
       error,
     };
   }
+}
+
+export async function isUniqueIdDocNumber(type_id: number, num: string) {
+  const peopleCountWithSameNationalId = await db.$count(
+    people_view,
+    and(eq(people_view.id_doc_type_id, type_id), eq(people_view.id_doc_number, num))
+  );
+
+  return peopleCountWithSameNationalId === 0;
 }
