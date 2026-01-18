@@ -150,14 +150,16 @@ export const diagnosis_view = Patient.view('diagnosis_view', {
   patient_id: integer().notNull(),
   diagnosis: text().notNull(),
   timestamp: timestamp().notNull(),
+  diagnosis_type: varchar({ length: 45 }),
 }).as(sql`
 SELECT 
 	pd.patient_id,
 	ARRAY_TO_STRING(ARRAY_AGG(d.name), ' + ') AS diagnosis,
+  pd.type AS diagnosis_type,
 	pd.timestamp
 FROM "Patient"."Patient_diagnosis" pd
 LEFT JOIN "Patient"."Diagnosis" d ON pd.diagnosis_id = d.id
-GROUP BY pd.patient_id, pd.timestamp
+GROUP BY pd.patient_id, pd.type, pd.timestamp
   `);
 
 export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
