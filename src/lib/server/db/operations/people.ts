@@ -129,6 +129,29 @@ export async function updateIdDocNumber(
   }
 }
 
+export async function updateIdDocNumberOfPerson(
+  person_id: number,
+  id_doc_type: number,
+  id_doc_number: string
+) {
+  try {
+    const [id_doc_numberInsert] = await db
+      .update(Person_IdDoc)
+      .set({ document_type: id_doc_type, document_number: id_doc_number })
+      .where(eq(Person_IdDoc.person_id, person_id))
+      .returning();
+
+    return {
+      success: true,
+      data: id_doc_numberInsert,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+}
+
 export async function isUniqueIdDocNumber(type_id: number, num: string) {
   const peopleCountWithSameNationalId = await db.$count(
     people_view,
@@ -136,4 +159,25 @@ export async function isUniqueIdDocNumber(type_id: number, num: string) {
   );
 
   return peopleCountWithSameNationalId === 0;
+}
+
+export async function createIdDocNumber(
+  person_id: number,
+  id_doc_type: number,
+  id_doc_number: string
+) {
+  try {
+    const [idDocNumInsert] = await db
+      .insert(Person_IdDoc)
+      .values({ person_id, document_type: id_doc_type, document_number: id_doc_number })
+      .returning();
+
+    return {
+      success: true,
+      data: idDocNumInsert,
+    };
+  } catch (error) {
+    console.error(error);
+    return { error };
+  }
 }
