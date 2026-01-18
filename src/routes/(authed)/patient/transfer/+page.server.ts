@@ -8,23 +8,16 @@ export async function load({ fetch, url }) {
     title: 'تحويل مريض إلى قسم',
     wards: ward_list,
   };
-  const patientFileId = url.searchParams.get('patient_file_id');
   const patientId = url.searchParams.get('patient_id');
 
-  if (!patientFileId && !patientId) return pageProps;
-
-  if (patientFileId && !/^\d{2}\/\d+$/.test(patientFileId)) {
-    return { ...pageProps, message: 'رقم ملف المريض غير صحيح' };
-  }
+  if (!patientId) return pageProps;
 
   if (patientId && !/^\d+$/.test(patientId)) {
     return { ...pageProps, message: 'رقم المريض غير صحيح' };
   }
 
   const patientData: typeof inPatient_view.$inferSelect = await fetch(
-    `/api/patients/patient?${patientId ? 'patient_id' : 'patient_file_id'}=${
-      patientId ?? patientFileId
-    }`
+    `/api/patients/${patientId}`
   ).then((r) => {
     if (r.ok) {
       return r.json();
@@ -34,7 +27,7 @@ export async function load({ fetch, url }) {
   if (!patientData)
     return {
       ...pageProps,
-      message: `لا يوجد مريض بالرقم ${patientFileId || patientId}`,
+      message: `لا يوجد مريض بالرقم ${patientId}`,
     };
 
   return {

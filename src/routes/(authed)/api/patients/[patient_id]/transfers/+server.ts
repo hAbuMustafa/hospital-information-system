@@ -3,9 +3,8 @@ import { transfers_view } from '$server/db/schema/entities/patients';
 import { json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
-export async function GET({ url }) {
-  const patient_query = url.searchParams.get('patient_id');
-  if (patient_query === '') return new Response('Bad request', { status: 401 });
+export async function GET({ params }) {
+  const patient_query = params.patient_id;
 
   if (patient_query && !/\d+/.test(patient_query))
     return new Response('Bad request', { status: 401 });
