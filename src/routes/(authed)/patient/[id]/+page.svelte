@@ -100,22 +100,24 @@
 
     <h3>التشخيص</h3>
     <ol class="diagnosis_list">
-      {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
-        <li class="diagnosis_pair">
-          <span class="diagnosis_name">{diagnosis.Diagnosis.name}</span>
-          <span class="diagnosis_time">
-            {diagnosis.timestamp === data.patient.admission_time
-              ? '(أولي)'
-              : dateAndTime(diagnosis.timestamp)}
-          </span>
-        </li>
+      {#each data.diagnoses as diagnosis, i (i)}
+        {#each diagnosis.diagnosis.split(' + ') as d, j (j)}
+          <li class="diagnosis_pair">
+            <span class="diagnosis_name">{d}</span>
+            <span class="diagnosis_time">
+              {diagnosis.diagnosis_type === 'initial'
+                ? '(أولي)'
+                : dateAndTime(diagnosis.timestamp)}
+            </span>
+          </li>
+        {/each}
       {/each}
     </ol>
 
     <details dir="ltr">
       <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
       <Timeline position="alternate">
-        {#each data.patient.Patient_wards as transfer, i (i)}
+        {#each data.transfers as transfer, i (i)}
           <TimelineItem>
             <TimelineOppositeContent slot="opposite-content">
               <small class="transfer_time">
@@ -124,7 +126,7 @@
             </TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot style={'background-color: #7CD5E2;'} />
-              {#if !data.patient.discharge_time && data.patient.Patient_wards.length - 1 === i}
+              {#if !data.patient.discharge_time && data.transfers.length - 1 === i}
                 <TimelineConnector
                   style="background: linear-gradient(#fff, 30%, transparent 99% 1%);"
                 />
@@ -133,7 +135,7 @@
               {/if}
             </TimelineSeparator>
             <TimelineContent>
-              <span class="transfer_ward_name">{transfer.Ward.name}</span>
+              <span class="transfer_ward_name">{transfer.to_ward}</span>
             </TimelineContent>
           </TimelineItem>
         {/each}
@@ -156,15 +158,22 @@
       </Timeline>
     </details>
   </section>
-  {#if data.patient.Person.Patients?.length}
-    {@const sheetRows = data.patient.Person.Patients.map((p) => {
-      const { id, admission_date, discharge_date } = p;
+  {#if data.other_admissions?.length}
+    {@const sheetRows = data.other_admissions.map((p) => {
+      const {
+        patient_file_number,
+        patient_id,
+        admission_time,
+        discharge_time,
+        discharge_reason,
+      } = p;
 
       return {
-        id,
-        admission_date: new Date(admission_date),
-        discharge_date: discharge_date ? new Date(discharge_date) : null,
-        discharge_reason: p.Patient_discharge_reason?.name,
+        patient_id,
+        patient_file_number,
+        admission_date: new Date(admission_time),
+        discharge_date: discharge_time ? new Date(discharge_time) : null,
+        discharge_reason,
       };
     })}
     <section class="other_admissions">
@@ -173,12 +182,13 @@
         rows={sheetRows}
         dateColumns={{ admission_date: 'YYYY/MM/DD', discharge_date: 'YYYY/MM/DD' }}
         renameColumns={{
-          id: 'رقم القيد',
+          patient_id: 'رقم القيد',
+          patient_file_number: 'رقم الملف',
           admission_date: 'تاريخ الدخول',
           discharge_date: 'تاريخ الخروج',
           discharge_reason: 'سبب الخروج',
         }}
-        detailsColumn={{ id: (p: any) => `/patient/${p.id}` }}
+        detailsColumn={{ patient_id: (p: any) => `/patient/${p.patient_id}` }}
       />
     </section>
   {/if}
