@@ -29,8 +29,6 @@
     return data.person?.birthdate;
   });
 
-  let selectedPersonId = $state(0);
-
   let hasAName = $derived(!firstName && !fatherName && !grandfatherName && !familyName);
 </script>
 
@@ -85,8 +83,6 @@
       </button>
     </div>
   </div>
-
-  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
   <Picker
     label="نوع الهوية"
