@@ -1,4 +1,5 @@
 import { id_doc_type_list } from '$lib/server/db/menus';
+import type { people_view } from '$server/db/schema/entities/people.js';
 import { error } from '@sveltejs/kit';
 
 export async function load({ params, fetch }) {
@@ -6,7 +7,9 @@ export async function load({ params, fetch }) {
 
   if (!/^\d+$/.test(personId)) return error(404, 'الرقم الطبي الموحد للمريض غير صحيح');
 
-  const person = await fetch(`/api/person?id=${personId}`).then((r) => {
+  const person: typeof people_view.$inferSelect = await fetch(
+    `/api/person?id=${personId}`
+  ).then((r) => {
     if (r.ok) {
       return r.json();
     } else return null;
@@ -15,7 +18,7 @@ export async function load({ params, fetch }) {
   if (!person) error(404, 'لا يوجد مريض بالرقم الطبي الموحد المذكور');
 
   return {
-    title: person.name,
+    title: person.full_name,
     person,
     id_doc_type_list: id_doc_type_list,
   };

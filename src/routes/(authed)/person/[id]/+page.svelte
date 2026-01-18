@@ -1,18 +1,21 @@
 <script lang="ts">
+  import { nationalIdPattern } from '$lib/stores/patterns';
   import Picker from '$lib/components/Forms/Picker.svelte';
-  import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
 
   const { data } = $props();
 
-  let patientName = $state(data.person.name ?? '');
-  let idDocType = $state(data.person.id_doc_type ? Number(data.person.id_doc_type) : 1);
-  let idDocNum = $state(data.person.id_doc_num ?? '');
+  let firstName = $state(data.person.first_name);
+  let fatherName = $state(data.person.father_name);
+  let grandfatherName = $state(data.person.grandfather_name);
+  let familyName = $state(data.person.family_name ?? '');
+  let idDocType = $state(data.person.id_doc_type_id ?? 1);
+  let idDocNum = $state(data.person.id_doc_number ?? '');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
-      return Number(idDocNum.slice(12, 13)) % 2 ? 1 : 0;
+      return Number(idDocNum.slice(12, 13)) % 2 === 1;
     }
-    return data.person.gender ? Number(data.person.gender) : null;
+    return data.person?.gender;
   });
   let birthdate = $derived.by(() => {
     if (isNationalId) {
@@ -23,23 +26,67 @@
 
       return [year, month, day].join('-');
     }
-    return data.person.birthdate;
+    return data.person?.birthdate;
   });
+
+  let selectedPersonId = $state(0);
+
+  let hasAName = $derived(!firstName && !fatherName && !grandfatherName && !familyName);
 </script>
 
 <form method="POST" class="flex-form">
   <div class="input-pair">
-    <label for="name"> اسم المريض </label>
-    <input
-      type="text"
-      name="name"
-      id="name"
-      bind:value={patientName}
-      pattern={arabicTriadicNamesPattern.source}
-      autocomplete="off"
-      required
-    />
+    <label for="first_name">اسم المريض</label>
+    <div class="input-group">
+      <input
+        type="text"
+        name="first_name"
+        id="first_name"
+        placeholder="الاسم الأول"
+        bind:value={firstName}
+        required
+      />
+      <input
+        type="text"
+        name="father_name"
+        id="father_name"
+        placeholder="اسم الأب"
+        bind:value={fatherName}
+        required
+      />
+      <input
+        type="text"
+        name="grandfather_name"
+        id="grandfather_name"
+        placeholder="اسم الجد"
+        bind:value={grandfatherName}
+        required
+      />
+      <input
+        type="text"
+        name="family_name"
+        id="family_name"
+        placeholder="اسم العائلة"
+        bind:value={familyName}
+        required
+      />
+
+      <button
+        type="button"
+        disabled={hasAName}
+        onclick={() => {
+          firstName = '';
+          fatherName = '';
+          grandfatherName = '';
+          familyName = '';
+        }}
+      >
+        مسح
+      </button>
+    </div>
   </div>
+
+  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
   <Picker
     label="نوع الهوية"
@@ -49,7 +96,7 @@
   />
 
   <div class="input-pair">
-    <label for="id_doc_num">رقم الهوية</label>
+    <label for="id_doc_num" class:locked={isNationalId}>رقم الهوية</label>
     <input
       name="id_doc_num"
       id="id_doc_num"
@@ -65,16 +112,32 @@
     name="gender"
     label="النوع"
     options={[
-      { id: 1, name: 'ذكر' },
-      { id: 0, name: 'أنثى' },
+      { id: true, name: 'ذكر' },
+      { id: false, name: 'أنثى' },
     ]}
     bind:value={gender}
+    locked={isNationalId}
   />
 
   <div class="input-pair">
-    <label for="birthdate">تاريخ الميلاد</label>
-    <input name="birthdate" id="birthdate" type="date" bind:value={birthdate} required />
+    <label for="birthdate" class:locked={isNationalId}>تاريخ الميلاد</label>
+    <input
+      name="birthdate"
+      id="birthdate"
+      type="date"
+      bind:value={birthdate}
+      readonly={isNationalId}
+      required
+    />
   </div>
 
   <input type="submit" value="تعديل" />
 </form>
+
+<style>
+  .input-group {
+    display: grid;
+    grid-template-columns: repeat(4, 3fr) 1fr;
+    gap: 0.5rem;
+  }
+</style>
