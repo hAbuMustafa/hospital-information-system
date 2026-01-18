@@ -92,7 +92,7 @@
   />
 
   <div class="input-pair">
-    <label for="id_doc_num" class:locked={isNationalId}>رقم الهوية</label>
+    <label for="id_doc_num">رقم الهوية</label>
     <input
       name="id_doc_num"
       id="id_doc_num"
