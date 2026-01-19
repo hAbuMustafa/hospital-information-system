@@ -1,13 +1,16 @@
 type MenuT = {
   label?: string;
   name?: string;
-  links: (
-    | {
-        href: string;
-        label: string;
-        permission?: ({ role: number } | { affiliation: number })[];
-      }
-    | 'separator'
-  )[];
-  permission?: ({ role: number } | { affiliation: number })[];
+  links: NavLinkT[];
+  permission?: PermissionT;
 };
+
+type PermissionT = ({ role: number } | { affiliation: number })[];
+
+type NavLinkT =
+  | {
+      href: string;
+      label: string;
+      permission?: PermissionT;
+    }
+  | 'separator';
