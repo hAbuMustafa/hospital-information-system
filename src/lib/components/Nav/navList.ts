@@ -42,3 +42,5 @@ export const menus: MenuT[] = [
     ],
   },
 ];
+
+// todo: make dedicated link lists like "frontOfficeOnlyLinks" that when spread into `menus` mapped to append permissions like `{affiliation: 22}` and when filtering menus and links in main layout, remember to show everything for admin role
