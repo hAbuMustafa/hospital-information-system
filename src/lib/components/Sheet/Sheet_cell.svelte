@@ -23,7 +23,7 @@
 </script>
 
 <td>
-  {#if dateColumns && dateColumns.hasOwnProperty(colName) && colValue && (typeof colValue === 'number' || colValue instanceof Date)}
+  {#if dateColumns && dateColumns.hasOwnProperty(colName) && colValue}
     {formatDate(colValue as number | Date, dateColumns[colName])}
   {:else if actionColumns && actionColumns.hasOwnProperty(colName)}
     <input
