@@ -15,6 +15,7 @@ export const menus: MenuT[] = [
       { href: '/patient/report', label: 'بيان المرضى بالأقسام' },
       { href: '/patient/icu-report', label: 'بيان الرعاية المركزة' },
       { href: '/patient/occupation-report', label: 'بيان الإشغال الحالي' },
+      'separator',
       { href: '/patient/monthly-report', label: ' تقرير الإشغال الشهري ' },
     ],
   },
