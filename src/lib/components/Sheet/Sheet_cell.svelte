@@ -3,8 +3,8 @@
   import { getContext } from 'svelte';
 
   type PropsT = {
-    dataTuple: [string, string | number | Date | null | undefined];
-    row: Record<string, string | number | Date | null | undefined>;
+    dataTuple: [string, string | number | boolean | Date | null | undefined];
+    row: Record<string, string | number | boolean | Date | null | undefined>;
   };
 
   const { dataTuple, row }: PropsT = $props();
