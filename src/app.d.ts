@@ -17,7 +17,7 @@ declare global {
     // interface PageState {}
     // interface Platform {}
     // interface CustomTypes {}
-    type Require<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+    type Require<T, K extends keyof T> = T & { [P in K]-?: NonNullable<T[P]> };
   }
   type ToastT = { type: 'info' | 'success' | 'error' | 'warning'; message: string };
 }
