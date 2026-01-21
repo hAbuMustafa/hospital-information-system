@@ -5,12 +5,10 @@ type MenuT = {
   permission?: PermissionT;
 };
 
-type PermissionT = ({ role: number } | { affiliation: number })[];
+type PermissionT = { role: number[]; affiliation: number[] };
 
-type NavLinkT =
-  | {
-      href: string;
-      label: string;
-      permission?: PermissionT;
-    }
-  | 'separator';
+type NavLinkT = {
+  href: string;
+  label: string;
+  permission?: PermissionT;
+};
