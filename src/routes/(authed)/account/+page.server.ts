@@ -42,31 +42,31 @@ export const actions = {
     'اسم المستخدم',
     usernamePattern,
     'ينبغي أن يكون من حروف إنجليزية فقط أو شرطات "-"',
-    true
+    true,
   ),
   first_name: createAction(
     'first_name',
     'اسم الموظف',
     arabicNamePattern,
-    'يجب أن يكون اسما عربيا'
+    'يجب أن يكون اسما عربيا',
   ),
   father_name: createAction(
     'father_name',
     'اسم الأب',
     arabicNamePattern,
-    'يجب أن يكون اسما عربيا'
+    'يجب أن يكون اسما عربيا',
   ),
   grandfather_name: createAction(
     'grandfather_name',
     'اسم الجد',
     arabicNamePattern,
-    'يجب أن يكون اسما عربيا'
+    'يجب أن يكون اسما عربيا',
   ),
   family_name: createAction(
     'family_name',
     'اسم العائلة',
     arabicNamePattern,
-    'يجب أن يكون اسما عربيا'
+    'يجب أن يكون اسما عربيا',
   ),
   phone_number: createAction('phone_number', 'رقم الموبايل', egyptianMobileNumberPattern),
   email: createAction('email', 'البريد الإلكتروني', emailPattern),
@@ -75,7 +75,7 @@ export const actions = {
     'الرقم القومي',
     nationalIdPattern,
     'صيغة الرقم القومي غير صحيحة',
-    true
+    true,
   ),
 };
 
@@ -84,7 +84,7 @@ function createAction(
   fieldLabel: string,
   pattern: RegExp,
   patternErrorMessage?: string,
-  mustBeUnique?: boolean
+  mustBeUnique?: boolean,
 ): Action {
   return async ({ request, locals }) => {
     const data = await request.formData();
@@ -144,11 +144,21 @@ function createAction(
     switch (fieldName) {
       case 'email':
       case 'phone_number':
-        result = await updateContactInfo(oldValue, fieldValue);
+        result = await updateContactInfo(
+          locals.user![`${fieldLabel}_id` as 'phone_number_id' | 'email_id'],
+          fieldValue,
+          locals.user!.person_id,
+          fieldName,
+        );
         break;
 
       case 'id_doc_number':
-        result = await updateIdDocNumber(oldValue, fieldValue);
+        result = await updateIdDocNumber(
+          locals.user!.id_doc_number_id,
+          fieldValue,
+          locals.user!.person_id,
+          1,
+        );
         break;
 
       case 'username':

@@ -1,6 +1,7 @@
 import { db } from '$lib/server/db';
 import { and, eq } from 'drizzle-orm';
 import {
+  Contact_type,
   People_contact_information,
   people_view,
   Person,
@@ -65,7 +66,7 @@ export async function getPerson(personId: number) {
 
 export async function updatePerson(
   personId: number,
-  values: Omit<Partial<typeof Person.$inferInsert>, 'id'>
+  values: Omit<Partial<typeof Person.$inferInsert>, 'id'>,
 ) {
   try {
     const [person] = await db
@@ -86,15 +87,38 @@ export async function updatePerson(
 }
 
 export async function updateContactInfo(
-  old_contact_string: string,
-  new_contact_string: string
+  contact_string_id: number | null,
+  new_contact_string: string,
+  person_id: number,
+  contact_type_tag: string,
 ) {
   try {
-    const [contact_string] = await db
-      .update(People_contact_information)
-      .set({ contact_string: new_contact_string })
-      .where(eq(People_contact_information.contact_string, old_contact_string))
-      .returning();
+    let contact_string;
+    if (contact_string_id) {
+      [contact_string] = await db
+        .update(People_contact_information)
+        .set({ contact_string: new_contact_string })
+        .where(eq(People_contact_information.id, contact_string_id))
+        .returning();
+    } else {
+      contact_string = await db.transaction(async (tx) => {
+        const [contact_type_id_row] = await tx
+          .select()
+          .from(Contact_type)
+          .where(eq(Contact_type.tag, contact_type_tag));
+
+        const [new_contact_row] = await tx
+          .insert(People_contact_information)
+          .values({
+            contact_type: contact_type_id_row.id,
+            contact_string: new_contact_string,
+            person_id: person_id,
+          })
+          .returning();
+
+        return new_contact_row;
+      });
+    }
 
     return {
       success: true,
@@ -108,15 +132,29 @@ export async function updateContactInfo(
 }
 
 export async function updateIdDocNumber(
-  old_id_doc_number: string,
-  new_id_doc_number: string
+  id_doc_id: number | null,
+  new_id_doc: string,
+  person_id: number,
+  id_doc_type_id: number,
 ) {
   try {
-    const [id_doc_number] = await db
-      .update(Person_IdDoc)
-      .set({ document_number: new_id_doc_number })
-      .where(eq(Person_IdDoc.document_number, old_id_doc_number))
-      .returning();
+    let id_doc_number;
+    if (id_doc_id) {
+      [id_doc_number] = await db
+        .update(Person_IdDoc)
+        .set({ document_number: new_id_doc, document_type: id_doc_type_id })
+        .where(eq(Person_IdDoc.id, id_doc_id))
+        .returning();
+    } else {
+      [id_doc_number] = await db
+        .insert(Person_IdDoc)
+        .values({
+          person_id,
+          document_type: id_doc_type_id,
+          document_number: new_id_doc,
+        })
+        .returning();
+    }
 
     return {
       success: true,
@@ -132,7 +170,7 @@ export async function updateIdDocNumber(
 export async function updateIdDocNumberOfPerson(
   person_id: number,
   id_doc_type: number,
-  id_doc_number: string
+  id_doc_number: string,
 ) {
   try {
     const [id_doc_numberInsert] = await db
@@ -155,7 +193,7 @@ export async function updateIdDocNumberOfPerson(
 export async function isUniqueIdDocNumber(type_id: number, num: string) {
   const peopleCountWithSameNationalId = await db.$count(
     people_view,
-    and(eq(people_view.id_doc_type_id, type_id), eq(people_view.id_doc_number, num))
+    and(eq(people_view.id_doc_type_id, type_id), eq(people_view.id_doc_number, num)),
   );
 
   return peopleCountWithSameNationalId === 0;
@@ -164,7 +202,7 @@ export async function isUniqueIdDocNumber(type_id: number, num: string) {
 export async function createIdDocNumber(
   person_id: number,
   id_doc_type: number,
-  id_doc_number: string
+  id_doc_number: string,
 ) {
   try {
     const [idDocNumInsert] = await db
