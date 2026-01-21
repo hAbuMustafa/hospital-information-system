@@ -74,6 +74,7 @@ FROM "People"."Person" pr
 export const Contact_type = People.table('Contact_type', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
+  tag: varchar({ length: 20 }).notNull(),
 });
 
 export const People_contact_information = People.table('People_contact_information', {
@@ -94,6 +95,7 @@ export const IdDoc_type = People.table('IdDoc_type', {
 });
 
 export const Person_IdDoc = People.table('Person_IdDoc', {
+  id: serial(),
   person_id: integer()
     .notNull()
     .references(() => Person.id),
