@@ -11,7 +11,7 @@ import {
   smallint,
   date,
 } from 'drizzle-orm/pg-core';
-import { People_contact_information, Person } from './people';
+import { People_contact_information, Person, Person_IdDoc } from './people';
 import { Staff } from './hospital';
 import { sql } from 'drizzle-orm';
 
@@ -71,6 +71,9 @@ export const users_view = Security.view('users_view', {
   full_name: text().notNull(),
   id_doc_type_id: smallint(),
   id_doc_type: varchar({ length: 16 }).notNull(),
+  id_doc_number_id: integer()
+    .references(() => Person_IdDoc.id)
+    .notNull(),
   id_doc_number: varchar({ length: 45 }).notNull(),
   gender: boolean().notNull(),
   birthdate: date().notNull(),
@@ -101,6 +104,7 @@ SELECT
   CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) AS "full_name",
   doctype.id AS id_doc_type_id,
   doctype.name AS id_doc_type,
+  doc.id AS id_doc_number_id,
   doc.document_number AS id_doc_number,
   pr.gender,
   pr.birthdate,
