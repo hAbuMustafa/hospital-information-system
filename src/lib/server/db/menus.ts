@@ -32,13 +32,11 @@ export const id_doc_type_list = [
 ];
 
 export const contact_type_list = [
-  { name: 'رقم موبايل', id: 1 },
-  { name: 'رقم أرضي', id: 2 },
-  { name: 'بريد إلكتروني', id: 3 },
-  { name: 'عنوان إقامة', id: 4 },
-  { name: 'عنوان عمل', id: 5 },
-  { name: 'عنوان آخر', id: 6 },
-  { name: 'رقم بريدي', id: 7 },
+  { name: 'رقم موبايل', tag: 'phone_number', id: 1 },
+  { name: 'رقم أرضي', tag: 'landline', id: 2 },
+  { name: 'بريد إلكتروني', tag: 'email', id: 3 },
+  { name: 'عنوان', tag: 'address', id: 4 },
+  { name: 'رقم بريدي', tag: 'postal_number', id: 5 },
 ];
 
 export const discharge_reason_list = [
