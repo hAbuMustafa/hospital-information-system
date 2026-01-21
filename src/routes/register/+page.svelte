@@ -20,6 +20,7 @@
 
     <div class="input-pair">
       <label for="first_name">الاسم الأول</label>
+      <!-- svelte-ignore a11y_autofocus -->
       <input
         id="first_name"
         name="first_name"
