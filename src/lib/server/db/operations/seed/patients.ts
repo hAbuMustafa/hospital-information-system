@@ -10,9 +10,9 @@ import {
   Admission,
   inPatient_view,
 } from '$lib/server/db/schema/entities/patients';
-import { Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
+import { people_view, Person, Person_IdDoc } from '$lib/server/db/schema/entities/people';
 import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
-import { eq, and, like } from 'drizzle-orm';
+import { eq, and, like, isNull } from 'drizzle-orm';
 import { createDiagnosis } from '$lib/server/db/operations/menus';
 import type { PatientSeedT, seedDischargeT, seedTransferT } from '../types';
 
@@ -27,6 +27,19 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
           .from(Person_IdDoc)
           .where(like(Person_IdDoc.document_number, `${admission.id_doc_num}%`));
         foundPersonId = firstResult?.id;
+      }
+
+      if (!foundPersonId) {
+        let [first_result] = await tx
+          .select({ id: people_view.person_id })
+          .from(people_view)
+          .where(
+            and(
+              eq(people_view.full_name, admission.name),
+              isNull(people_view.id_doc_number),
+            ),
+          );
+        foundPersonId = first_result?.id;
       }
 
       if (!foundPersonId) {
@@ -137,7 +150,7 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
               currentDiagnosisText,
               'for patient',
               newPatient.id,
-              admission.name
+              admission.name,
             );
             continue;
           }
@@ -210,7 +223,7 @@ export async function seedPatientDischarge(discharge: seedDischargeT) {
         .select()
         .from(InPatient_file)
         .where(
-          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
+          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber)),
         );
 
       if (patient) {
