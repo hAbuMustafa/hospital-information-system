@@ -1,21 +1,24 @@
-import { new_Wards } from '$lib/server/db/menus';
-import { transferPatient } from '$lib/server/db/operations/patients.js';
+import { ward_list } from '$lib/server/db/menus';
+import { transferPatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
+import type { inPatient_view } from '$server/db/schema/entities/patients.js';
 
 export async function load({ fetch, url }) {
   const pageProps = {
     title: 'تحويل مريض إلى قسم',
-    wards: new_Wards,
+    wards: ward_list,
   };
-  const patientId = url.searchParams.get('patientId');
+  const patientId = url.searchParams.get('patient_id');
 
   if (!patientId) return pageProps;
 
-  if (!/\d{2}\/\d+/.test(patientId)) {
-    return { ...pageProps, message: 'رقم القيد غير صحيح' };
+  if (patientId && !/^\d+$/.test(patientId)) {
+    return { ...pageProps, message: 'رقم المريض غير صحيح' };
   }
 
-  const patientData = await fetch(`/api/patients/patient?id=${patientId}`).then((r) => {
+  const patientData: typeof inPatient_view.$inferSelect = await fetch(
+    `/api/patients/${patientId}`
+  ).then((r) => {
     if (r.ok) {
       return r.json();
     }
@@ -24,7 +27,7 @@ export async function load({ fetch, url }) {
   if (!patientData)
     return {
       ...pageProps,
-      title: `لا يوجد مريض بالرقم ${patientId}`,
+      message: `لا يوجد مريض بالرقم ${patientId}`,
     };
 
   return {
@@ -36,16 +39,16 @@ export async function load({ fetch, url }) {
 
 export const actions = {
   default: async ({ request }) => {
-    const data = await request.formData();
+    const formData = await request.formData();
 
-    const patientId = data.get('patient_id') as unknown as string;
-    let selectedPatientRecentWardId = data.get(
+    let patientId = formData.get('patient_id') as unknown as number;
+    let selectedPatientRecentWardId = formData.get(
       'patient_recent_ward'
     ) as unknown as number;
-    const patientName = data.get('patient_name') as unknown as string;
-    let transferDate = data.get('transfer_date') as unknown as Date;
-    let transferTo = data.get('ward') as unknown as number;
-    const transferNotes = data.get('transfer_notes') as unknown as string;
+    const patientName = formData.get('patient_name') as unknown as string;
+    let transferTime = formData.get('transfer_date') as unknown as Date;
+    let transferTo = formData.get('ward') as unknown as number;
+    const transferNotes = formData.get('transfer_notes') as unknown as string;
 
     const failMessages = [];
 
@@ -53,19 +56,20 @@ export const actions = {
       patientId,
       patientName,
       selectedPatientRecentWardId,
-      transferDate,
+      transferTime,
       transferTo,
       transferNotes,
     });
 
     if (!patientId) failMessages.push('لم يتم العثور على المريض');
-    if (!transferDate) failMessages.push('يجب إدخال تاريخ ووقت التحويل');
+    if (!transferTime) failMessages.push('يجب إدخال تاريخ ووقت التحويل');
     if (!transferTo) failMessages.push('يجب تحديد القسم المحول إليه');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
     try {
-      transferDate = new Date(transferDate);
+      patientId = Number(patientId);
+      transferTime = new Date(transferTime);
       transferTo = Number(transferTo);
       selectedPatientRecentWardId = Number(selectedPatientRecentWardId);
     } catch (error) {
@@ -74,8 +78,9 @@ export const actions = {
 
     const result = await transferPatient({
       patient_id: patientId,
-      ward: transferTo,
-      timestamp: transferDate,
+      from_ward_id: selectedPatientRecentWardId,
+      to_ward_id: transferTo,
+      timestamp: transferTime,
       notes: transferNotes,
     });
 
@@ -88,9 +93,7 @@ export const actions = {
 
     return {
       success: true,
-      message: `تم تحويل المريض "${patientName}" من "${
-        new_Wards.find((w) => w.id === selectedPatientRecentWardId)?.name
-      }" إلى "${new_Wards.find((w) => w.id === transferTo)?.name}"`,
+      message: `تم تحويل المريض "${patientName}" من "${result.data.from_ward}" إلى "${result.data.to_ward}"`,
     };
   },
 };

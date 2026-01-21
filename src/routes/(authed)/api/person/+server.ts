@@ -1,5 +1,5 @@
-import { db } from '$lib/server/db/';
-import { People } from '$lib/server/db/schema';
+import { db } from '$server/db/';
+import { people_view } from '$server/db/schema/entities/people';
 import { json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
@@ -8,8 +8,8 @@ export async function GET({ url }) {
 
   const [person] = await db
     .select()
-    .from(People)
-    .where(eq(People.id, Number(personId)));
+    .from(people_view)
+    .where(eq(people_view.person_id, Number(personId)));
 
   if (!person) return json({ message: 'No such person' }, { status: 404 });
 

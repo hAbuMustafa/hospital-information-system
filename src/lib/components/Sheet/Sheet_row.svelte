@@ -3,7 +3,7 @@
   import { getContext } from 'svelte';
 
   type PropsT = {
-    dataObj: Record<string, string | number | Date | null | undefined>;
+    dataObj: Record<string, string | number | boolean | Date | null | undefined>;
   };
 
   const { dataObj }: PropsT = $props();

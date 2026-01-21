@@ -1,150 +1,109 @@
-import { floors, new_id_doc_type, new_Wards } from '$lib/server/db/menus';
-import {
-  createPatient,
-  getDiagnoses,
-  getLastMedicalNumber,
-  isAdmitted,
-} from '$lib/server/db/operations/patients';
+import { id_doc_type_list } from '$lib/server/db/menus';
+import { isAdmitted } from '$lib/server/db/operations/utils';
+import { createPerson } from '$server/db/operations/people.js';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
-import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id.js';
-import { DrizzleQueryError } from 'drizzle-orm';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id';
+import { redirect } from '@sveltejs/kit';
 
 export async function load() {
-  const diagnoses_list = await getDiagnoses();
-
-  const lastMedicalNumber = await getLastMedicalNumber();
-
   return {
     title: 'تسجيل دخول مريض',
-    id_doc_type_list: new_id_doc_type,
-    wards_list: new_Wards,
-    floors_list: floors,
-    diagnoses_list,
-    nextMedicalNumber: (lastMedicalNumber || 0) + 1,
+    id_doc_type_list,
   };
 }
 
 export const actions = {
   default: async ({ request }) => {
-    const data = await request.formData();
+    const formData = await request.formData();
 
-    // Person Data
-    let personId = data.get('person_id') as unknown as number;
-    const patientName = data.get('name') as unknown as string;
-    let idDocType = data.get('id_doc_type') as unknown as number;
-    const idDocNum = data.get('id_doc_num') as unknown as string;
-    let gender = data.get('gender') as unknown as boolean;
-    let birthdate = data.get('birthdate') as unknown as Date;
-
-    // Patient Data
-    let medicalNumber = data.get('medical_number') as unknown as number;
-    let admissionWard = data.get('admission_ward') as unknown as number;
-    let diagnosis = data.getAll('diagnosis') as unknown as string[];
-    let heathInsurance = data.get('health_insurance') as unknown as boolean;
-    let referredFrom = data.get('referred_from') as unknown as string;
-    let securityStatus = data.get('security_status') as unknown as boolean;
-    let admissionDate = data.get('admission_date') as unknown as Date;
-    let admissionNotes = data.get('admission_notes') as unknown as string;
+    let personId = formData.get('person_id') as unknown as number;
+    const firstName = formData.get('first_name') as unknown as string;
+    const fatherName = formData.get('father_name') as unknown as string;
+    const grandfatherName = formData.get('grandfather_name') as unknown as string;
+    const familyName = formData.get('family_name') as unknown as string | null;
+    let idDocType = formData.get('id_doc_type') as unknown as number;
+    const idDocNum = formData.get('id_doc_num') as unknown as string;
+    let gender = formData.get('gender') as unknown as boolean;
+    let birthdate = formData.get('birthdate') as unknown as Date;
 
     const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
-      medicalNumber,
-      patientName,
+      personId,
       idDocType,
       idDocNum,
       gender,
       birthdate,
-      heathInsurance,
-      diagnosis,
-      admissionWard,
-      admissionDate,
-      personId,
-      admissionNotes,
-      referredFrom,
-      securityStatus,
+      firstName,
+      fatherName,
+      grandfatherName,
+      familyName,
     });
 
     const failMessages = [];
 
-    if (!medicalNumber) failMessages.push('الرقم الطبي مطلوب');
-    if (!patientName) failMessages.push(' اسم المريض مطلوب');
+    if (!firstName) failMessages.push(' اسم المريض مطلوب');
+    if (!fatherName) failMessages.push(' اسم المريض مطلوب');
+    if (!grandfatherName) failMessages.push(' اسم المريض مطلوب');
     if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
     if (!idDocNum && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
     if (idDocType == 1 && !verifyEgyptianNationalId(idDocNum))
       failMessages.push('صيغة رقم الهوية غير صحيحة');
     if (!gender) failMessages.push('الجنس/النوع مطلوب');
     if (!birthdate) failMessages.push('تاريخ الميلاد مطلوب');
-    if (!heathInsurance) failMessages.push('موقف المريض من التأمين الصحي مطلوب');
-    if (!diagnosis.length)
-      failMessages.push('التشخيص مطلوب. يلزم كتابة تشخيص واحد على الأقل');
-    if (!admissionWard) failMessages.push('يلزم تحديد قسم الدخول');
-    if (!admissionDate) failMessages.push('تاريخ الدخول مطلوب');
-    if (!admissionNotes && idDocType == 6)
-      failMessages.push('يلزم الإفادة بملاحظات حال لم يتم كتابة رقم هوية');
-    if (!referredFrom)
-      failMessages.push('يجب تحديد الجهة التي أوصت بتحويل المريض لدخول المستشفى');
-    if (!securityStatus) failMessages.push('يجب تحديد الحالة الأمنية للمريض');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
     try {
       personId = Number(personId);
-      medicalNumber = Number(medicalNumber);
       idDocType = Number(idDocType);
-      admissionWard = Number(admissionWard);
 
-      gender = Boolean(Number(gender));
-      heathInsurance = Boolean(Number(heathInsurance));
-      securityStatus = Boolean(Number(securityStatus));
+      gender = Boolean(gender);
 
       birthdate = new Date(birthdate);
-      admissionDate = new Date(admissionDate);
     } catch (e) {
-      console.error(JSON.stringify(data, null, 4));
+      console.error(JSON.stringify(formData, null, 4));
+      console.error(e);
       failWithMessages([
         { message: 'خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).', type: 'error' },
       ]);
     }
 
-    const foundAdmitted =
-      idDocType !== 6 ? await isAdmitted(idDocType, idDocNum) : undefined;
+    const foundAdmitted = personId
+      ? await isAdmitted(personId)
+      : idDocType !== 6
+      ? await isAdmitted(idDocType, idDocNum)
+      : undefined;
 
     if (foundAdmitted) {
       return failWithMessages([
         {
-          message: `المريض "${foundAdmitted.name}" محجوز بالفعل في "${foundAdmitted.recent_ward_name}"`,
+          message: `المريض "${foundAdmitted.full_name}" محجوز بالفعل في "${foundAdmitted.ward_name}"`,
           type: 'error',
         },
       ]);
     }
 
-    const result = await createPatient({
-      id: [admissionDate.getFullYear().toString().slice(2, 4), medicalNumber].join('/'),
-      name: patientName.trim(),
+    if (personId) {
+      return redirect(303, `/patient/admission/${personId}`);
+    }
+
+    const result = await createPerson({
+      first_name: firstName.trim(),
+      father_name: fatherName.trim(),
+      grandfather_name: grandfatherName.trim(),
+      family_name: familyName?.trim(),
       id_doc_type: idDocType,
       id_doc_num: idDocNum.trim(),
-      admission_ward: admissionWard,
-      admission_date: admissionDate,
-      admission_notes: admissionNotes,
-      diagnosis: diagnosis.map((d) => d.trim()),
-      security_status: securityStatus,
-      referred_from: referredFrom,
-      person_id: personId ?? undefined,
+      gender,
+      birthdate,
     });
 
-    if (
-      !result.success &&
-      (result.error as DrizzleQueryError).cause?.message!.includes(
-        'UNIQUE constraint failed'
-      )
-    ) {
+    if (!result.success) {
+      console.error(result.error);
       return failWithMessages([
-        { message: `الرقم الطبي ${medicalNumber} مسجل مسبقا`, type: 'error' },
+        { message: 'حدث خطأ أثناء تسجيل بيانات المريض', type: 'error' },
       ]);
     }
 
-    return {
-      success: true,
-      message: `تم تسجيل دخول المريض "${patientName}" بنجاح`,
-    };
+    return redirect(303, `/patient/admission/${result.data.person_id}`);
   },
 };

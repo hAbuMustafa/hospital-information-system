@@ -1,4 +1,4 @@
-import { refreshAccessToken } from '$lib/server/db/operations/auth';
+import { getUserById, refreshAccessToken } from '$lib/server/db/operations/auth';
 import {
   ACCESS_COOKIE_NAME,
   ACCESS_TOKEN_MAX_AGE,
@@ -6,6 +6,7 @@ import {
   REFRESH_COOKIE_NAME,
   verifyAccessToken,
 } from '$lib/utils/auth/jwt';
+import { getGravatarLinkFromEmail } from '$lib/utils/gravatar';
 import { redirect } from '@sveltejs/kit';
 
 export async function handle({ event, resolve }) {
@@ -18,27 +19,27 @@ export async function handle({ event, resolve }) {
 
   if (!accessToken && !authedOnly) return await resolve(event);
 
-  const redirectURL = new URL('/login', event.url.origin);
+  const loginURL = new URL('/login', event.url.origin);
 
   if (!event.url.pathname.startsWith('/login') && event.url.pathname !== '/')
-    redirectURL.searchParams.set('redirectTo', event.url.pathname);
+    loginURL.searchParams.set('redirectTo', event.url.pathname);
 
   const refreshToken = event.cookies.get(REFRESH_COOKIE_NAME);
 
-  if (!accessToken && !refreshToken) return redirect(303, redirectURL);
+  if (!accessToken && !refreshToken) return redirect(303, loginURL);
 
-  let userPayload = await verifyAccessToken(accessToken);
+  let userInAccToken = await verifyAccessToken(accessToken);
 
-  if (!userPayload) {
+  if (!userInAccToken) {
     if (!refreshToken) {
       event.cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
       event.cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
       event.locals.user = null;
-      return redirect(303, redirectURL);
+      return redirect(303, loginURL);
     }
 
     try {
-      const { accessToken: newAccessToken, user } = await refreshAccessToken(
+      const { accessToken: newAccessToken, user: userData } = await refreshAccessToken(
         refreshToken
       );
 
@@ -47,16 +48,18 @@ export async function handle({ event, resolve }) {
         maxAge: ACCESS_TOKEN_MAX_AGE,
       });
 
-      userPayload = user;
+      event.locals.user = userData;
     } catch (error) {
       console.error(error);
       event.cookies.delete(ACCESS_COOKIE_NAME, COOKIE_OPTIONS);
       event.cookies.delete(REFRESH_COOKIE_NAME, COOKIE_OPTIONS);
-      return redirect(303, redirectURL);
+      return redirect(303, loginURL);
     }
+  } else {
+    event.locals.user = await getUserById(userInAccToken.userId);
   }
 
-  event.locals.user = userPayload;
+  event.locals.user.gravatar = getGravatarLinkFromEmail(event.locals.user.email);
 
   if (
     event.locals.user.password_reset_required &&
@@ -68,7 +71,7 @@ export async function handle({ event, resolve }) {
   if (
     (!event.locals.user.email ||
       !event.locals.user.phone_number ||
-      !event.locals.user.national_id) &&
+      !event.locals.user.id_doc_number) &&
     !event.url.pathname.startsWith('/account')
   ) {
     return redirect(307, '/account');

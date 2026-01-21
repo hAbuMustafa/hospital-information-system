@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import Nav from '$lib/components/Nav.svelte';
+  import Nav from '$lib/components/Nav/Nav.svelte';
   import { toast, Toaster } from 'svelte-sonner';
   import './styles.css';
   const { data, children } = $props();
@@ -55,7 +55,7 @@
     if (
       data.user &&
       !data.user?.password_reset_required &&
-      (!data.user?.email || !data.user?.phone_number || !data.user?.national_id)
+      (!data.user?.email || !data.user?.phone_number || !data.user?.id_doc_number)
     ) {
       toast.warning('يلزم استكمال بيانات الحساب', {
         duration: 10000,

@@ -1,21 +1,24 @@
-import { new_Patient_discharge_reasons } from '$lib/server/db/menus';
-import { dischargePatient } from '$lib/server/db/operations/patients.js';
+import { discharge_reason_list } from '$lib/server/db/menus';
+import { dischargePatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
+import type { inPatient_view } from '$server/db/schema/entities/patients';
 
 export async function load({ url, fetch }) {
   const pageProps = {
     title: 'تسجيل خروج مريض',
-    discharge_reasons: new_Patient_discharge_reasons.filter((r) => r.id !== 8),
+    discharge_reasons: discharge_reason_list.filter((r) => r.id !== 8),
   };
-  const patientId = url.searchParams.get('patientId');
+  const patientId = url.searchParams.get('patient_id');
 
   if (!patientId) return pageProps;
 
-  if (!/\d{2}\/\d+/.test(patientId)) {
-    return { ...pageProps, message: 'رقم القيد غير صحيح' };
+  if (patientId && !/^\d+$/.test(patientId)) {
+    return { ...pageProps, message: 'رقم المريض غير صحيح' };
   }
 
-  const patientData = await fetch(`/api/patients/patient?id=${patientId}`).then((r) => {
+  const patientData: typeof inPatient_view.$inferSelect = await fetch(
+    `/api/patients/${patientId}`
+  ).then((r) => {
     if (r.ok) {
       return r.json();
     }
@@ -24,7 +27,7 @@ export async function load({ url, fetch }) {
   if (!patientData)
     return {
       ...pageProps,
-      title: `لا يوجد مريض بالرقم ${patientId}`,
+      message: `لا يوجد مريض بالرقم ${patientId}`,
     };
 
   return {
@@ -38,9 +41,9 @@ export const actions = {
   default: async ({ request }) => {
     const data = await request.formData();
 
-    const patientId = data.get('patient_id') as unknown as string;
+    let patientId = data.get('patient_id') as unknown as number;
     const patientName = data.get('patient_name') as unknown as string;
-    let dischargeDate = data.get('discharge_date') as unknown as Date;
+    let dischargeTime = data.get('discharge_date') as unknown as Date;
     let dischargeReason = data.get('discharge_reason') as unknown as number;
     const dischargeNotes = data.get('discharge_notes') as unknown as string;
 
@@ -49,13 +52,13 @@ export const actions = {
     const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
       patientId,
       patientName,
-      dischargeDate,
+      dischargeTime,
       dischargeReason,
       dischargeNotes,
     });
 
     if (!patientId) failMessages.push('لم يتم العثور على المريض');
-    if (!dischargeDate) failMessages.push('وقت الخروج مطلوب');
+    if (!dischargeTime) failMessages.push('وقت الخروج مطلوب');
     if (!dischargeReason) failMessages.push('سبب الخروج مطلوب');
     if (!dischargeNotes && (dischargeReason == 3 || dischargeReason == 9))
       failMessages.push(
@@ -65,17 +68,18 @@ export const actions = {
     if (failMessages.length) return failWithMessages(failMessages);
 
     try {
-      dischargeDate = new Date(dischargeDate);
+      patientId = Number(patientId);
+      dischargeTime = new Date(dischargeTime);
       dischargeReason = Number(dischargeReason);
     } catch (error) {
       return failWithMessages([{ message: 'البيانات المدخلة غير صحيحة', type: 'error' }]);
     }
 
     const result = await dischargePatient({
-      id: patientId,
-      discharge_date: dischargeDate,
+      patient_id: patientId,
+      timestamp: dischargeTime,
       discharge_reason: dischargeReason,
-      discharge_notes: dischargeNotes,
+      notes: dischargeNotes,
     });
 
     if (!result.success) {
@@ -87,7 +91,7 @@ export const actions = {
 
     return {
       success: true,
-      message: `تم تسجيل خروج المريض "${result.data.name}" (قيد ${result.data.id})`,
+      message: `تم تسجيل خروج المريض "${patientName}"`,
     };
   },
 };

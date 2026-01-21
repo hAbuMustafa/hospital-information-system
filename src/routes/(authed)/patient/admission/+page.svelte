@@ -1,27 +1,27 @@
 <script lang="ts">
-  import ListMaker from '$lib/components/Forms/ListMaker.svelte';
-
   import { arabicTriadicNamesPattern, nationalIdPattern } from '$lib/stores/patterns';
-  import { formatDate } from '$lib/utils/date-format';
   import ISelect from '$lib/components/Forms/iSelect.svelte';
   import PersonButton from '$lib/components/Forms/PersonButton.svelte';
-  import type { People } from '$lib/server/db/schema';
+  import type { inPatient_view } from '$server/db/schema/entities/patients.js';
   import Picker from '$lib/components/Forms/Picker.svelte';
 
-  type FetchedPersonT = typeof People.$inferSelect;
+  type FetchedPersonT = typeof inPatient_view.$inferSelect;
 
   const { data, form } = $props();
 
-  let medicalNumber = $state(form?.medicalNumber ?? '');
-  let patientName = $state(form?.patientName ?? '');
+  let personName = $state('');
+  let firstName = $state(form?.firstName ?? '');
+  let fatherName = $state(form?.fatherName ?? '');
+  let grandfatherName = $state(form?.grandfatherName ?? '');
+  let familyName = $state(form?.familyName ?? '');
   let idDocType = $state(form?.idDocType ? Number(form.idDocType) : 1);
   let idDocNum = $state(form?.idDocNum ?? '');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
-      return Number(idDocNum.slice(12, 13)) % 2 ? 1 : 0;
+      return Number(idDocNum.slice(12, 13)) % 2 === 1;
     }
-    return form?.gender ? Number(form.gender) : null;
+    return form?.gender;
   });
   let birthdate = $derived.by(() => {
     if (isNationalId) {
@@ -34,88 +34,120 @@
     }
     return form?.birthdate;
   });
-  let healthInsurance = $state(form?.heathInsurance ? Number(form.heathInsurance) : 0);
 
-  let returnedDiagnosesOnFormError = form?.diagnosis ? form.diagnosis : null;
-  let diagnoses = $state<string[]>(returnedDiagnosesOnFormError ?? []);
-  let diagnosisText = $state('');
+  let selectedPersonId = $state(0);
 
-  let admissionWard = $state(form?.admissionWard ? Number(form.admissionWard) : null);
+  let hasAName = $derived(!firstName && !fatherName && !grandfatherName && !familyName);
 
-  let admissionDate = $state(
-    form?.admissionDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
-  );
-
-  let hasSelectedPerson = $state(!!form?.personId || false);
-  let selectedPersonId = $state(form?.personId ? Number(form?.personId) : 0);
-
-  let referredFrom = $state('reception');
-  let securityStatus = $state(0);
+  let hasSelectedPerson = $state(false);
 
   function selectPerson(person: FetchedPersonT) {
     hasSelectedPerson = true;
 
-    patientName = person.name;
+    selectedPersonId = person.person_id;
 
-    selectedPersonId = person.id;
+    firstName = person.first_name;
+    fatherName = person.father_name;
+    grandfatherName = person.grandfather_name;
+    if (person.family_name) familyName = person.family_name;
 
-    idDocType = person.id_doc_type ?? 1;
+    idDocType = person.id_doc_type_id ?? 1;
 
-    idDocNum = person.id_doc_num ?? '';
+    idDocNum = person.id_doc_number ?? '';
 
-    if (person.gender) {
-      gender = Number(person.gender);
+    birthdate = person.birthdate?.toString();
+
+    if (person.gender !== null) {
+      gender = person.gender;
     }
   }
 </script>
 
 <form method="POST" class="flex-form">
-  <div class="input-pair">
-    <label for="medical_number">الرقم الطبي</label>
-    <div class="medical_number_input">
-      <!-- svelte-ignore a11y_autofocus -->
-      <input
-        type="number"
-        name="medical_number"
-        id="medical_number"
-        placeholder={String(data.nextMedicalNumber)}
+  {#if hasAName}
+    <div class="input-pair">
+      <label for="name" class={hasSelectedPerson ? 'locked' : ''}>بحث عن مريض </label>
+      <ISelect
+        endpoint="/api/people/"
+        type="text"
+        id="name"
+        bind:done={hasSelectedPerson}
+        bind:value={personName}
+        pattern={arabicTriadicNamesPattern.source}
+        onclear={() => {
+          selectedPersonId = 0;
+          firstName = '';
+          fatherName = '';
+          grandfatherName = '';
+          familyName = '';
+        }}
+        readonly={hasSelectedPerson}
+        autocomplete="off"
         autofocus
-        bind:value={medicalNumber}
+      >
+        {#snippet optionSnippet(person: FetchedPersonT)}
+          <PersonButton {person} onclick={() => selectPerson(person)} />
+        {/snippet}
+      </ISelect>
+    </div>
+  {/if}
+
+  <div class="input-pair">
+    <label for="first_name">اسم المريض</label>
+    <div class="input-group">
+      <input
+        type="text"
+        name="first_name"
+        id="first_name"
+        placeholder="الاسم الأول"
+        bind:value={firstName}
+        readonly={hasSelectedPerson}
         required
       />
-      {#if !medicalNumber}
-        <button
-          type="button"
-          onclick={() => {
-            medicalNumber = data.nextMedicalNumber;
-          }}>{String(data.nextMedicalNumber)}</button
-        >
-      {/if}
+      <input
+        type="text"
+        name="father_name"
+        id="father_name"
+        placeholder="اسم الأب"
+        bind:value={fatherName}
+        readonly={hasSelectedPerson}
+        required
+      />
+      <input
+        type="text"
+        name="grandfather_name"
+        id="grandfather_name"
+        placeholder="اسم الجد"
+        bind:value={grandfatherName}
+        readonly={hasSelectedPerson}
+        required
+      />
+      <input
+        type="text"
+        name="family_name"
+        id="family_name"
+        placeholder="اسم العائلة"
+        bind:value={familyName}
+        readonly={hasSelectedPerson}
+        required
+      />
+
+      <button
+        type="button"
+        disabled={hasAName}
+        onclick={() => {
+          firstName = '';
+          fatherName = '';
+          grandfatherName = '';
+          familyName = '';
+        }}
+      >
+        مسح
+      </button>
     </div>
   </div>
 
-  <div class="input-pair">
-    <label for="name" class={hasSelectedPerson ? 'locked' : ''}> اسم المريض </label>
-    <ISelect
-      endpoint="/api/people/"
-      name="name"
-      type="text"
-      id="name"
-      bind:done={hasSelectedPerson}
-      bind:value={patientName}
-      pattern={arabicTriadicNamesPattern.source}
-      readonly={hasSelectedPerson}
-      onclear={() => {
-        selectedPersonId = 0;
-      }}
-      autocomplete="off"
-      required
-    >
-      {#snippet optionSnippet(person: FetchedPersonT)}
-        <PersonButton {person} onclick={() => selectPerson(person)} />
-      {/snippet}
-    </ISelect>
-  </div>
+  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
 
   <Picker
     label="نوع الهوية"
@@ -143,8 +175,8 @@
     name="gender"
     label="النوع"
     options={[
-      { id: 1, name: 'ذكر' },
-      { id: 0, name: 'أنثى' },
+      { id: true, name: 'ذكر' },
+      { id: false, name: 'أنثى' },
     ]}
     bind:value={gender}
     locked={hasSelectedPerson}
@@ -162,81 +194,13 @@
     />
   </div>
 
-  <hr />
-
-  <input type="hidden" name="person_id" bind:value={selectedPersonId} />
-
-  <!-- todo: use ISelect to insert diagnoses -->
-  <ListMaker
-    name="diagnosis"
-    label="التشخيص"
-    bind:value={diagnosisText}
-    bind:list={diagnoses}
-    datalist={data.diagnoses_list}
-  />
-
-  <Picker
-    name="admission_ward"
-    label="قسم الدخول"
-    options={data.wards_list}
-    bind:value={admissionWard}
-    dividerList={data.floors_list}
-    dividerKey="floor"
-  />
-
-  <Picker
-    name="health_insurance"
-    label="التأمين الصحي"
-    options={[
-      { id: 1, name: 'مؤمن عليه' },
-      { id: 0, name: 'غير مؤمن عليه' },
-    ]}
-    bind:value={healthInsurance}
-  />
-
-  <Picker
-    name="referred_from"
-    label="محول من"
-    options={[{ id: 'reception', name: 'الاستقبال' }]}
-    bind:value={referredFrom}
-    other
-  />
-
-  <Picker
-    name="security_status"
-    label="الوضع الأمني"
-    options={[
-      { id: 0, name: 'حر' },
-      { id: 1, name: 'مسجون' },
-    ]}
-    bind:value={securityStatus}
-  />
-
-  <div class="input-pair">
-    <label for="admission_date">وقت وتاريخ الدخول</label>
-    <input
-      type="datetime-local"
-      name="admission_date"
-      id="admission_date"
-      bind:value={admissionDate}
-      required
-    />
-  </div>
-
-  <div class="input-pair">
-    <label for="admission_notes">ملاحظات</label>
-    <textarea name="admission_notes" id="admission_notes" required={idDocType === 6}
-    ></textarea>
-  </div>
-
-  <input type="submit" value="تسجيل" />
+  <input type="submit" value="تسجيل البيانات الشخصية" />
 </form>
 
 <style>
-  form {
-    div.medical_number_input {
-      display: grid;
-      grid-template-columns: 1fr max-content;
-    }
+  .input-group {
+    display: grid;
+    grid-template-columns: repeat(4, 3fr) 1fr;
+    gap: 0.5rem;
   }
 </style>

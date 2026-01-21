@@ -1,8 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { db } from '$lib/server/db';
-import { RefreshTokens, Users } from '$lib/server/db/schema';
+import { RefreshToken, users_view } from '$lib/server/db/schema/entities/system';
 import { and, eq, gt, lt } from 'drizzle-orm';
-import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
 import {
   generateTokenId,
   generateAccessToken,
@@ -13,8 +12,20 @@ import {
   type AccessTokenPayload,
 } from '$lib/utils/auth/jwt';
 
+export async function getUserById(user_id: number) {
+  const [user] = await db
+    .select()
+    .from(users_view)
+    .where(eq(users_view.user_id, user_id));
+
+  return user;
+}
+
 export async function validateLogin(username: string, password: string) {
-  const [user] = await db.select().from(Users).where(eq(Users.username, username));
+  const [user] = await db
+    .select()
+    .from(users_view)
+    .where(eq(users_view.username, username));
 
   if (!user) {
     return null;
@@ -26,31 +37,42 @@ export async function validateLogin(username: string, password: string) {
     return null;
   }
 
-  const { hashed_pw: droppedPwHash, ...otherUserData } = user;
-
-  return otherUserData;
+  return user;
 }
 
 export async function createTokens(
-  userData: NonNullable<App.Locals['user']>,
+  userData: typeof users_view.$inferSelect,
   sessionMaxAge: Date
 ) {
+  if (!userData) {
+    console.error('User logged out');
+    return;
+  }
+
   const tokenId = generateTokenId();
 
   const refreshPayload: RefreshTokenPayload = {
-    userId: userData.id,
+    userId: userData.user_id,
     tokenId,
   };
 
-  const accessToken = await generateAccessToken(userData);
+  const accessPayload: AccessTokenPayload = {
+    userId: userData.user_id,
+  };
+
+  const accessToken = await generateAccessToken(accessPayload);
   const refreshToken = await generateRefreshToken(refreshPayload, sessionMaxAge);
 
-  await db.insert(RefreshTokens).values({
-    id: tokenId,
-    user_id: userData.id,
-    token_hash: hashToken(refreshToken),
-    expires_at: sessionMaxAge,
-  });
+  try {
+    await db.insert(RefreshToken).values({
+      id: tokenId,
+      user_id: userData.user_id,
+      token_hash: hashToken(refreshToken),
+      expires_at: sessionMaxAge,
+    });
+  } catch (e) {
+    console.error(e);
+  }
 
   return {
     success: true,
@@ -67,48 +89,50 @@ export async function refreshAccessToken(refreshToken: string) {
   }
 
   const tokenHash = hashToken(refreshToken);
-  const tokenRecord = await db.query.RefreshTokens.findFirst({
-    where: and(
-      eq(RefreshTokens.id, refreshTokenPayload.tokenId),
-      eq(RefreshTokens.user_id, refreshTokenPayload.userId),
-      eq(RefreshTokens.token_hash, tokenHash),
-      gt(RefreshTokens.expires_at, new Date())
-    ),
-    with: {
-      User: true,
-    },
+  const records = await db.transaction(async (tx) => {
+    const [tokenRecord] = await tx
+      .select()
+      .from(RefreshToken)
+      .where(
+        and(
+          eq(RefreshToken.id, refreshTokenPayload.tokenId),
+          eq(RefreshToken.user_id, refreshTokenPayload.userId),
+          eq(RefreshToken.token_hash, tokenHash),
+          gt(RefreshToken.expires_at, new Date())
+        )
+      );
+
+    const [userRecord] = await tx
+      .select()
+      .from(users_view)
+      .where(eq(users_view.user_id, tokenRecord.user_id));
+
+    return {
+      token: tokenRecord,
+      user: userRecord,
+    };
   });
 
-  if (!tokenRecord) {
+  if (!records.token) {
     throw new Error('Refresh token not found or expired');
   }
 
   await db
-    .update(RefreshTokens)
+    .update(RefreshToken)
     .set({
       last_used_at: new Date(),
     })
-    .where(eq(RefreshTokens.id, refreshTokenPayload.tokenId));
+    .where(eq(RefreshToken.id, refreshTokenPayload.tokenId));
 
   const accessPayload: AccessTokenPayload = {
-    id: refreshTokenPayload.userId,
-    username: tokenRecord.User.username,
-    name: tokenRecord.User.name,
-    created_at: tokenRecord.User.created_at,
-    password_reset_required: tokenRecord.User.password_reset_required,
-    phone_number: tokenRecord.User.phone_number,
-    national_id: tokenRecord.User.national_id,
-    role: tokenRecord.User.role,
-    last_login: tokenRecord.User.last_login,
-    gravatar: getGravatarLinkFromUserRecord(tokenRecord.User),
-    email: tokenRecord.User.email,
+    userId: records.user.user_id,
   };
 
   const newAccessToken = await generateAccessToken(accessPayload);
 
   return {
     accessToken: newAccessToken,
-    user: accessPayload,
+    user: records.user,
   };
 }
 
@@ -117,11 +141,11 @@ export async function logoutUser(refreshToken: string) {
   if (!payload) {
     return;
   }
-  await db.delete(RefreshTokens).where(eq(RefreshTokens.id, payload.tokenId));
+  await db.delete(RefreshToken).where(eq(RefreshToken.id, payload.tokenId));
 }
 
 export async function logoutAllDevices(userId: number) {
-  await db.delete(RefreshTokens).where(eq(RefreshTokens.user_id, userId));
+  await db.delete(RefreshToken).where(eq(RefreshToken.user_id, userId));
 }
 
 export async function rotateRefreshToken(oldRefreshToken: string, sessionMaxAge: Date) {
@@ -130,25 +154,23 @@ export async function rotateRefreshToken(oldRefreshToken: string, sessionMaxAge:
     throw new Error('Invalid refresh token');
   }
 
-  await db.delete(RefreshTokens).where(eq(RefreshTokens.id, payload.tokenId));
+  await db.delete(RefreshToken).where(eq(RefreshToken.id, payload.tokenId));
 
-  const user = await db.query.Users.findFirst({ where: eq(Users.id, payload.userId) });
+  const [user] = await db
+    .select()
+    .from(users_view)
+    .where(eq(users_view.user_id, payload.userId));
 
   if (!user) {
     throw new Error('User not found');
   }
 
-  const userData = {
-    ...user,
-    gravatar: getGravatarLinkFromUserRecord(user),
-  };
-
-  return await createTokens(userData, sessionMaxAge);
+  return await createTokens(user, sessionMaxAge);
 }
 
 async function deleteAllExpiredRefreshTokens() {
   console.log('CLEANED EXPIRED REFRESH TOKENS');
-  await db.delete(RefreshTokens).where(lt(RefreshTokens.expires_at, new Date()));
+  await db.delete(RefreshToken).where(lt(RefreshToken.expires_at, new Date()));
 }
 
 setInterval(deleteAllExpiredRefreshTokens, 24 * 60 * 60 * 1000);

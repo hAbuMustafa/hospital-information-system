@@ -15,6 +15,10 @@
       prevYear: currentMonth > 1 ? currentYear : currentYear - 1,
     };
   });
+
+  const icuWard_ids = data
+    .wards!.filter((w) => w.tags.some((t) => t === 'icu'))
+    .map((w) => w.id);
 </script>
 
 <nav aria-label="Month Navigation">
@@ -27,32 +31,31 @@
 </nav>
 
 {#if data.stats}
-  {@const icuAdmissions = data.stats.transfers.filter(
-    (t: any) => t.ward === 1 || t.ward === 2
+  {@const icuAdmissions = data.stats.transfers.filter((t) =>
+    icuWard_ids.some((w_id) => w_id === t.to_ward_id)
   )}
-  {@const icuDischarges = data.stats.discharges.filter(
-    (d: any) => d.recent_ward === 1 || d.recent_ward === 2
+  {@const icuDischarges = data.stats.discharges.filter((d) =>
+    icuWard_ids.some((w_id) => w_id === d.recent_ward_id)
   )}
-  {@const transfersByPatient = Object.groupBy(
-    data.stats.transfers,
-    (t: any) => t.patient_id
-  )}
+  {@const transfersByPatient = Object.groupBy(data.stats.transfers, (t) => t.patient_id)}
 
   <h2>إحصائيات الدخول</h2>
   <dl>
     <dt>عدد حالات الدخول (ذكور):</dt>
-    <dd>{data.stats.admissions.filter((p: any) => p.Person.gender).length}</dd>
+    <dd>{data.stats.admissions.filter((p) => p.gender === true).length}</dd>
 
     <dt>عدد حالات الدخول (إناث):</dt>
-    <dd>{data.stats.admissions.filter((p: any) => !p.Person.gender).length}</dd>
+    <dd>{data.stats.admissions.filter((p) => p.gender === false).length}</dd>
   </dl>
 
   <dl>
     <dt>عدد حالات الدخول المنتفعين بالتأمين الصحي:</dt>
-    <dd>{data.stats.admissions.filter((p: any) => p.health_insurance).length}</dd>
+    <dd>{data.stats.admissions.filter((p) => p.health_insurance).length}</dd>
 
     <dt>غير المصريين:</dt>
-    <dd>{data.stats.admissions.filter((p: any) => p.Person.id_doc_type !== 1).length}</dd>
+    <dd>
+      {data.stats.admissions.filter((p) => p.id_doc_type_id !== 1).length}
+    </dd>
   </dl>
 
   <dl>
@@ -63,19 +66,23 @@
   <h2>إحصائيات الخروج</h2>
   <dl>
     <dt>عدد حالات الخروج (ذكور):</dt>
-    <dd>{data.stats.discharges.filter((p: any) => p.Person.gender).length}</dd>
+    <dd>
+      {data.stats.discharges.filter((p) => p.gender === true).length}
+    </dd>
 
     <dt>عدد حالات الخروج (إناث):</dt>
-    <dd>{data.stats.discharges.filter((p: any) => !p.Person.gender).length}</dd>
+    <dd>
+      {data.stats.discharges.filter((p) => p.gender === false).length}
+    </dd>
   </dl>
 
   <dl>
     <dt>إجمالي مدة الإقامة لحالات الخروج:</dt>
     <dd>
       {data.stats.discharges.reduce(
-        (total: number, currentPatient: any) =>
+        (total, currentPatient) =>
           total +
-          getDuration(currentPatient.admission_date, currentPatient.discharge_date),
+          getDuration(currentPatient.admission_time, currentPatient.discharge_time),
         0
       )}
     </dd>
@@ -92,47 +99,49 @@
     <dd>{icuAdmissions.length}</dd>
     <dt>إجمالي حالات الدخول عن طريق الاستقبال:</dt>
     <dd>
-      {icuAdmissions.filter(
-        (t: any) =>
-          t.notes?.includes('admission') && t.Patient.referred_from?.includes('reception')
+      {data.stats.admissions.filter(
+        (adm) =>
+          adm.admitted_from?.includes('reception') &&
+          icuWard_ids.some(
+            (w_id) =>
+              w_id ===
+              icuAdmissions.find(
+                (t) => t.patient_id === adm.patient_id && t.notes?.includes('admission')
+              )?.to_ward_id
+          )
       ).length}
     </dd>
     <dt>إجمالي حالات الدخول عن طريق الأقسام الداخلية:</dt>
-    <dd>{icuAdmissions.filter((t: any) => !t.notes?.includes('admission')).length}</dd>
+    <dd>
+      {data.stats.transfers.filter(
+        (t) =>
+          icuWard_ids.some((w_id) => w_id === t.to_ward_id) &&
+          !t.notes?.includes('admission')
+      ).length}
+    </dd>
     <dt>إجمالي حالات الدخول عن طريق تنسيق المديرية:</dt>
     <dd>
-      {icuAdmissions.filter(
-        (t: any) =>
-          t.notes?.includes('admission') &&
-          t.Patient.referred_from &&
-          !t.Patient.referred_from.includes('reception')
+      {data.stats.admissions.filter(
+        (adm) => adm.admitted_from && !adm.admitted_from.includes('reception')
       ).length}
     </dd>
   </dl>
 
   <dl>
-    {#each Object.keys(Object.groupBy(icuDischarges, (pat: any) => pat.Patient_discharge_reason.name)) as dischargeReason, i (i)}
+    {#each Object.keys(Object.groupBy(icuDischarges, (pat) => pat.discharge_reason)) as dischargeReason, i (i)}
       <dt>حالات الخروج {dischargeReason}:</dt>
       <dd>
-        {icuDischarges.filter(
-          (d: any) => d.Patient_discharge_reason.name === dischargeReason
-        ).length}
+        {icuDischarges.filter((d) => d.discharge_reason === dischargeReason).length}
       </dd>
     {/each}
+  </dl>
+
+  <dl>
     <dt>حالات التحويل من الرعاية للأقسام الداخلية:</dt>
     <dd>
-      {Object.keys(transfersByPatient).reduce((acc, currPatientId) => {
-        if (
-          transfersByPatient[currPatientId]?.some(
-            (transObject: any, indx: number) =>
-              (transObject.ward === 1 || transObject.ward === 2) &&
-              indx < transfersByPatient[currPatientId]!.length - 1
-          )
-        ) {
-          return acc + 1;
-        }
-        return acc;
-      }, 0)}
+      {data.stats.transfers.filter((t) =>
+        icuWard_ids.some((w_id) => w_id === t.from_ward_id)
+      ).length}
     </dd>
   </dl>
 {/if}

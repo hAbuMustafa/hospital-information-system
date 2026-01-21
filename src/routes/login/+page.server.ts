@@ -8,7 +8,7 @@ import {
 } from '$lib/utils/auth/jwt';
 import { createTokens } from '$lib/server/db/operations/auth';
 import { usernamePattern } from '$lib/stores/patterns';
-import { getGravatarLinkFromUserRecord } from '$lib/utils/gravatar';
+import { getGravatarLinkFromEmail } from '$lib/utils/gravatar';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
 export function load({ locals }) {
@@ -64,13 +64,7 @@ export const actions: Actions = {
 
     const sessionMaxAge = getEndOfSessionTime();
 
-    const result = await createTokens(
-      {
-        ...userData,
-        gravatar: getGravatarLinkFromUserRecord(userData),
-      },
-      sessionMaxAge
-    );
+    const result = await createTokens(userData, sessionMaxAge);
 
     if (!result.success)
       return fail(401, { message: 'حدث خطأ غير متوقع أثناء إثبات الجلسة' });

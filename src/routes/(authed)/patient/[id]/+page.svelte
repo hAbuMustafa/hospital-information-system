@@ -8,7 +8,7 @@
     TimelineSeparator,
     TimelineDot,
   } from 'svelte-vertical-timeline';
-  import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format.js';
+  import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
 
   let { data } = $props();
@@ -24,29 +24,29 @@
       <summary>البيانات الشخصية</summary>
       <dl class="personal_data">
         <dt>الرقم الموحد:</dt>
-        <dd>{data.patient.Person.id}</dd>
+        <dd>{data.patient.person_id}</dd>
 
-        {#if data.patient.Person.id_doc_type !== 1}
+        {#if data.patient.id_doc_type_id !== 1}
           <!-- todo: separate nationality in a separate column -->
           <dt>الجنسية:</dt>
           <dd>{data.patient.admission_notes}</dd>
         {/if}
 
-        <dt>{data.patient.Person.Patient_id_doc_type?.name}:</dt>
-        <dd>{data.patient.Person.id_doc_num}</dd>
+        <dt>{data.patient.id_doc_type}:</dt>
+        <dd>{data.patient.id_doc_number}</dd>
 
-        {#if data.patient.Person.birthdate}
+        {#if data.patient.birthdate}
           <dt>تاريخ الميلاد:</dt>
           <dd>
-            {formatDate(data.patient.Person.birthdate, 'YYYY/MM/DD')} ({getAge(
-              data.patient.Person.birthdate
+            {formatDate(new Date(data.patient.birthdate), 'YYYY/MM/DD')} ({getAge(
+              data.patient.birthdate
             )} سنة)
           </dd>
         {/if}
 
-        {#if data.patient.Person.gender}
+        {#if data.patient.gender}
           <dt>النوع:</dt>
-          <dd>{data.patient.Person.gender ? 'ذكر' : 'أنثى'}</dd>
+          <dd>{data.patient.gender ? 'ذكر' : 'أنثى'}</dd>
         {/if}
 
         <dt>التأمين الصحي:</dt>
@@ -60,10 +60,10 @@
     <h2>بيانات الإقامة</h2>
     <dl class="stay-data">
       <dt>رقم الملف:</dt>
-      <dd>{data.patient.id}</dd>
+      <dd>{data.patient.patient_file_number}</dd>
 
       <dt>تاريخ الدخول:</dt>
-      <dd>{dateAndTime(data.patient.admission_date)}</dd>
+      <dd>{dateAndTime(data.patient.admission_time)}</dd>
 
       {#if data.patient.admission_notes}
         <dt>ملاحظات الدخول:</dt>
@@ -75,47 +75,49 @@
         <dd>مسجون</dd>
       {/if}
 
-      {#if data.patient.discharge_date}
+      {#if data.patient.discharge_time}
         <dt>تاريخ الخروج:</dt>
-        <dd>{dateAndTime(data.patient.discharge_date)}</dd>
+        <dd>{dateAndTime(data.patient.discharge_time)}</dd>
 
         <dt>سبب الخروج:</dt>
-        <dd>{data.patient.Patient_discharge_reason?.name}</dd>
+        <dd>{data.patient.discharge_reason}</dd>
 
         <dt>مدة الإقامة:</dt>
         {@const daysOfStay = getDuration(
-          data.patient.admission_date,
-          data.patient.discharge_date
+          data.patient.admission_time,
+          data.patient.discharge_time
         )}
         <dd>
           {getTermed(daysOfStay, 'يوم', 'أيام')}
         </dd>
       {/if}
 
-      {#if !data.patient.discharge_date}
+      {#if !data.patient.discharge_time}
         <dt>القسم:</dt>
-        <dd>{data.patient.Patient_wards.at(-1)?.Ward.name}</dd>
+        <dd>{data.patient.ward_name}</dd>
       {/if}
     </dl>
 
     <h3>التشخيص</h3>
     <ol class="diagnosis_list">
-      {#each data.patient.Patient_diagnoses as diagnosis, i (i)}
-        <li class="diagnosis_pair">
-          <span class="diagnosis_name">{diagnosis.Diagnosis.name}</span>
-          <span class="diagnosis_time">
-            {diagnosis.timestamp === data.patient.admission_date
-              ? '(أولي)'
-              : dateAndTime(diagnosis.timestamp)}
-          </span>
-        </li>
+      {#each data.diagnoses as diagnosis, i (i)}
+        {#each diagnosis.diagnosis.split(' + ') as d, j (j)}
+          <li class="diagnosis_pair">
+            <span class="diagnosis_name">{d}</span>
+            <span class="diagnosis_time">
+              {diagnosis.diagnosis_type === 'Initial'
+                ? '(أولي)'
+                : dateAndTime(diagnosis.timestamp)}
+            </span>
+          </li>
+        {/each}
       {/each}
     </ol>
 
     <details dir="ltr">
       <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
       <Timeline position="alternate">
-        {#each data.patient.Patient_wards as transfer, i (i)}
+        {#each data.transfers as transfer, i (i)}
           <TimelineItem>
             <TimelineOppositeContent slot="opposite-content">
               <small class="transfer_time">
@@ -124,7 +126,7 @@
             </TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot style={'background-color: #7CD5E2;'} />
-              {#if !data.patient.discharge_date && data.patient.Patient_wards.length - 1 === i}
+              {#if !data.patient.discharge_time && data.transfers.length - 1 === i}
                 <TimelineConnector
                   style="background: linear-gradient(#fff, 30%, transparent 99% 1%);"
                 />
@@ -133,16 +135,16 @@
               {/if}
             </TimelineSeparator>
             <TimelineContent>
-              <span class="transfer_ward_name">{transfer.Ward.name}</span>
+              <span class="transfer_ward_name">{transfer.to_ward}</span>
             </TimelineContent>
           </TimelineItem>
         {/each}
 
-        {#if data.patient.discharge_date}
+        {#if data.patient.discharge_time}
           <TimelineItem>
             <TimelineOppositeContent slot="opposite-content">
               <small class="transfer_time">
-                {dateAndTime(data.patient.discharge_date)}
+                {dateAndTime(data.patient.discharge_time)}
               </small>
             </TimelineOppositeContent>
             <TimelineSeparator>
@@ -156,15 +158,22 @@
       </Timeline>
     </details>
   </section>
-  {#if data.patient.Person.Patients?.length}
-    {@const sheetRows = data.patient.Person.Patients.map((p) => {
-      const { id, admission_date, discharge_date } = p;
+  {#if data.other_admissions?.length}
+    {@const sheetRows = data.other_admissions.map((p) => {
+      const {
+        patient_file_number,
+        patient_id,
+        admission_time,
+        discharge_time,
+        discharge_reason,
+      } = p;
 
       return {
-        id,
-        admission_date: new Date(admission_date),
-        discharge_date: discharge_date ? new Date(discharge_date) : null,
-        discharge_reason: p.Patient_discharge_reason?.name,
+        patient_id,
+        patient_file_number,
+        admission_date: new Date(admission_time),
+        discharge_date: discharge_time ? new Date(discharge_time) : null,
+        discharge_reason,
       };
     })}
     <section class="other_admissions">
@@ -173,12 +182,13 @@
         rows={sheetRows}
         dateColumns={{ admission_date: 'YYYY/MM/DD', discharge_date: 'YYYY/MM/DD' }}
         renameColumns={{
-          id: 'رقم القيد',
+          patient_id: 'رقم القيد',
+          patient_file_number: 'رقم الملف',
           admission_date: 'تاريخ الدخول',
           discharge_date: 'تاريخ الخروج',
           discharge_reason: 'سبب الخروج',
         }}
-        detailsColumn={{ id: (p: any) => `/patient/${p.id}` }}
+        detailsColumn={{ patient_id: (p: any) => `/patient/${p.patient_id}` }}
       />
     </section>
   {/if}

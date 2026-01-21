@@ -13,10 +13,12 @@
     "db:seed": "node scripts/seed/",
     "db:push:prod": "pnpm drizzle-kit push",
     "db:pull:prod": "pnpm drizzle-kit pull",
-    "db:generate:prod": "pnpm drizzle-kit generate",
+    "db:gene:prod": "pnpm drizzle-kit generate",
+    "db:migr:prod": "pnpm drizzle-kit migrate",
     "db:push": "pnpm drizzle-kit push --config=drizzle-dev.config.ts",
     "db:pull": "pnpm drizzle-kit pull --config=drizzle-dev.config.ts",
-    "db:generate": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts"
+    "db:gene": "pnpm drizzle-kit generate --config=drizzle-dev.config.ts",
+    "db:migr": "pnpm drizzle-kit migrate --config=drizzle-dev.config.ts"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.1.1",
@@ -24,6 +26,7 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^24.7.2",
+    "@types/pg": "^8.15.6",
     "drizzle-kit": "^0.31.5",
     "svelte": "^5.40.0",
     "svelte-check": "^4.3.3",
@@ -36,14 +39,13 @@
     ]
   },
   "dependencies": {
-    "@libsql/client": "^0.15.15",
     "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.18",
     "drizzle-orm": "^0.44.7",
     "extend-arabic-query": "^0.3.2",
     "jose": "^6.1.0",
     "lodash.debounce": "^4.0.8",
-    "mysql2": "^3.15.3",
+    "pg": "^8.16.3",
     "svelte-sonner": "^1.0.5",
     "svelte-vertical-timeline": "^2.0.0"
   }

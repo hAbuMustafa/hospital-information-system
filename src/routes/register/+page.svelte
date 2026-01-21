@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import {
-    arabicTriadicNamesPattern,
+    arabicNamePattern,
     egyptianMobileNumberPattern,
     nationalIdPattern,
     passwordPattern,
@@ -19,20 +19,67 @@
     <legend>البيانات الشخصية</legend>
 
     <div class="input-pair">
-      <label for="name">الاسم كاملا</label>
+      <label for="first_name">الاسم الأول</label>
       <!-- svelte-ignore a11y_autofocus -->
       <input
-        id="name"
-        name="name"
+        id="first_name"
+        name="first_name"
         type="text"
         style:direction="rtl"
         required
         autofocus
-        pattern={arabicTriadicNamesPattern.source}
+        pattern={arabicNamePattern.source}
         autocomplete="off"
         autocorrect="off"
         spellcheck="false"
-        value={form?.name ?? ''}
+        value={form?.first_name ?? ''}
+      />
+    </div>
+
+    <div class="input-pair">
+      <label for="father_name">اسم الأب</label>
+      <input
+        id="father_name"
+        name="father_name"
+        type="text"
+        style:direction="rtl"
+        required
+        pattern={arabicNamePattern.source}
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        value={form?.father_name ?? ''}
+      />
+    </div>
+
+    <div class="input-pair">
+      <label for="grandfather_name">اسم الجد</label>
+      <input
+        id="grandfather_name"
+        name="grandfather_name"
+        type="text"
+        style:direction="rtl"
+        required
+        pattern={arabicNamePattern.source}
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        value={form?.grandfather_name ?? ''}
+      />
+    </div>
+
+    <div class="input-pair">
+      <label for="family_name">اسم العائلة</label>
+      <input
+        id="family_name"
+        name="family_name"
+        type="text"
+        style:direction="rtl"
+        pattern={arabicNamePattern.source}
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        value={form?.family_name ?? ''}
       />
     </div>
 

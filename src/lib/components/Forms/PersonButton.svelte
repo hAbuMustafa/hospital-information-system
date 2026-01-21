@@ -1,8 +1,9 @@
 <script lang="ts">
   import { formatDate, getAge } from '$lib/utils/date-format';
+  import type { inPatient_view } from '$server/db/schema/entities/patients';
 
   type PropsT = {
-    person: any;
+    person: typeof inPatient_view.$inferSelect;
     onclick?: Function;
   };
 
@@ -17,11 +18,11 @@
     onclick?.();
   }}
 >
-  <strong>{person.name}</strong>
-  <span>{person.id_doc_num}</span>
+  <strong>{person.full_name}</strong>
+  <span>{person.id_doc_number}</span>
   {#if person.birthdate}
     <span>
-      {formatDate(person.birthdate, 'YYYY/MM/DD')} ({getAge(person.birthdate)} سنة)
+      {formatDate(new Date(person.birthdate), 'YYYY/MM/DD')} ({getAge(person.birthdate)} سنة)
     </span>
   {/if}
 </button>

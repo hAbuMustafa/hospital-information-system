@@ -1,40 +1,42 @@
 import {
-  mysqlTable,
-  serial,
+  pgSchema,
+  bigserial,
   varchar,
   foreignKey,
   bigint,
-  int,
+  integer,
   decimal,
-  longtext,
   text,
   timestamp,
-} from 'drizzle-orm/mysql-core';
+  smallint,
+} from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Formulary } from './pharmacy';
 import { Staff } from './hospital';
 import { Sec_pb_key } from './system';
 
-export const MedPlan = mysqlTable(
+export const MedicationPlan = pgSchema('MedicationPlan');
+
+export const MedPlan = MedicationPlan.table(
   'MedPlan',
   {
-    id: serial().primaryKey(),
+    id: bigserial({ mode: 'bigint' }).primaryKey(),
     timestamp: timestamp({ mode: 'date' }).notNull(),
-    patient_id: bigint({ mode: 'number', unsigned: true })
+    patient_id: integer()
       .notNull()
       .references(() => InPatient.id),
-    medication_id: bigint({ mode: 'number', unsigned: true })
+    medication_id: integer()
       .notNull()
       .references(() => Formulary.id),
     amount: decimal({ precision: 10, scale: 2 }).notNull(),
     amount_unit: varchar({ length: 15 }).notNull(),
     frequency: decimal({ precision: 10, scale: 2 }).notNull(),
     duration_days: decimal({ precision: 10, scale: 2 }).notNull(),
-    mixed_with: bigint({ mode: 'number', unsigned: true }),
+    mixed_with: bigint({ mode: 'bigint' }),
     discontinued_at: timestamp({ mode: 'date' }),
-    discontinue_phys_id: int().references(() => Staff.id),
+    discontinue_phys_id: smallint().references(() => Staff.id),
     discontinue_phys_signature: varchar({ length: 256 }),
-    discontinue_phys_sign_key_id: bigint({ mode: 'number', unsigned: true }).references(
+    discontinue_phys_sign_key_id: bigint({ mode: 'bigint' }).references(
       () => Sec_pb_key.id
     ),
   },
@@ -47,67 +49,67 @@ export const MedPlan = mysqlTable(
   ]
 );
 
-export const MedPlan_note = mysqlTable('MedPlan_note', {
-  id: serial().primaryKey(),
+export const MedPlan_note = MedicationPlan.table('MedPlan_note', {
+  id: bigserial({ mode: 'bigint' }).primaryKey(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
-  med_plan_id: bigint({ mode: 'number', unsigned: true })
+  med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  note: longtext().notNull(),
-  note_type: int()
+  note: text().notNull(),
+  note_type: integer()
     .notNull()
     .references(() => MedPlan_note_type.id),
-  author_id: int()
+  author_id: smallint()
     .notNull()
     .references(() => Staff.id),
   author_signature: varchar({ length: 256 }).notNull(),
-  author_sign_key_id: bigint({ mode: 'number', unsigned: true })
+  author_sign_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
 });
 
-export const MedPlan_note_type = mysqlTable('MedPlan_note_type', {
-  id: int().primaryKey(),
+export const MedPlan_note_type = MedicationPlan.table('MedPlan_note_type', {
+  id: integer().primaryKey(),
   type: text().notNull(),
 });
 
-export const MedPlan_sign_nurse = mysqlTable('MedPlan_sign_nurse', {
-  med_plan_id: bigint({ mode: 'number', unsigned: true })
+export const MedPlan_sign_nurse = MedicationPlan.table('MedPlan_sign_nurse', {
+  med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  nurse_id: int()
+  nurse_id: smallint()
     .notNull()
     .references(() => Staff.id),
   nurse_signature: varchar({ length: 256 }).notNull(),
-  nurse_sign_key_id: bigint({ mode: 'number', unsigned: true })
+  nurse_sign_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
   signature_time: timestamp({ mode: 'date' }).notNull(),
 });
 
-export const MedPlan_sign_pharm = mysqlTable('MedPlan_sign_pharm', {
-  med_plan_id: bigint({ mode: 'number', unsigned: true })
+export const MedPlan_sign_pharm = MedicationPlan.table('MedPlan_sign_pharm', {
+  med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  pharm_id: int()
+  pharm_id: smallint()
     .notNull()
     .references(() => Staff.id),
   pharm_signature: varchar({ length: 256 }).notNull(),
-  pharm_signature_key_id: bigint({ mode: 'number', unsigned: true })
+  pharm_signature_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
   signature_time: timestamp({ mode: 'date' }).notNull(),
 });
 
-export const MedPlan_sign_phys = mysqlTable('MedPlan_sign_phys', {
-  med_plan_id: bigint({ mode: 'number', unsigned: true })
+export const MedPlan_sign_phys = MedicationPlan.table('MedPlan_sign_phys', {
+  med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
-  phys_id: int()
+  phys_id: smallint()
     .notNull()
     .references(() => Staff.id),
   phys_signature: varchar({ length: 256 }).notNull(),
-  phys_signature_key_id: bigint({ mode: 'number', unsigned: true })
+  phys_signature_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
   signature_time: timestamp({ mode: 'date' }).notNull(),

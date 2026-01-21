@@ -5,7 +5,7 @@
   import Row from '$lib/components/Sheet/Sheet_row.svelte';
   import NoData from '$lib/components/Sheet/Sheet_no_data.svelte';
 
-  type RowT = Record<string, string | number | Date | null | undefined>;
+  type RowT = Record<string, string | number | boolean | Date | null | undefined>;
 
   type PropsT = {
     rows: RowT[];

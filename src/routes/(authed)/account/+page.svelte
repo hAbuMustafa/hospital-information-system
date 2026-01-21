@@ -1,11 +1,12 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import {
+    arabicNamePattern,
     arabicTriadicNamesPattern,
     egyptianMobileNumberPattern,
     nationalIdPattern,
     usernamePattern,
-  } from '$lib/stores/patterns.js';
+  } from '$lib/stores/patterns';
 
   let { data } = $props();
 </script>
@@ -23,14 +24,50 @@
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/name" use:enhance>
-    <label for="name">اسم الموظف</label>
+  <form method="POST" action="?/first_name" use:enhance>
+    <label for="first_name">اسم الموظف</label>
     <input
       type="text"
-      id="name"
-      name="name"
-      value={data.user?.name}
-      pattern={arabicTriadicNamesPattern.source}
+      id="first_name"
+      name="first_name"
+      value={data.user?.first_name}
+      pattern={arabicNamePattern.source}
+    />
+    <input type="submit" value="تعديل" />
+  </form>
+
+  <form method="POST" action="?/father_name" use:enhance>
+    <label for="father_name">اسم الأب</label>
+    <input
+      type="text"
+      id="father_name"
+      name="father_name"
+      value={data.user?.father_name}
+      pattern={arabicNamePattern.source}
+    />
+    <input type="submit" value="تعديل" />
+  </form>
+
+  <form method="POST" action="?/grandfather_name" use:enhance>
+    <label for="grandfather_name">اسم الجد</label>
+    <input
+      type="text"
+      id="grandfather_name"
+      name="grandfather_name"
+      value={data.user?.grandfather_name}
+      pattern={arabicNamePattern.source}
+    />
+    <input type="submit" value="تعديل" />
+  </form>
+
+  <form method="POST" action="?/family_name" use:enhance>
+    <label for="family_name">اسم العائلة</label>
+    <input
+      type="text"
+      id="family_name"
+      name="family_name"
+      value={data.user?.family_name}
+      pattern={arabicNamePattern.source}
     />
     <input type="submit" value="تعديل" />
   </form>
@@ -53,13 +90,13 @@
     <input type="submit" value="تعديل" />
   </form>
 
-  <form method="POST" action="?/national_id" use:enhance>
-    <label for="national_id">الرقم القومي</label>
+  <form method="POST" action="?/id_doc_number" use:enhance>
+    <label for="id_doc_number">الرقم القومي</label>
     <input
       type="text"
-      id="national_id"
-      name="national_id"
-      value={data.user?.national_id}
+      id="id_doc_number"
+      name="id_doc_number"
+      value={data.user?.id_doc_number}
       pattern={nationalIdPattern.source}
     />
     <input type="submit" value="تعديل" />

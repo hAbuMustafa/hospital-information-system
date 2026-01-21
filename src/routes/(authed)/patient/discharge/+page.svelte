@@ -3,28 +3,21 @@
   import PatientButton from '$lib/components/Forms/PatientButton.svelte';
   import Picker from '$lib/components/Forms/Picker.svelte';
   import { formatDate } from '$lib/utils/date-format';
-
-  type PatientT = {
-    id: string;
-    name: string;
-    id_doc_num: string;
-    admission_date: Date;
-    recent_ward: number;
-  };
+  import type { inPatient_view } from '$server/db/schema/entities/patients';
 
   const { data, form } = $props();
 
-  let patientName = $state(data.patient?.Person.name ?? form?.patientName ?? '');
-  let selectedPatientId = $state(data.patient?.id ?? form?.patientId ?? '');
+  let patientName = $state(data.patient?.full_name ?? form?.patientName ?? '');
+  let selectedPatientId = $state(data.patient?.patient_id ?? form?.patientId ?? '');
   let selectedDischargeReason = $state(
     form?.dischargeReason ? Number(form.dischargeReason) : 0
   );
   let dischargeDate = $state(
-    form?.dischargeDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
+    form?.dischargeTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
   );
 
   let hasSelectedPatient = $derived(
-    (form?.patientId?.length ?? 0) > 3 ? true : !!selectedPatientId
+    !!(data.patient?.patient_id ?? form?.patientId ?? selectedPatientId)
   );
 </script>
 
@@ -46,12 +39,12 @@
       required={Boolean(!selectedPatientId) ?? null}
       autofocus
     >
-      {#snippet optionSnippet(patient: PatientT)}
+      {#snippet optionSnippet(patient: typeof inPatient_view.$inferSelect)}
         <PatientButton
           {patient}
           onclick={() => {
-            patientName = patient.name;
-            selectedPatientId = patient.id;
+            patientName = patient.full_name;
+            selectedPatientId = patient.patient_id;
           }}
         />
       {/snippet}

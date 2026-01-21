@@ -1,13 +1,12 @@
-import { drizzle } from 'drizzle-orm/mysql2';
-import mysql from 'mysql2/promise';
-import { MySQL_Connection_String } from '$env/static/private';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { NODE_ENV, PSQL_CONNECTION_STRING } from '$env/static/private';
+import { Pool } from 'pg';
+import schema from './schema/entities';
 
-const connection = await mysql.createConnection({
-  uri: `${MySQL_Connection_String}${
-    process.env.NODE_ENV !== 'production' ? '_TEST' : ''
+const pool = new Pool({
+  connectionString: `${PSQL_CONNECTION_STRING}${
+    NODE_ENV !== 'production' ? '_TEST' : ''
   }`,
 });
 
-export const db = drizzle({
-  client: connection,
-});
+export const db = drizzle(pool, { schema });

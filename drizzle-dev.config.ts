@@ -1,15 +1,24 @@
 import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  dialect: 'mysql',
+  dialect: 'postgresql',
   schema: './src/lib/server/db/schema/entities',
   out: './drizzle',
   dbCredentials: {
-    url: `${process.env.MySQL_Connection_String!}${
+    url: `${process.env.PSQL_CONNECTION_STRING!}${
       process.env.NODE_ENV !== 'production' ? '_TEST' : ''
     }`,
   },
   introspect: {
     casing: 'preserve',
   },
+  schemaFilter: [
+    'Hospital',
+    'MedicationPlan',
+    'Finance',
+    'Patient',
+    'People',
+    'Pharmacy',
+    'Security',
+  ],
 });

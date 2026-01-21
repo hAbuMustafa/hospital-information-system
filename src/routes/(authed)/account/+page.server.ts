@@ -1,11 +1,22 @@
-import { isUniqueValue, updateUser } from '$lib/server/db/operations/users.js';
 import {
-  arabicTriadicNamesPattern,
+  updateContactInfo,
+  updateIdDocNumber,
+  updatePerson,
+} from '$lib/server/db/operations/people.js';
+import {
+  isUniqueUsername,
+  isUniqueContactString,
+  isUniqueNationalId,
+  updateUser,
+} from '$lib/server/db/operations/users';
+import {
+  arabicNamePattern,
   egyptianMobileNumberPattern,
   emailPattern,
   nationalIdPattern,
   usernamePattern,
-} from '$lib/stores/patterns.js';
+} from '$lib/stores/patterns';
+import { verifyEgyptianNationalId } from '$lib/utils/id-number-validation/egyptian-national-id.js';
 import { fail, type Action } from '@sveltejs/kit';
 
 export function load() {
@@ -15,11 +26,14 @@ export function load() {
 }
 
 const changeableFields = [
-  'name',
+  'first_name',
+  'father_name',
+  'grandfather_name',
+  'family_name',
   'username',
   'phone_number',
   'email',
-  'national_id',
+  'id_doc_number',
 ] as const;
 
 export const actions = {
@@ -28,17 +42,41 @@ export const actions = {
     'اسم المستخدم',
     usernamePattern,
     'ينبغي أن يكون من حروف إنجليزية فقط أو شرطات "-"',
-    true
+    true,
   ),
-  name: createAction(
-    'name',
+  first_name: createAction(
+    'first_name',
     'اسم الموظف',
-    arabicTriadicNamesPattern,
-    'يجب أن يكون اسما عربيا ثلاثيا على الأقل'
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا',
+  ),
+  father_name: createAction(
+    'father_name',
+    'اسم الأب',
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا',
+  ),
+  grandfather_name: createAction(
+    'grandfather_name',
+    'اسم الجد',
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا',
+  ),
+  family_name: createAction(
+    'family_name',
+    'اسم العائلة',
+    arabicNamePattern,
+    'يجب أن يكون اسما عربيا',
   ),
   phone_number: createAction('phone_number', 'رقم الموبايل', egyptianMobileNumberPattern),
   email: createAction('email', 'البريد الإلكتروني', emailPattern),
-  national_id: createAction('national_id', 'الرقم القومي', nationalIdPattern),
+  id_doc_number: createAction(
+    'id_doc_number',
+    'الرقم القومي',
+    nationalIdPattern,
+    'صيغة الرقم القومي غير صحيحة',
+    true,
+  ),
 };
 
 function createAction(
@@ -46,7 +84,7 @@ function createAction(
   fieldLabel: string,
   pattern: RegExp,
   patternErrorMessage?: string,
-  mustBeUnique?: boolean
+  mustBeUnique?: boolean,
 ): Action {
   return async ({ request, locals }) => {
     const data = await request.formData();
@@ -66,7 +104,25 @@ function createAction(
       return fail(401, { message: 'غيرت إيه انت كدة؟ 🤷🏻‍♂️' });
 
     if (mustBeUnique) {
-      const isUnique = await isUniqueValue(fieldName, fieldValue);
+      let isUnique = false;
+
+      switch (fieldName) {
+        case 'id_doc_number':
+          let isValidNatId;
+          isValidNatId = verifyEgyptianNationalId(fieldValue);
+
+          if (!isValidNatId) return fail(400, { message: 'رقم قومي غير صحيح' });
+
+          const natIdCheckResult = await isUniqueNationalId(fieldValue);
+          isUnique = natIdCheckResult.people;
+          break;
+        case 'username':
+          isUnique = await isUniqueUsername(fieldValue);
+          break;
+
+        default:
+          await isUniqueContactString(fieldName as 'email' | 'phone_number', fieldValue);
+      }
 
       if (!isUnique)
         return fail(401, {
@@ -77,11 +133,43 @@ function createAction(
     const newFields: Partial<{ [K in (typeof changeableFields)[number]]: string }> = {};
     newFields[fieldName] = fieldValue;
 
-    const result = await updateUser(locals.user!.id, newFields);
+    const oldValue = locals.user?.[fieldName]!;
 
-    if (!result.success) return fail(401, { message: 'حدث خطأ غير متوقع.' });
+    let result: { success?: boolean; data?: any; error?: any };
 
-    const oldValue = locals.user?.[fieldName];
+    switch (fieldName) {
+      case 'email':
+      case 'phone_number':
+        result = await updateContactInfo(
+          locals.user![`${fieldLabel}_id` as 'phone_number_id' | 'email_id'],
+          fieldValue,
+          locals.user!.person_id,
+          fieldName,
+        );
+        break;
+
+      case 'id_doc_number':
+        result = await updateIdDocNumber(
+          locals.user!.id_doc_number_id,
+          fieldValue,
+          locals.user!.person_id,
+          1,
+        );
+        break;
+
+      case 'username':
+        result = await updateUser(locals.user?.user_id!, { username: fieldValue });
+        break;
+
+      default:
+        result = await updatePerson(locals.user?.person_id!, newFields);
+        break;
+    }
+
+    if (!result.success) {
+      console.error(result.error);
+      return fail(401, { message: 'حدث خطأ غير متوقع.' });
+    }
 
     locals.user![fieldName] = fieldValue;
 

@@ -1,4 +1,4 @@
-export const new_Wards = [
+export const ward_list = [
   { name: 'رعاية أ', floor: 1, id: 1, capacity: 15, tags: ['icu'] },
   { name: 'رعاية ب', floor: 1, id: 2, capacity: 5, tags: ['icu', 'quarantine'] },
   { name: 'ثاني أ', floor: 2, id: 3, capacity: 0, tags: [] },
@@ -22,7 +22,7 @@ export const floors = [
   { id: 4, name: 'الدور الرابع' },
 ];
 
-export const new_id_doc_type = [
+export const id_doc_type_list = [
   { name: 'رقم قومي', id: 1 },
   { name: 'جواز سفر', id: 2 },
   { name: 'هوية وطنية', id: 3 },
@@ -31,7 +31,15 @@ export const new_id_doc_type = [
   { name: 'بدون', id: 6 },
 ];
 
-export const new_Patient_discharge_reasons = [
+export const contact_type_list = [
+  { name: 'رقم موبايل', tag: 'phone_number', id: 1 },
+  { name: 'رقم أرضي', tag: 'landline', id: 2 },
+  { name: 'بريد إلكتروني', tag: 'email', id: 3 },
+  { name: 'عنوان', tag: 'address', id: 4 },
+  { name: 'رقم بريدي', tag: 'postal_number', id: 5 },
+];
+
+export const discharge_reason_list = [
   { name: 'تحسن', id: 1 },
   { name: 'حسب الطلب', id: 2 },
   { name: 'تحويل لمستشفى آخر', id: 3 },
@@ -43,7 +51,7 @@ export const new_Patient_discharge_reasons = [
   { name: 'أخرى', id: 9 },
 ];
 
-export const new_Drugs_unit = [
+export const dosage_unit_list = [
   { name: 'قرص', id: 1 },
   { name: 'كبسول', id: 2 },
   { name: 'أمبول', id: 3 },
@@ -60,7 +68,7 @@ export const new_Drugs_unit = [
   { name: 'علبة', id: 14 },
 ];
 
-export const new_Drugs_category = [
+export const stock_category_list = [
   { name: 'أقراص/كبسولات', id: 1 },
   { name: 'حقن', id: 2 },
   { name: 'مضاد حيوي', id: 3 },

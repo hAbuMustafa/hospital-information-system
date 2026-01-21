@@ -3,8 +3,8 @@
   import { getContext } from 'svelte';
 
   type PropsT = {
-    dataTuple: [string, string | number | Date | null | undefined];
-    row: Record<string, string | number | Date | null | undefined>;
+    dataTuple: [string, string | number | boolean | Date | null | undefined];
+    row: Record<string, string | number | boolean | Date | null | undefined>;
   };
 
   const { dataTuple, row }: PropsT = $props();
@@ -23,7 +23,7 @@
 </script>
 
 <td>
-  {#if dateColumns && dateColumns.hasOwnProperty(colName) && colValue && (typeof colValue === 'number' || colValue instanceof Date)}
+  {#if dateColumns && dateColumns.hasOwnProperty(colName) && colValue}
     {formatDate(colValue as number | Date, dateColumns[colName])}
   {:else if actionColumns && actionColumns.hasOwnProperty(colName)}
     <input

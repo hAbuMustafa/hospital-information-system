@@ -1,14 +1,12 @@
 import { db } from '$lib/server/db';
 import {
-  Drugs,
-  Drug_categories,
-  Drug_units,
-  Ph_InEco_Stock,
-} from '$lib/server/db/schema';
+  StockCategory,
+  DosageForm_SizeUnit,
+} from '$lib/server/db/schema/entities/pharmacy';
 
-export async function createDrugUnit(unit: typeof Drug_units.$inferInsert) {
+export async function createDrugUnit(unit: typeof DosageForm_SizeUnit.$inferInsert) {
   try {
-    const [drugUnit] = await db.insert(Drug_units).values(unit).returning();
+    const [drugUnit] = await db.insert(DosageForm_SizeUnit).values(unit).returning();
 
     return {
       success: true,
@@ -21,37 +19,14 @@ export async function createDrugUnit(unit: typeof Drug_units.$inferInsert) {
   }
 }
 
-export async function createDrugCategory(category: typeof Drug_categories.$inferInsert) {
+export async function createDrugCategory(category: typeof StockCategory.$inferInsert) {
   try {
-    const [drugCategory] = await db.insert(Drug_categories).values(category).returning();
+    const [drugCategory] = await db.insert(StockCategory).values(category).returning();
 
     return {
       success: true,
       data: drugCategory,
     };
-  } catch (error) {
-    return {
-      error,
-    };
-  }
-}
-
-export async function createDrug(
-  drug: typeof Drugs.$inferInsert & typeof Ph_InEco_Stock.$inferInsert
-) {
-  try {
-    const [dr] = await db.insert(Drugs).values(drug).returning();
-
-    const [stockItem] = await db
-      .insert(Ph_InEco_Stock)
-      .values({
-        drug_id: dr.id,
-        price_purchase: drug.price_purchase,
-        amount: drug.amount,
-      })
-      .returning();
-
-    return { success: true, data: stockItem };
   } catch (error) {
     return {
       error,

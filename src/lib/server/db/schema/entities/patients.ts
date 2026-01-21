@@ -1,36 +1,133 @@
 import {
-  mysqlTable,
+  pgSchema,
   serial,
   varchar,
   bigint,
-  int,
+  integer,
   decimal,
-  longtext,
+  text,
   date,
-  tinyint,
+  boolean,
   timestamp,
-} from 'drizzle-orm/mysql-core';
+  smallint,
+  check,
+  unique,
+} from 'drizzle-orm/pg-core';
 import { Staff, Ward } from './hospital';
 import { Sec_pb_key } from './system';
 import { Person } from './people';
+import { sql } from 'drizzle-orm';
 
-export const InPatient = mysqlTable('InPatient', {
+export const Patient = pgSchema('Patient');
+
+export const InPatient = Patient.table('InPatient', {
   id: serial().primaryKey(),
-  person_id: bigint({ mode: 'number', unsigned: true })
+  person_id: integer()
     .notNull()
     .references(() => Person.id),
   meal_type: varchar({ length: 45 }),
-  recent_ward: int()
+  recent_ward: smallint()
     .notNull()
     .references(() => Ward.id),
-  security_status: tinyint().default(0),
+  security_status: boolean().default(false),
 });
 
-export const Insurance_Doc = mysqlTable('Insurance_Doc', {
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const InPatient_file = Patient.table(
+  'InPatient_file',
+  {
+    id: serial().primaryKey(),
+    year: smallint().notNull(),
+    number: smallint().notNull(),
+    patient_id: integer()
+      .references(() => InPatient.id)
+      .notNull(),
+  },
+  (table) => [
+    check(
+      'year_check',
+      sql`${table.year} >= (2024-2000) AND ${table.year} <= (date_part('year', CURRENT_DATE)-2000)`
+    ),
+    unique('unique_file_number_in_a_year').on(table.year, table.number),
+  ]
+);
+
+export const inPatient_view = Patient.view('inPatient_view', {
+  patient_id: integer().notNull(),
+  person_id: integer().notNull(),
+  patient_file_number: varchar({ length: 8 }),
+  full_name: text().notNull(),
+  first_name: varchar({ length: 45 }).notNull(),
+  father_name: varchar({ length: 45 }).notNull(),
+  grandfather_name: varchar({ length: 45 }).notNull(),
+  family_name: varchar({ length: 45 }),
+  id_doc_type_id: smallint(),
+  id_doc_type: varchar({ length: 16 }).notNull(),
+  id_doc_number: varchar({ length: 45 }),
+  health_insurance: varchar({ length: 45 }),
+  meal_type: varchar({ length: 45 }),
+  recent_ward_id: smallint().notNull(),
+  ward_name: varchar({ length: 10 }).notNull(),
+  ward_floor: integer(),
+  ward_tags: text(),
+  security_status: boolean(),
+  gender: boolean(),
+  birthdate: date(),
+  admission_time: timestamp().notNull(),
+  admission_notes: text(),
+  admitted_from: varchar({ length: 100 }),
+  discharge_order_id: integer(),
+  discharge_time: timestamp(),
+  discharge_reason: varchar({ length: 15 }),
+  discharge_notes: text(),
+}).as(
+  sql`
+SELECT p.id AS patient_id,
+p.person_id,
+CONCAT(pf.year, '/', pf.number) AS patient_file_number,
+CONCAT_WS(' ', pr.first_name, pr.father_name, pr.grandfather_name, pr.family_name) AS full_name,
+pr.first_name,
+pr.father_name,
+pr.grandfather_name,
+pr.family_name,
+doc.document_type AS id_doc_type_id,
+doctype.name AS id_doc_type,
+doc.document_number AS id_doc_number,
+i.insurance_entity AS health_insurance,
+p.meal_type,
+p.recent_ward AS recent_ward_id,
+w.name AS ward_name,
+w.floor AS ward_floor,
+w.tags AS ward_tags,
+p.security_status,
+pr.gender,
+pr.birthdate,
+adm.timestamp as admission_time,
+adm.admission_notes,
+adm.referred_from as admitted_from,
+d.discharge_order_id,
+d."timestamp" AS discharge_time,
+r.name AS discharge_reason,
+d.notes AS discharge_notes
+FROM "Patient"."InPatient" p
+ LEFT JOIN "People"."Person" pr ON p.person_id = pr.id
+ LEFT JOIN "Patient"."InPatient_file" pf ON p.id = pf.patient_id
+ LEFT JOIN "People"."Person_IdDoc" doc ON doc.person_id = pr.id
+ LEFT JOIN "People"."IdDoc_type" doctype ON doctype.id = doc.document_type
+ LEFT JOIN "Patient"."Insurance_Doc" i ON i.patient_id = p.id
+ LEFT JOIN "Hospital"."Ward" w ON p.recent_ward = w.id
+ LEFT JOIN "Patient"."Discharge" d ON d.patient_id = p.id
+ LEFT JOIN "Patient"."Discharge_Reason" r ON d.discharge_reason = r.id
+ LEFT JOIN "Patient"."Admission" adm ON p.id = adm.patient_id
+ORDER BY p.id
+`
+);
+
+export const Insurance_Doc = Patient.table('Insurance_Doc', {
+  id: serial().primaryKey(),
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  insurance_entity: varchar({ length: 45 }).notNull(),
+  insurance_entity: varchar({ length: 45 }),
   insurance_number: varchar({ length: 30 }),
   type: varchar({ length: 45 }),
   valid_from_date: date({ mode: 'date' }),
@@ -43,130 +140,168 @@ export const Insurance_Doc = mysqlTable('Insurance_Doc', {
   maternal_deductible_percent: decimal(),
 });
 
-export const Diagnosis = mysqlTable('Diagnosis', {
+export const Diagnosis = Patient.table('Diagnosis', {
   id: serial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   icd11: varchar({ length: 45 }),
 });
 
-export const Patient_diagnosis = mysqlTable('Patient_diagnosis', {
-  patient_id: bigint({ mode: 'number', unsigned: true })
+export const diagnosis_view = Patient.view('diagnosis_view', {
+  patient_id: integer().notNull(),
+  diagnosis: text().notNull(),
+  timestamp: timestamp().notNull(),
+  diagnosis_type: varchar({ length: 45 }),
+}).as(sql`
+SELECT 
+	pd.patient_id,
+	ARRAY_TO_STRING(ARRAY_AGG(d.name), ' + ') AS diagnosis,
+  pd.type AS diagnosis_type,
+	pd.timestamp
+FROM "Patient"."Patient_diagnosis" pd
+LEFT JOIN "Patient"."Diagnosis" d ON pd.diagnosis_id = d.id
+GROUP BY pd.patient_id, pd.type, pd.timestamp
+  `);
+
+export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  diagnosis_id: bigint({ mode: 'number', unsigned: true })
+  diagnosis_id: integer()
     .notNull()
     .references(() => Diagnosis.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
   type: varchar({ length: 45 }),
-  diagnosing_phys_id: int().references(() => Staff.id),
+  diagnosing_phys_id: smallint().references(() => Staff.id),
   diagnosing_phys_signature: varchar({ length: 256 }),
-  diagnosing_phys_sign_key_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Sec_pb_key.id
-  ),
+  diagnosing_phys_sign_key_id: bigint({ mode: 'bigint' }).references(() => Sec_pb_key.id),
 });
 
-export const Admission_Order = mysqlTable('Admission_Order', {
+export const Admission_Order = Patient.table('Admission_Order', {
   id: serial().primaryKey(),
-  person_id: bigint({ mode: 'number', unsigned: true })
+  person_id: integer()
     .references(() => Person.id)
     .notNull(),
-  notes: longtext(),
+  notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  referred_from: varchar({ length: 100 }).default('reception'),
-  admitting_phys: int()
+  admitting_phys: smallint()
     .references(() => Staff.id)
     .notNull(),
   admitting_phys_signature: varchar({ length: 256 }).notNull(),
-  admitting_phys_sign_key_id: bigint({ mode: 'number', unsigned: true })
+  admitting_phys_sign_key_id: bigint({ mode: 'bigint' })
     .references(() => Sec_pb_key.id)
     .notNull(),
 });
 
-export const Admission = mysqlTable('Admission', {
-  id: varchar({ length: 8 }).primaryKey(), // Archive File Number
-  patient_id: bigint({ mode: 'number', unsigned: true })
-    .references(() => InPatient.id)
-    .notNull(),
-  admission_order_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Admission_Order.id
-  ),
-  admission_notes: longtext(),
-  timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  registrar: int().references(() => Staff.id),
-});
-
-export const Discharge_Reason = mysqlTable('Discharge_Reason', {
-  id: int().primaryKey(),
-  reason: varchar({ length: 15 }).notNull(),
-});
-
-export const Discharge_Order = mysqlTable('Discharge_Order', {
+export const Admission = Patient.table('Admission', {
   id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+  patient_id: integer()
     .references(() => InPatient.id)
     .notNull(),
-  notes: longtext(),
-  phys_id: int()
+  admission_order_id: integer().references(() => Admission_Order.id),
+  admission_notes: text(),
+  referred_from: varchar({ length: 100 }).default('reception'),
+  timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
+  registrar: smallint().references(() => Staff.id),
+});
+
+export const Discharge_Reason = Patient.table('Discharge_Reason', {
+  id: integer().primaryKey(),
+  name: varchar({ length: 32 }).notNull(),
+});
+
+export const Discharge_Order = Patient.table('Discharge_Order', {
+  id: serial().primaryKey(),
+  patient_id: integer()
+    .references(() => InPatient.id)
+    .notNull(),
+  notes: text(),
+  phys_id: smallint()
     .references(() => Staff.id)
     .notNull(),
   phys_signature: varchar({ length: 256 }).notNull(),
-  phys_sign_key: bigint({ mode: 'number', unsigned: true })
+  phys_sign_key: bigint({ mode: 'bigint' })
     .references(() => Sec_pb_key.id)
     .notNull(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });
 
-export const Discharge = mysqlTable('Discharge', {
+export const Discharge = Patient.table('Discharge', {
   id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  discharge_order_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Discharge_Order.id
-  ),
+  discharge_order_id: integer().references(() => Discharge_Order.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
-  discharge_reason: int()
+  discharge_reason: integer()
     .notNull()
     .references(() => Discharge_Reason.id),
-  notes: longtext(),
-  registrar: int().references(() => Staff.id),
+  notes: text(),
+  registrar: smallint().references(() => Staff.id),
   registrar_signature: varchar({ length: 256 }),
-  registrar_sign_key: bigint({ mode: 'number', unsigned: true }).references(
-    () => Sec_pb_key.id
-  ),
+  registrar_sign_key: bigint({ mode: 'bigint' }).references(() => Sec_pb_key.id),
 });
 
-export const Transfer_Order = mysqlTable('Transfer_Order', {
+export const Transfer_Order = Patient.table('Transfer_Order', {
   id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  to_ward: int()
+  to_ward: smallint()
     .notNull()
     .references(() => Ward.id),
-  notes: longtext(),
-  phys_id: int()
+  notes: text(),
+  phys_id: smallint()
     .notNull()
     .references(() => Staff.id),
   phys_signature: varchar({ length: 256 }).notNull(),
-  phys_sign_key_id: bigint({ mode: 'number', unsigned: true })
+  phys_sign_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });
 
-export const Transfer = mysqlTable('Transfer', {
+export const Transfer = Patient.table('Transfer', {
   id: serial().primaryKey(),
-  patient_id: bigint({ mode: 'number', unsigned: true })
+  patient_id: integer()
     .notNull()
     .references(() => InPatient.id),
-  from_ward_id: int().references(() => Ward.id),
-  to_ward_id: int()
+  from_ward_id: smallint().references(() => Ward.id),
+  to_ward_id: smallint()
     .notNull()
     .references(() => Ward.id),
-  transfer_order_id: bigint({ mode: 'number', unsigned: true }).references(
-    () => Transfer_Order.id
-  ),
-  notes: longtext(),
+  transfer_order_id: integer().references(() => Transfer_Order.id),
+  notes: text(),
   timestamp: timestamp({ mode: 'date' }).notNull(),
 });
+
+export const transfers_view = Patient.view('transfers_view', {
+  id: integer(),
+  patient_id: integer()
+    .notNull()
+    .references(() => InPatient.id),
+  from_ward_id: smallint().references(() => Ward.id),
+  from_ward: varchar({ length: 10 }),
+  to_ward_id: smallint()
+    .notNull()
+    .references(() => Ward.id),
+  to_ward: varchar({ length: 10 }),
+  transfer_order_id: integer().references(() => Transfer_Order.id),
+  notes: text(),
+  timestamp: timestamp({ mode: 'date' }).notNull(),
+}).as(
+  sql`
+    SELECT
+      t.id,
+      patient_id,
+      t.from_ward_id,
+      wf.name AS from_ward,
+      t.to_ward_id,
+      wt.name AS to_ward,
+      t.transfer_order_id,
+      t.notes,
+      t.timestamp
+    FROM "Patient"."Transfer" t
+    LEFT JOIN "Hospital"."Ward" wf ON t.from_ward_id = wf.id
+    LEFT JOIN "Hospital"."Ward" wt ON t.to_ward_id = wt.id
+  `
+);

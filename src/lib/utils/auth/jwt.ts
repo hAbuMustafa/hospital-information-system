@@ -20,7 +20,9 @@ export const COOKIE_OPTIONS = {
   path: '/',
 };
 
-export type AccessTokenPayload = NonNullable<App.Locals['user']>;
+export type AccessTokenPayload = {
+  userId: number;
+};
 
 export type RefreshTokenPayload = {
   userId: number;

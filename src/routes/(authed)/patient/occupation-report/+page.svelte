@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { formatDate } from '$lib/utils/date-format.js';
+  import { formatDate } from '$lib/utils/date-format';
 
   let { data } = $props();
 
-  let patientsByWard = Object.groupBy(
-    data.patients,
-    (p: Record<string, any>) => p.recent_ward
-  );
+  let patientsByWard = Object.groupBy(data.patients, (p) => p.recent_ward_id);
 </script>
 
 <h2>{formatDate(new Date(), 'ليوم YYYY/MM/DD الساعة hh:mm')}</h2>
