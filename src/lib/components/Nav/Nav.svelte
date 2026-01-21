@@ -34,11 +34,13 @@
   <NavLogo />
 
   {#if user}
-    <ul>
-      {#each userSpecificMenus as menu, i (i)}
-        <NavMenu {...menu} />
-      {/each}
-    </ul>
+    {#if userSpecificMenus.length}
+      <ul>
+        {#each userSpecificMenus as menu, i (i)}
+          <NavMenu {...menu} />
+        {/each}
+      </ul>
+    {/if}
 
     <ul>
       <NavMenu {...accountMenu}>
