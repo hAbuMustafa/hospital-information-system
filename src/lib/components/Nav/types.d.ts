@@ -2,6 +2,7 @@ type MenuT = {
   label?: string;
   name?: string;
   links: NavLinkT[];
+  separator_indices?: number[];
   permission?: PermissionT;
 };
 

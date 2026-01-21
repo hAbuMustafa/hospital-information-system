@@ -3,7 +3,16 @@
   import NavMenu from './NavMenu.svelte';
   import { menus } from './navList';
 
-  const { user } = $props();
+  function menuFilterPredicate<T extends { permission?: PermissionT }>(menu: T) {
+    return user?.role === 1 || menu.permission?.role.some((r) => r === user?.role);
+  }
+
+  const { user }: { user: App.Locals['user'] } = $props();
+
+  const userSpecificMenus = menus.filter(menuFilterPredicate).map((m) => {
+    m.links = m.links.filter(menuFilterPredicate);
+    return m;
+  });
 
   const accountMenu: MenuT = {
     name: 'account',
@@ -26,7 +35,7 @@
 
   {#if user}
     <ul>
-      {#each menus as menu, i (i)}
+      {#each userSpecificMenus as menu, i (i)}
         <NavMenu {...menu} />
       {/each}
     </ul>
