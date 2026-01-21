@@ -47,7 +47,7 @@
         <img
           class="gravatar"
           src={'/api/proxy-images/?url=' + user.gravatar}
-          alt={`صورة حساب ${user.name}`}
+          alt={`صورة حساب ${user.first_name}`}
           width="40px"
           height="40px"
         />
