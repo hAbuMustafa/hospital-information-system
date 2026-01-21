@@ -10,6 +10,7 @@ const config: Config = {
     adapter: adapter(),
     alias: {
       $server: './src/lib/server',
+      $comp: './src/lib/components',
     },
   },
 };
