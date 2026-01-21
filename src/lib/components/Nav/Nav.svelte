@@ -4,28 +4,38 @@
   import { menus } from './navList';
 
   function menuFilterPredicate<T extends { permission?: PermissionT }>(menu: T) {
-    return user?.role === 1 || menu.permission?.role.some((r) => r === user?.role);
+    return (
+      user?.role === 1 ||
+      menu.permission?.role?.includes(0) ||
+      menu.permission?.role?.some((r) => r === user?.role)
+    );
   }
 
   const { user }: { user: App.Locals['user'] } = $props();
 
   const userSpecificMenus = menus.filter(menuFilterPredicate).map((m) => {
-    m.links = m.links.filter(menuFilterPredicate);
+    m.links = m.links
+      .map((linkGroup) => linkGroup.filter(menuFilterPredicate))
+      .filter((linkGroup) => linkGroup.length);
     return m;
   });
 
   const accountMenu: MenuT = {
     name: 'account',
     links: [
-      { href: '/account', label: 'الحساب' },
-      { href: '/logout', label: 'تسجيل الخروج' },
+      [
+        { href: '/account', label: 'الحساب' },
+        { href: '/logout', label: 'تسجيل الخروج' },
+      ],
     ],
   };
 
   const loggedOutMenu: MenuT = {
     links: [
-      { href: '/register', label: 'إنشاء حساب' },
-      { href: '/login', label: 'تسجيل الدخول' },
+      [
+        { href: '/register', label: 'إنشاء حساب' },
+        { href: '/login', label: 'تسجيل الدخول' },
+      ],
     ],
   };
 </script>

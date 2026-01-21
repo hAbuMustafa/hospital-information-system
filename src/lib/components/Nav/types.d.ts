@@ -1,12 +1,11 @@
 type MenuT = {
   label?: string;
   name?: string;
-  links: NavLinkT[];
-  separator_indices?: number[];
+  links: NavLinkT[][];
   permission?: PermissionT;
 };
 
-type PermissionT = { role: number[]; affiliation: number[] };
+type PermissionT = { role?: number[]; affiliation?: number[] };
 
 type NavLinkT = {
   href: string;

@@ -5,7 +5,7 @@
     children?: Snippet;
   };
 
-  let { label, name, links, separator_indices, children }: PropsT = $props();
+  let { label, name, links, children }: PropsT = $props();
 </script>
 
 {#if name}
@@ -23,20 +23,22 @@
     </button>
 
     <ul id="{name}-menu" popover style:position-anchor="--{name}-menu-button">
-      {#each links as link, i (i)}
-        {#if separator_indices?.includes(i + 1)}
+      {#each links as linkGroup, i (i)}
+        {#if i > 0}
           <hr />
         {/if}
-        <li><a href={link.href}>{link.label}</a></li>
+        {#each linkGroup as link, j (j)}
+          <li><a href={link.href}>{link.label}</a></li>
+        {/each}
       {/each}
     </ul>
   </li>
 {:else}
   <ul class="logged-out">
-    {#each links as link, i (i)}
-      {#if typeof link !== 'string'}
+    {#each links as linkGroup, i (i)}
+      {#each linkGroup as link, j (j)}
         <li><a href={link.href}>{link.label}</a></li>
-      {/if}
+      {/each}
     {/each}
   </ul>
 {/if}
