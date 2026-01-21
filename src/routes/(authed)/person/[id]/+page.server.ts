@@ -16,7 +16,7 @@ export async function load({ params, fetch }) {
   if (!/^\d+$/.test(personId)) return error(404, 'الرقم الطبي الموحد للمريض غير صحيح');
 
   const person: typeof people_view.$inferSelect = await fetch(
-    `/api/person?id=${personId}`
+    `/api/person?id=${personId}`,
   ).then((r) => {
     if (r.ok) {
       return r.json();
@@ -37,7 +37,7 @@ export const actions = {
     let personId = params.id as unknown as number;
 
     const person: typeof people_view.$inferSelect = await fetch(
-      `/api/person?id=${personId}`
+      `/api/person?id=${personId}`,
     ).then((r) => {
       if (r.ok) {
         return r.json();
@@ -120,14 +120,10 @@ export const actions = {
     }
 
     if (idDocNumber && idDocType === 1 && idDocNumber !== person.id_doc_number) {
-      try {
-        const result = verifyEgyptianNationalId(idDocNumber);
+      const result = verifyEgyptianNationalId(idDocNumber);
 
-        if (result === false)
-          return failWithMessages([{ message: 'الرقم القومي غير صحيح', type: 'error' }]);
-      } catch (error) {
+      if (result === false)
         return failWithMessages([{ message: 'الرقم القومي غير صحيح', type: 'error' }]);
-      }
     }
 
     if (

@@ -109,11 +109,7 @@ function createAction(
       switch (fieldName) {
         case 'id_doc_number':
           let isValidNatId;
-          try {
-            isValidNatId = verifyEgyptianNationalId(fieldValue);
-          } catch (err) {
-            console.error(err);
-          }
+          isValidNatId = verifyEgyptianNationalId(fieldValue);
 
           if (!isValidNatId) return fail(400, { message: 'رقم قومي غير صحيح' });
 

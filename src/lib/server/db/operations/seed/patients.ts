@@ -46,12 +46,8 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
         let numberValidity;
 
         if (admission.id_doc_type === 1 && admission.id_doc_num) {
-          try {
-            numberValidity = verifyEgyptianNationalId(admission.id_doc_num);
-            if (!numberValidity) admission.id_doc_num = admission.id_doc_num + ' INVALID';
-          } catch (e) {
-            admission.id_doc_num = admission.id_doc_num + ' INVALID';
-          }
+          numberValidity = verifyEgyptianNationalId(admission.id_doc_num);
+          if (!numberValidity) admission.id_doc_num = admission.id_doc_num + ' INVALID';
         }
 
         const { name: patient_name, ...restOfPatientData } = admission;
