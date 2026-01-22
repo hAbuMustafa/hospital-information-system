@@ -36,22 +36,9 @@ export const ReportsTo = Hospital.table('ReportsTo', {
   reports_to_id: smallint().references(() => Staff.id),
 });
 
-export const Warehouse_Drug = Hospital.table('Warehouse_Drug', {
+// Pharmacies, Warehouses, Crash Cars, ...etc
+export const Custody_Units = Hospital.table('Custody_Units', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 32 }).notNull(),
-});
-
-export const Warehouse_Supplies = Hospital.table('Warehouse_Supplies', {
-  id: smallserial().primaryKey(),
-  name: varchar({ length: 32 }).notNull(),
-});
-
-export const Pharmacy_Drugs = Hospital.table('Pharmacy_Drugs', {
-  id: smallserial().primaryKey(),
-  name: varchar({ length: 32 }).notNull(),
-});
-
-export const Pharmacy_Supplies = Hospital.table('Pharmacy_Supplies', {
-  id: smallserial().primaryKey(),
-  name: varchar({ length: 32 }).notNull(),
+  manager: smallint().references(() => Staff.id),
 });
