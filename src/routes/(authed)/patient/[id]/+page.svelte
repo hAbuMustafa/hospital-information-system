@@ -1,13 +1,5 @@
 <script lang="ts">
-  import {
-    Timeline,
-    TimelineItem,
-    TimelineContent,
-    TimelineOppositeContent,
-    TimelineConnector,
-    TimelineSeparator,
-    TimelineDot,
-  } from 'svelte-vertical-timeline';
+  import Timeline from '$comp/Timeline/Timeline.svelte';
   import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
 
@@ -39,7 +31,7 @@
           <dt>تاريخ الميلاد:</dt>
           <dd>
             {formatDate(new Date(data.patient.birthdate), 'YYYY/MM/DD')} ({getAge(
-              data.patient.birthdate
+              data.patient.birthdate,
             )} سنة)
           </dd>
         {/if}
@@ -85,7 +77,7 @@
         <dt>مدة الإقامة:</dt>
         {@const daysOfStay = getDuration(
           data.patient.admission_time,
-          data.patient.discharge_time
+          data.patient.discharge_time,
         )}
         <dd>
           {getTermed(daysOfStay, 'يوم', 'أيام')}
@@ -116,46 +108,15 @@
 
     <details dir="ltr">
       <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
-      <Timeline position="alternate">
-        {#each data.transfers as transfer, i (i)}
-          <TimelineItem>
-            <TimelineOppositeContent slot="opposite-content">
-              <small class="transfer_time">
-                {dateAndTime(transfer.timestamp)}
-              </small>
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineDot style={'background-color: #7CD5E2;'} />
-              {#if !data.patient.discharge_time && data.transfers.length - 1 === i}
-                <TimelineConnector
-                  style="background: linear-gradient(#fff, 30%, transparent 99% 1%);"
-                />
-              {:else}
-                <TimelineConnector />
-              {/if}
-            </TimelineSeparator>
-            <TimelineContent>
-              <span class="transfer_ward_name">{transfer.to_ward}</span>
-            </TimelineContent>
-          </TimelineItem>
-        {/each}
-
-        {#if data.patient.discharge_time}
-          <TimelineItem>
-            <TimelineOppositeContent slot="opposite-content">
-              <small class="transfer_time">
-                {dateAndTime(data.patient.discharge_time)}
-              </small>
-            </TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineDot style={'background-color: red;'} />
-            </TimelineSeparator>
-            <TimelineContent>
-              <span class="transfer_ward_name">خروج</span>
-            </TimelineContent>
-          </TimelineItem>
-        {/if}
-      </Timeline>
+      <Timeline
+        events={data.transfers}
+        eventTitle_name="to_ward"
+        eventTime_name="timestamp"
+        endEvent_time={data.patient.discharge_time}
+        endEvent_label="خروج"
+        dateTimeFormatter={dateAndTime}
+        alternate={true}
+      />
     </details>
   </section>
   {#if data.other_admissions?.length}
@@ -288,14 +249,5 @@
   dt,
   dd {
     place-content: center;
-  }
-
-  small.transfer_time {
-    color: gray;
-  }
-
-  span.transfer_ward_name {
-    font-weight: bolder;
-    font-size: 1.25rem;
   }
 </style>
