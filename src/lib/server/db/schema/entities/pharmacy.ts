@@ -96,7 +96,7 @@ export const Formulation = Pharmacy.table(
       .references(() => ActiveIngredient_Unit.id),
     unit_representation: varchar({ length: 3 }).notNull(), // Modifier for parts (nano, micro, milli-, centi-, deci-) and multipliers (Kilo-, Mega-, Giga-)
     role: varchar({ length: 45 }).notNull(),
-    role_target: bigint({ mode: 'bigint' }),
+    role_target: integer(),
   },
   (table) => [
     foreignKey({
