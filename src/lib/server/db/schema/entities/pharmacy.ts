@@ -13,7 +13,7 @@ import {
   bigserial,
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
-import { Sec_pb_key, User } from './system';
+import { Sec_pb_key } from './system';
 import { Staff } from './hospital';
 import { MedPlan } from './medication_plan';
 
@@ -42,7 +42,7 @@ export const DosageForm_SizeUnit = Pharmacy.table('DosageForm_SizeUnit', {
 
 export const ActiveIngredient_Use = Pharmacy.table('ActiveIngredient_Use', {
   ac_id: integer().references(() => ActiveIngredient.id),
-  use_id: integer().references(() => Use.id),
+  use_id: integer().references(() => Usage.id),
 });
 
 export const BrandName = Pharmacy.table('BrandName', {
@@ -104,7 +104,7 @@ export const Formulation = Pharmacy.table(
       foreignColumns: [table.id],
       name: 'ac_role_target_link',
     }),
-  ]
+  ],
 );
 
 export const RouteOfAdministration = Pharmacy.table('RouteOfAdministration', {
@@ -122,9 +122,9 @@ export const StockCategory = Pharmacy.table('StockCategory', {
   name: varchar({ length: 15 }).notNull(),
 });
 
-export const Use = Pharmacy.table('Use', {
+export const Usage = Pharmacy.table('Usage', {
   id: integer().primaryKey(),
-  use: varchar({ length: 45 }).notNull(),
+  name: varchar({ length: 45 }).notNull(),
 });
 
 export const PharmacyStock_Drugs = Pharmacy.table('PharmacyStock_Drugs', {
