@@ -11,6 +11,7 @@ import {
   date,
   smallint,
   bigserial,
+  smallserial,
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Sec_pb_key } from './system';
@@ -20,7 +21,7 @@ import { MedPlan } from './medication_plan';
 export const Pharmacy = pgSchema('Pharmacy');
 
 export const ActiveIngredient = Pharmacy.table('ActiveIngredient', {
-  id: serial().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   name_ar: varchar({ length: 100 }).notNull(),
   alias: varchar({ length: 45 }),
@@ -28,30 +29,49 @@ export const ActiveIngredient = Pharmacy.table('ActiveIngredient', {
 
 // Represents only ISO Units (liter, Gram, .. etc) without modifiers (milli-, Kilo-)
 export const ActiveIngredient_Unit = Pharmacy.table('ActiveIngredient_Unit', {
-  id: integer().primaryKey(),
-  name: varchar({ length: 15 }),
-  name_ar: varchar({ length: 15 }),
+  id: smallserial().primaryKey(),
+  name: varchar({ length: 2 }).notNull(),
+  name_ar: varchar({ length: 2 }).notNull(),
+  fullname: varchar({ length: 15 }).notNull(),
+  fullname_ar: varchar({ length: 15 }).notNull(),
 });
+
+export const ActiveIngredient_Role = Pharmacy.table('ActiveIngredient_Role', {
+  id: smallserial().primaryKey(),
+  name: varchar({ length: 15 }).notNull(),
+  name_ar: varchar({ length: 15 }).notNull(),
+});
+
+// Modifier for parts (nano, micro, milli-, centi-, deci-) and multipliers (Kilo-, Mega-, Giga-)
+export const ActiveIngredient_Unit_Modifier = Pharmacy.table(
+  'ActiveIngredient_Unit_Modifier',
+  {
+    id: smallserial().primaryKey(),
+    name: varchar({ length: 2 }).notNull(),
+    name_ar: varchar({ length: 2 }).notNull(),
+    multiplier: decimal().notNull(),
+  },
+);
 
 // (Bottle, Tablet, .. etc)
 export const DosageForm_SizeUnit = Pharmacy.table('DosageForm_SizeUnit', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 15 }),
   name_ar: varchar({ length: 15 }),
 });
 
 export const ActiveIngredient_Use = Pharmacy.table('ActiveIngredient_Use', {
-  ac_id: integer().references(() => ActiveIngredient.id),
-  use_id: integer().references(() => Usage.id),
+  ac_id: smallint().references(() => ActiveIngredient.id),
+  use_id: smallint().references(() => Usage.id),
 });
 
 export const BrandName = Pharmacy.table('BrandName', {
-  id: serial().primaryKey(),
+  id: smallserial().primaryKey(),
   formulary_id: integer().references(() => Formulary.id),
   name: varchar({ length: 45 }).notNull(),
   name_ar: varchar({ length: 45 }),
   size: decimal({ precision: 10, scale: 5 }),
-  size_unit: integer().references(() => DosageForm_SizeUnit.id),
+  size_unit: smallint().references(() => DosageForm_SizeUnit.id),
   unit_representation: varchar({ length: 3 }),
   is_imported: boolean(),
   modifier: varchar({ length: 20 }), // (eg. ROM or With Rubber Cap)
@@ -60,16 +80,16 @@ export const BrandName = Pharmacy.table('BrandName', {
 });
 
 export const DosageUnit_look_like = Pharmacy.table('DosageUnit_look_like', {
-  brand_name_id: integer()
+  brand_name_id: smallint()
     .notNull()
     .references(() => BrandName.id),
-  look_like_id: integer()
+  look_like_id: smallint()
     .notNull()
     .references(() => BrandName.id),
 });
 
 export const Formulary = Pharmacy.table('Formulary', {
-  id: serial().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
   cat_strategy: boolean().default(false),
   cat_high_concentration_electrolyte: boolean().default(false),
@@ -78,8 +98,8 @@ export const Formulary = Pharmacy.table('Formulary', {
 });
 
 export const Formulary_ROA = Pharmacy.table('Formulary_ROA', {
-  formulary_id: integer().references(() => Formulary.id),
-  roa: integer()
+  formulary_id: smallint().references(() => Formulary.id),
+  roa: smallint()
     .notNull()
     .references(() => RouteOfAdministration.id),
 });
@@ -88,13 +108,14 @@ export const Formulation = Pharmacy.table(
   'Formulation',
   {
     id: serial().primaryKey(),
-    formulary_id: integer().references(() => Formulary.id),
-    ac_id: integer().references(() => ActiveIngredient.id),
+    formulary_id: smallint().references(() => Formulary.id),
+    ac_id: smallint().references(() => ActiveIngredient.id),
     amount: decimal({ precision: 10, scale: 5 }).notNull(),
-    amount_unit: integer()
+    amount_unit: smallint()
       .notNull()
-      .references(() => ActiveIngredient_Unit.id),
-    unit_representation: varchar({ length: 3 }).notNull(), // Modifier for parts (nano, micro, milli-, centi-, deci-) and multipliers (Kilo-, Mega-, Giga-)
+      .references(() => ActiveIngredient_Unit.id)
+      .notNull(),
+    unit_representation: smallint().references(() => ActiveIngredient_Unit_Modifier.id),
     role: varchar({ length: 45 }).notNull(),
     role_target: integer(),
   },
@@ -108,35 +129,35 @@ export const Formulation = Pharmacy.table(
 );
 
 export const RouteOfAdministration = Pharmacy.table('RouteOfAdministration', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
 });
 
 export const DosageForm = Pharmacy.table('DosageForm', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
 });
 
 export const StockCategory = Pharmacy.table('StockCategory', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
 });
 
 export const Usage = Pharmacy.table('Usage', {
-  id: integer().primaryKey(),
+  id: smallserial().primaryKey(),
   name: varchar({ length: 45 }).notNull(),
 });
 
 export const PharmacyStock_Drugs = Pharmacy.table('PharmacyStock_Drugs', {
   id: serial().primaryKey(),
-  brand_name_id: integer()
+  brand_name_id: smallint()
     .notNull()
     .references(() => BrandName.id),
   amount: integer().notNull(),
   unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
   expiry_date: date({ mode: 'date' }),
   batch_number: varchar({ length: 32 }),
-  stock_category: integer().references(() => StockCategory.id),
+  stock_category: smallint().references(() => StockCategory.id),
 });
 
 export const PharmacyTransaction_Drugs = Pharmacy.table('PharmacyTransaction_Drugs', {
@@ -153,7 +174,7 @@ export const PharmacyTransaction_Drugs = Pharmacy.table('PharmacyTransaction_Dru
   pharmacist_sign_key: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  patient_id: bigint({ mode: 'bigint' }).references(() => InPatient.id),
+  patient_id: integer().references(() => InPatient.id),
   med_plan_id: bigint({ mode: 'bigint' }).references(() => MedPlan.id),
   dispensing_nurse_id: smallint().references(() => Staff.id),
 });
