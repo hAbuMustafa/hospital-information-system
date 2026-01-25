@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { getTermed } from '$lib/utils/date-format';
+
   type PropsT = {
     eventTitle: string;
     eventTime: Date;
@@ -7,20 +9,27 @@
 
     isEndEvent?: boolean;
 
+    duration?: number;
+
     dateTimeFormatter?: Function;
   };
 
-  const {
+  let {
     eventTitle,
     eventTime,
     direction = true,
     isEndEvent = false,
+    duration,
     dateTimeFormatter,
   }: PropsT = $props();
 </script>
 
 <div class="event-wrapper" class:reversed={direction}>
-  <span class="event-title">{eventTitle}</span>
+  <span
+    class="event-title"
+    title={duration ? `المدة ${getTermed(duration, 'يوم', 'أيام')}` : null}
+    >{eventTitle}</span
+  >
   <span class="dot" class:end={isEndEvent}></span>
   <small class="event-time">{dateTimeFormatter?.(eventTime) ?? eventTime}</small>
 </div>
