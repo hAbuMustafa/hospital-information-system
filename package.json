@@ -39,6 +39,7 @@
     ]
   },
   "dependencies": {
+    "@lucide/svelte": "^0.563.1",
     "bcryptjs": "^3.0.2",
     "dayjs": "^1.11.18",
     "drizzle-orm": "^0.44.7",
