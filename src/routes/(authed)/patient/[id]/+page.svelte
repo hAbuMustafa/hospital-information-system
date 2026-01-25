@@ -106,8 +106,8 @@
       {/each}
     </ol>
 
-    <details dir="ltr">
-      <summary dir="rtl"><h3 style="display: inline-block;">التنقلات</h3></summary>
+    <details>
+      <summary><h3 style="display: inline-block;">التنقلات</h3></summary>
       <Timeline
         events={data.transfers}
         eventTitle_name="to_ward"
