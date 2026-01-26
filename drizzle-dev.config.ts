@@ -20,5 +20,6 @@ export default defineConfig({
     'People',
     'Pharmacy',
     'Security',
+    'Drug',
   ],
 });

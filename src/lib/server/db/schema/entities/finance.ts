@@ -9,7 +9,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Sec_pb_key, User } from './system';
-import { PharmacyStock_Drugs } from './pharmacy';
+import { Stock_Drugs } from './pharmacy';
 
 export const Finance = pgSchema('Finance');
 
@@ -38,7 +38,7 @@ export const Invoice_Item_Drugs = Finance.table('Invoice_Item_Drugs', {
     .references(() => Invoice_Drugs.id),
   item_id: integer()
     .notNull()
-    .references(() => PharmacyStock_Drugs.id),
+    .references(() => Stock_Drugs.id),
   amount: integer().notNull().default(1),
   unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
 });
