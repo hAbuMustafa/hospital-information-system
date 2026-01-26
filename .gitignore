@@ -19,8 +19,9 @@ Thumbs.db
 !.env.example
 !.env.test
 
-# Seed Data
+# Seed
 /scripts/seed/data/*
+/scripts/seed/seed.config.json
 
 # SQL Sessions
 /*.session.sql
