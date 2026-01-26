@@ -90,13 +90,29 @@ export async function beginSeed() {
   }
 
   // Seed Initial Data
-  if (config.all || config.data || config.patients || config.patientAdmissions)
+  if (
+    config.all ||
+    config.data === true ||
+    config.patient === true ||
+    config.patient.admissions === true
+  )
     await seed(new_PatientAdmissions, seedPatientAdmission);
-  if (config.all || config.data || config.patients || config.patientTransfers)
+  if (
+    config.all ||
+    config.data === true ||
+    config.patient === true ||
+    config.patient.transfers === true
+  )
     await seed(new_PatientTransfers, seedPatientTransfer);
-  if (config.all || config.data || config.patients || config.patientDischarges)
+  if (
+    config.all ||
+    config.data === true ||
+    config.patient === true ||
+    config.patient.discharges === true
+  )
     await seed(new_PatientDischarges, seedPatientDischarge);
-  if (config.all || config.data || config.users) await seed(new_Users, seedUser);
+  if (config.all || config.data === true || config.user === true)
+    await seed(new_Users, seedUser);
 
   console.timeEnd('total seeding time');
 }
