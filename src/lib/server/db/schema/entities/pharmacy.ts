@@ -55,7 +55,7 @@ export const ActiveIngredient_Unit_Modifier = Pharmacy.table(
 );
 
 // (Bottle, Tablet, .. etc)
-export const ProductUnit = Pharmacy.table('Product_unit', {
+export const ProductUnit = Pharmacy.table('ProductUnit', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }),
   name_ar: varchar({ length: 15 }),
