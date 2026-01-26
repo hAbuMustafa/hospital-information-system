@@ -94,21 +94,21 @@ export async function beginSeed() {
     config.all ||
     config.data === true ||
     config.patient === true ||
-    config.patient.admissions === true
+    config.patient?.admissions === true
   )
     await seed(new_PatientAdmissions, seedPatientAdmission);
   if (
     config.all ||
     config.data === true ||
     config.patient === true ||
-    config.patient.transfers === true
+    config.patient?.transfers === true
   )
     await seed(new_PatientTransfers, seedPatientTransfer);
   if (
     config.all ||
     config.data === true ||
     config.patient === true ||
-    config.patient.discharges === true
+    config.patient?.discharges === true
   )
     await seed(new_PatientDischarges, seedPatientDischarge);
   if (config.all || config.data === true || config.user === true)
