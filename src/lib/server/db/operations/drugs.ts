@@ -1,12 +1,9 @@
 import { db } from '$lib/server/db';
-import {
-  StockCategory,
-  DosageForm_SizeUnit,
-} from '$lib/server/db/schema/entities/pharmacy';
+import { StockCategory, ProductUnit } from '$lib/server/db/schema/entities/pharmacy';
 
-export async function createDrugUnit(unit: typeof DosageForm_SizeUnit.$inferInsert) {
+export async function createDrugUnit(unit: typeof ProductUnit.$inferInsert) {
   try {
-    const [drugUnit] = await db.insert(DosageForm_SizeUnit).values(unit).returning();
+    const [drugUnit] = await db.insert(ProductUnit).values(unit).returning();
 
     return {
       success: true,

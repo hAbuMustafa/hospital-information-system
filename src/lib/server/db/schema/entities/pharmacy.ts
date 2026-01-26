@@ -2,6 +2,7 @@ import {
   pgSchema,
   serial,
   varchar,
+  char,
   foreignKey,
   bigint,
   integer,
@@ -42,7 +43,7 @@ export const ActiveIngredient_Role = Pharmacy.table('ActiveIngredient_Role', {
   name_ar: varchar({ length: 15 }).notNull(),
 });
 
-// Modifier for parts (nano, micro, milli-, centi-, deci-) and multipliers (Kilo-, Mega-, Giga-)
+// Modifier for parts (nano-, micro-, milli-, centi-, deci-) and multipliers (Kilo-, Mega-, Giga-)
 export const ActiveIngredient_Unit_Modifier = Pharmacy.table(
   'ActiveIngredient_Unit_Modifier',
   {
@@ -54,24 +55,25 @@ export const ActiveIngredient_Unit_Modifier = Pharmacy.table(
 );
 
 // (Bottle, Tablet, .. etc)
-export const DosageForm_SizeUnit = Pharmacy.table('DosageForm_SizeUnit', {
+export const ProductUnit = Pharmacy.table('Product_unit', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }),
   name_ar: varchar({ length: 15 }),
 });
 
 export const ActiveIngredient_Use = Pharmacy.table('ActiveIngredient_Use', {
+  id: smallserial().primaryKey(),
   ac_id: smallint().references(() => ActiveIngredient.id),
   use_id: smallint().references(() => Usage.id),
 });
 
-export const BrandName = Pharmacy.table('BrandName', {
+export const Product_drug = Pharmacy.table('Product_drug', {
   id: smallserial().primaryKey(),
   formulary_id: integer().references(() => Formulary.id),
   name: varchar({ length: 45 }).notNull(),
   name_ar: varchar({ length: 45 }),
   size: decimal({ precision: 10, scale: 5 }),
-  size_unit: smallint().references(() => DosageForm_SizeUnit.id),
+  size_unit: smallint().references(() => ProductUnit.id),
   unit_representation: varchar({ length: 3 }),
   is_imported: boolean(),
   modifier: varchar({ length: 20 }), // (eg. ROM or With Rubber Cap)
@@ -80,12 +82,13 @@ export const BrandName = Pharmacy.table('BrandName', {
 });
 
 export const DosageUnit_look_like = Pharmacy.table('DosageUnit_look_like', {
+  id: smallserial().primaryKey(),
   brand_name_id: smallint()
     .notNull()
-    .references(() => BrandName.id),
+    .references(() => Product_drug.id),
   look_like_id: smallint()
     .notNull()
-    .references(() => BrandName.id),
+    .references(() => Product_drug.id),
 });
 
 export const Formulary = Pharmacy.table('Formulary', {
@@ -95,13 +98,9 @@ export const Formulary = Pharmacy.table('Formulary', {
   cat_high_concentration_electrolyte: boolean().default(false),
   cat_dangerous: boolean().default(false),
   upa_code: bigint({ mode: 'bigint' }),
-});
-
-export const Formulary_ROA = Pharmacy.table('Formulary_ROA', {
-  formulary_id: smallint().references(() => Formulary.id),
-  roa: smallint()
-    .notNull()
-    .references(() => RouteOfAdministration.id),
+  formulation_cat_id: smallint()
+    .references(() => Formulation_Dosing_Category.id)
+    .notNull(),
 });
 
 export const Formulation = Pharmacy.table(
@@ -110,12 +109,12 @@ export const Formulation = Pharmacy.table(
     id: serial().primaryKey(),
     formulary_id: smallint().references(() => Formulary.id),
     ac_id: smallint().references(() => ActiveIngredient.id),
-    amount: decimal({ precision: 10, scale: 5 }).notNull(),
+    amount: decimal({ precision: 10, scale: 6 }).notNull(),
     amount_unit: smallint()
       .notNull()
       .references(() => ActiveIngredient_Unit.id)
       .notNull(),
-    unit_representation: smallint().references(() => ActiveIngredient_Unit_Modifier.id),
+    amount_unit_fraction: smallint().references(() => ActiveIngredient_Unit_Modifier.id),
     role: varchar({ length: 45 }).notNull(),
     role_target: integer(),
   },
@@ -127,6 +126,34 @@ export const Formulation = Pharmacy.table(
     }),
   ],
 );
+
+// strategy, high_concentration_electrolyte, dangerous
+export const FormulaCategory = Pharmacy.table('FormulaCategory', {
+  id: smallserial().primaryKey(),
+  name: varchar({ length: 30 }).notNull(),
+  color: char({ length: 6 }),
+});
+
+export const Formulary_category = Pharmacy.table('Formulary_category', {
+  id: serial().primaryKey(),
+  formula_id: smallint().references(() => Formulary.id),
+  category_id: smallint().references(() => FormulaCategory.id),
+});
+
+export const Formulary_ROA = Pharmacy.table('Formulary_ROA', {
+  id: smallserial().primaryKey(),
+  formulary_id: smallint().references(() => Formulary.id),
+  roa: smallint()
+    .notNull()
+    .references(() => RouteOfAdministration.id),
+});
+
+// Helps calculate concentrations
+// compressed, metered, powder for reconstitution, solution, spreadable
+export const Formulation_Dosing_Category = Pharmacy.table('Dosing_category', {
+  id: smallserial().primaryKey(),
+  name: varchar({ length: 25 }).notNull(),
+});
 
 export const RouteOfAdministration = Pharmacy.table('RouteOfAdministration', {
   id: smallserial().primaryKey(),
@@ -152,7 +179,7 @@ export const PharmacyStock_Drugs = Pharmacy.table('PharmacyStock_Drugs', {
   id: serial().primaryKey(),
   brand_name_id: smallint()
     .notNull()
-    .references(() => BrandName.id),
+    .references(() => Product_drug.id),
   amount: integer().notNull(),
   unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
   expiry_date: date({ mode: 'date' }),
