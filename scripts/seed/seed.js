@@ -1,7 +1,7 @@
-import config from './seed.config.json' with {type:'json'};
-import { admissions as new_PatientAdmissions } from './data/patient_admissions';
-import { transfers as new_PatientTransfers } from './data/patient_transfers';
-import { discharges as new_PatientDischarges } from './data/patient_discharges';
+import config from './seed.config.json' with { type: 'json' };
+import { admissions as new_PatientAdmissions } from './data/patient/admissions';
+import { transfers as new_PatientTransfers } from './data/patient/transfers';
+import { discharges as new_PatientDischarges } from './data/patient/discharges';
 import { users as new_Users } from './data/users';
 
 import { seedUser } from '../../src/lib/server/db/operations/seed/users';
@@ -32,7 +32,7 @@ import {
 } from '../../src/lib/server/db/menus';
 
 async function seed(items, insertFunction) {
-  const seedName = insertFunction.name.replace('create', '').replace('seed','');
+  const seedName = insertFunction.name.replace('create', '').replace('seed', '');
 
   console.warn('\nStarting ' + seedName + ' seed..');
 
@@ -46,7 +46,7 @@ async function seed(items, insertFunction) {
         'Failed adding',
         JSON.stringify(items[i], null, 4),
         'with error:\n',
-        itemReturn.error
+        itemReturn.error,
       );
       break;
     }
@@ -83,8 +83,8 @@ export async function beginSeed() {
         new_PatientAdmissions
           .map((p) => p.diagnosis?.split('+').map((d) => d.trim()))
           .flat()
-          .sort()
-      )
+          .sort(),
+      ),
     );
     await seed(new_Diagnoses, createDiagnosis);
   }
