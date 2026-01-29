@@ -12,7 +12,7 @@ import {
   smallserial,
 } from 'drizzle-orm/pg-core';
 
-const Drug = pgSchema('Drug');
+export const Drug = pgSchema('Drug');
 
 export const ActiveIngredient = Drug.table('ActiveIngredient', {
   id: smallserial().primaryKey(),

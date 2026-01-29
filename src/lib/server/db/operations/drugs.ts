@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db';
-import { StockCategory, ProductUnit } from '$lib/server/db/schema/entities/pharmacy';
+import { StockCategory } from '$lib/server/db/schema/entities/pharmacy';
+import { ProductUnit } from '$lib/server/db/schema/entities/drugs';
 
 export async function createDrugUnit(unit: typeof ProductUnit.$inferInsert) {
   try {
