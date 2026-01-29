@@ -10,9 +10,10 @@
   const { dataTuple, row }: PropsT = $props();
   const [colName, colValue] = $derived(dataTuple);
 
-  const dateColumns: Record<string, string | undefined> = getContext('date columns');
-  const detailsColumn: Record<string, Function> = getContext('details column');
-  const actionColumns: Record<
+  const dateColumns: () => Record<string, string | undefined> =
+    getContext('date columns');
+  const detailsColumn: () => Record<string, Function> = getContext('details column');
+  const actionColumns: () => Record<
     string,
     {
       actionName: string;
@@ -23,23 +24,23 @@
 </script>
 
 <td>
-  {#if dateColumns && dateColumns.hasOwnProperty(colName) && colValue}
-    {formatDate(colValue as number | Date, dateColumns[colName])}
-  {:else if actionColumns && actionColumns.hasOwnProperty(colName)}
+  {#if dateColumns() && dateColumns().hasOwnProperty(colName) && colValue}
+    {formatDate(colValue as number | Date, dateColumns()[colName])}
+  {:else if actionColumns() && actionColumns().hasOwnProperty(colName)}
     <input
       type="button"
       onclick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        actionColumns[colName].onclick(row);
+        actionColumns()[colName].onclick(row);
       }}
-      value={actionColumns[colName].actionName}
-      style:--color={actionColumns[colName].style?.color ?? 'var(--main-text-color)'}
-      style:--background-color={actionColumns[colName].style?.backgroundColor ??
+      value={actionColumns()[colName].actionName}
+      style:--color={actionColumns()[colName].style?.color ?? 'var(--main-text-color)'}
+      style:--background-color={actionColumns()[colName].style?.backgroundColor ??
         'var(--main-bg-color)'}
     />
-  {:else if detailsColumn && detailsColumn.hasOwnProperty(colName)}
-    <a href={detailsColumn[colName](row)} class="button">{colValue}</a>
+  {:else if detailsColumn() && detailsColumn().hasOwnProperty(colName)}
+    <a href={detailsColumn()[colName](row)} class="button">{colValue}</a>
   {:else}
     {colValue}
   {/if}

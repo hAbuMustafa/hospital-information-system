@@ -34,10 +34,10 @@
   }
 
   setContext('column names', () => columnNames);
-  if (dateColumns) setContext('date columns', dateColumns);
-  if (renameColumns) setContext('rename columns', renameColumns);
-  if (actionColumns) setContext('action columns', actionColumns);
-  if (detailsColumn) setContext('details column', detailsColumn);
+  if (dateColumns) setContext('date columns', () => dateColumns);
+  if (renameColumns) setContext('rename columns', () => renameColumns);
+  if (actionColumns) setContext('action columns', () => actionColumns);
+  if (detailsColumn) setContext('details column', () => detailsColumn);
 </script>
 
 <table>

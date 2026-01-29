@@ -2,8 +2,8 @@
   import { getContext } from 'svelte';
 
   const columnNames: () => string[] = getContext('column names');
-  const renameColumns: Record<string, string> = getContext('rename columns');
-  const actionColumns: Record<
+  const renameColumns: () => Record<string, string> = getContext('rename columns');
+  const actionColumns: () => Record<
     string,
     {
       actionName: string;
@@ -11,15 +11,15 @@
       style?: { color?: string; backgroundColor?: string };
     }
   > = getContext('action columns');
-  const actionColumnNames = actionColumns ? Object.keys(actionColumns) : [];
+  const actionColumnNames = actionColumns() ? Object.keys(actionColumns()) : [];
 </script>
 
 <thead>
   <tr>
     {#each columnNames() as colName, i (i)}
       <th class:action_column={actionColumnNames.includes(colName)}>
-        {renameColumns && renameColumns.hasOwnProperty(colName)
-          ? renameColumns[colName]
+        {renameColumns() && renameColumns().hasOwnProperty(colName)
+          ? renameColumns()[colName]
           : colName}
       </th>
     {/each}
