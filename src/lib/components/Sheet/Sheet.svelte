@@ -25,19 +25,47 @@
   const { rows, dateColumns, renameColumns, actionColumns, detailsColumn }: PropsT =
     $props();
 
+  function getRows() {
+    return rows;
+  }
+
+  function getActionColumns() {
+    return actionColumns;
+  }
+
+  function getDateColumns() {
+    return dateColumns;
+  }
+
+  function getDetailsColumn() {
+    return detailsColumn;
+  }
+
+  function getRenamedColumn() {
+    return renameColumns;
+  }
+
   let columnNames: string[] = $state([]);
-  if (rows && rows.length > 0 && typeof rows[0] === 'object') {
-    columnNames.push(...Array.from(new Set(rows.map((r) => Object.keys(r)).flat())));
-    if (actionColumns) {
-      columnNames.push(...Object.keys(actionColumns));
+  if (getRows() && getRows().length > 0 && typeof getRows()[0] === 'object') {
+    columnNames.push(
+      ...Array.from(
+        new Set(
+          getRows()
+            .map((r) => Object.keys(r))
+            .flat(),
+        ),
+      ),
+    );
+    if (getActionColumns()) {
+      columnNames.push(...Object.keys(getActionColumns()!));
     }
   }
 
   setContext('column names', () => columnNames);
-  if (dateColumns) setContext('date columns', () => dateColumns);
-  if (renameColumns) setContext('rename columns', () => renameColumns);
-  if (actionColumns) setContext('action columns', () => actionColumns);
-  if (detailsColumn) setContext('details column', () => detailsColumn);
+  if (getDateColumns()) setContext('date columns', getDateColumns);
+  if (getRenamedColumn()) setContext('rename columns', getRenamedColumn);
+  if (getActionColumns()) setContext('action columns', getActionColumns);
+  if (getDetailsColumn()) setContext('details column', getDetailsColumn);
 </script>
 
 <table>
@@ -48,7 +76,7 @@
   {:else}
     <SheetHead />
     <tbody>
-      {#each rows as row, i (i)}
+      {#each getRows() as row, i (i)}
         {#if row[columnNames[0]] !== columnNames[0]}
           <Row dataObj={row} />
         {/if}
