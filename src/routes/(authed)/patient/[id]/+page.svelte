@@ -6,7 +6,7 @@
   let { data } = $props();
 
   const dateAndTime = (date: number | Date) => {
-    return formatDate(date, 'YYYY/MM/DD (hh:mm)');
+    return formatDate(date, 'YYYY/MM/DD (HH:mm)');
   };
 </script>
 
