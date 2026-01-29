@@ -11,7 +11,7 @@
       style?: { color?: string; backgroundColor?: string };
     }
   > = getContext('action columns');
-  const actionColumnNames = actionColumns() ? Object.keys(actionColumns()) : [];
+  const actionColumnNames = actionColumns?.() ? Object.keys(actionColumns?.()) : [];
 </script>
 
 <thead>
