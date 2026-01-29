@@ -20,13 +20,13 @@ export const Security = pgSchema('Security');
 export const Sec_pb_key = Security.table('Sec_pb_key', {
   id: bigserial({ mode: 'bigint' }).primaryKey(),
   key: text().notNull(),
-  timestamp: timestamp({ mode: 'date' }).defaultNow().notNull(),
+  timestamp: timestamp({ withTimezone: true }).defaultNow().notNull(),
 });
 
 export const Sec_pv_key = Security.table('Sec_pv_key', {
   id: bigserial({ mode: 'bigint' }).primaryKey(),
   key: text().notNull(),
-  timestamp: timestamp({ mode: 'date' }).defaultNow().notNull(),
+  timestamp: timestamp({ withTimezone: true }).defaultNow().notNull(),
 });
 
 export const RefreshToken = Security.table('RefreshToken', {
@@ -35,9 +35,9 @@ export const RefreshToken = Security.table('RefreshToken', {
     .notNull()
     .references(() => User.id),
   token_hash: varchar({ length: 64 }).notNull(),
-  created_at: timestamp({ mode: 'date' }).notNull().defaultNow(),
-  expires_at: timestamp({ mode: 'date' }).notNull(),
-  last_used_at: timestamp({ mode: 'date' }).defaultNow(),
+  created_at: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  expires_at: timestamp({ withTimezone: true }).notNull(),
+  last_used_at: timestamp({ withTimezone: true }).defaultNow(),
 });
 
 export const User = Security.table('User', {
@@ -55,9 +55,9 @@ export const User = Security.table('User', {
   pv_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pv_key.id),
-  created_at: timestamp({ mode: 'date' }).defaultNow().notNull(),
+  created_at: timestamp({ withTimezone: true }).defaultNow().notNull(),
   active: boolean().default(false).notNull(),
-  last_login: timestamp({ mode: 'date' }),
+  last_login: timestamp({ withTimezone: true }),
   password_reset_required: boolean().default(false).notNull(),
 });
 
@@ -89,9 +89,9 @@ export const users_view = Security.view('users_view', {
   hashed_pw: text().notNull(),
   role: integer().notNull(),
   staff_id: smallint().references(() => Staff.id),
-  created_at: timestamp({ mode: 'date' }).defaultNow().notNull(),
+  created_at: timestamp({ withTimezone: true }).defaultNow().notNull(),
   active: boolean().default(false).notNull(),
-  last_login: timestamp({ mode: 'date' }),
+  last_login: timestamp({ withTimezone: true }),
   password_reset_required: boolean().default(false).notNull(),
 }).as(sql`
 SELECT 

@@ -31,14 +31,14 @@ export const Stock_Drugs = Pharmacy.table('Stock_Drugs', {
     .references(() => Product_drug.id),
   amount: integer().notNull(),
   unit_price: decimal({ precision: 10, scale: 5 }).notNull(),
-  expiry_date: date({ mode: 'date' }),
+  expiry_date: date(),
   batch_number: varchar({ length: 32 }),
   stock_category: smallint().references(() => StockCategory.id),
 });
 
 export const Transaction_Drugs = Pharmacy.table('Transaction_Drugs', {
   id: bigserial({ mode: 'bigint' }).primaryKey(),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
   item_id: integer()
     .notNull()
     .references(() => Stock_Drugs.id),

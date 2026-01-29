@@ -45,10 +45,10 @@ export const InPatient_file = Patient.table(
   (table) => [
     check(
       'year_check',
-      sql`${table.year} >= (2024-2000) AND ${table.year} <= (date_part('year', CURRENT_DATE)-2000)`
+      sql`${table.year} >= (2024-2000) AND ${table.year} <= (date_part('year', CURRENT_DATE)-2000)`,
     ),
     unique('unique_file_number_in_a_year').on(table.year, table.number),
-  ]
+  ],
 );
 
 export const inPatient_view = Patient.view('inPatient_view', {
@@ -72,11 +72,11 @@ export const inPatient_view = Patient.view('inPatient_view', {
   security_status: boolean(),
   gender: boolean(),
   birthdate: date(),
-  admission_time: timestamp().notNull(),
+  admission_time: timestamp({ withTimezone: true }).notNull(),
   admission_notes: text(),
   admitted_from: varchar({ length: 100 }),
   discharge_order_id: integer(),
-  discharge_time: timestamp(),
+  discharge_time: timestamp({ withTimezone: true }),
   discharge_reason: varchar({ length: 15 }),
   discharge_notes: text(),
 }).as(
@@ -119,7 +119,7 @@ FROM "Patient"."InPatient" p
  LEFT JOIN "Patient"."Discharge_Reason" r ON d.discharge_reason = r.id
  LEFT JOIN "Patient"."Admission" adm ON p.id = adm.patient_id
 ORDER BY p.id
-`
+`,
 );
 
 export const Insurance_Doc = Patient.table('Insurance_Doc', {
@@ -130,8 +130,8 @@ export const Insurance_Doc = Patient.table('Insurance_Doc', {
   insurance_entity: varchar({ length: 45 }),
   insurance_number: varchar({ length: 30 }),
   type: varchar({ length: 45 }),
-  valid_from_date: date({ mode: 'date' }),
-  expiration_date: date({ mode: 'date' }),
+  valid_from_date: date(),
+  expiration_date: date(),
   stay: varchar({ length: 45 }),
   medication_deductible_percent: decimal(),
   lab_deductible_percent: decimal(),
@@ -149,7 +149,7 @@ export const Diagnosis = Patient.table('Diagnosis', {
 export const diagnosis_view = Patient.view('diagnosis_view', {
   patient_id: integer().notNull(),
   diagnosis: text().notNull(),
-  timestamp: timestamp().notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
   diagnosis_type: varchar({ length: 45 }),
 }).as(sql`
 SELECT 
@@ -169,7 +169,7 @@ export const Patient_diagnosis = Patient.table('Patient_diagnosis', {
   diagnosis_id: integer()
     .notNull()
     .references(() => Diagnosis.id),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
   type: varchar({ length: 45 }),
   diagnosing_phys_id: smallint().references(() => Staff.id),
   diagnosing_phys_signature: varchar({ length: 256 }),
@@ -182,7 +182,7 @@ export const Admission_Order = Patient.table('Admission_Order', {
     .references(() => Person.id)
     .notNull(),
   notes: text(),
-  timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
+  timestamp: timestamp({ withTimezone: true }).notNull().defaultNow(),
   admitting_phys: smallint()
     .references(() => Staff.id)
     .notNull(),
@@ -200,7 +200,7 @@ export const Admission = Patient.table('Admission', {
   admission_order_id: integer().references(() => Admission_Order.id),
   admission_notes: text(),
   referred_from: varchar({ length: 100 }).default('reception'),
-  timestamp: timestamp({ mode: 'date' }).notNull().defaultNow(),
+  timestamp: timestamp({ withTimezone: true }).notNull().defaultNow(),
   registrar: smallint().references(() => Staff.id),
 });
 
@@ -222,7 +222,7 @@ export const Discharge_Order = Patient.table('Discharge_Order', {
   phys_sign_key: bigint({ mode: 'bigint' })
     .references(() => Sec_pb_key.id)
     .notNull(),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
 });
 
 export const Discharge = Patient.table('Discharge', {
@@ -231,7 +231,7 @@ export const Discharge = Patient.table('Discharge', {
     .notNull()
     .references(() => InPatient.id),
   discharge_order_id: integer().references(() => Discharge_Order.id),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
   discharge_reason: integer()
     .notNull()
     .references(() => Discharge_Reason.id),
@@ -257,7 +257,7 @@ export const Transfer_Order = Patient.table('Transfer_Order', {
   phys_sign_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
 });
 
 export const Transfer = Patient.table('Transfer', {
@@ -271,7 +271,7 @@ export const Transfer = Patient.table('Transfer', {
     .references(() => Ward.id),
   transfer_order_id: integer().references(() => Transfer_Order.id),
   notes: text(),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
 });
 
 export const transfers_view = Patient.view('transfers_view', {
@@ -287,7 +287,7 @@ export const transfers_view = Patient.view('transfers_view', {
   to_ward: varchar({ length: 10 }),
   transfer_order_id: integer().references(() => Transfer_Order.id),
   notes: text(),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
 }).as(
   sql`
     SELECT
@@ -303,5 +303,5 @@ export const transfers_view = Patient.view('transfers_view', {
     FROM "Patient"."Transfer" t
     LEFT JOIN "Hospital"."Ward" wf ON t.from_ward_id = wf.id
     LEFT JOIN "Hospital"."Ward" wt ON t.to_ward_id = wt.id
-  `
+  `,
 );

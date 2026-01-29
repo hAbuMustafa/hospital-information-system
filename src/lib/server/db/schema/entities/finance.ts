@@ -21,9 +21,9 @@ export const Invoice_Drugs = Finance.table('Invoice_Drugs', {
   created_by: integer()
     .notNull()
     .references(() => User.id),
-  created_at: timestamp().notNull().default(new Date()),
-  from: timestamp().notNull(),
-  till: timestamp().notNull(),
+  created_at: timestamp({ withTimezone: true }).notNull().default(new Date()),
+  from: timestamp({ withTimezone: true }).notNull(),
+  till: timestamp({ withTimezone: true }).notNull(),
   total: decimal({ precision: 10, scale: 5 }).notNull(),
   creator_pb_key_id: bigint({ mode: 'bigint' })
     .notNull()

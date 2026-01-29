@@ -25,7 +25,7 @@ export const Staff = Hospital.table('Staff', {
   qualification: varchar({ length: 45 }),
   major: varchar({ length: 45 }),
   department: varchar({ length: 45 }), // todo: make a list
-  employment_date: date({ mode: 'date' }),
+  employment_date: date(),
   person_id: integer()
     .notNull()
     .references(() => Person.id),

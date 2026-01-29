@@ -21,7 +21,7 @@ export const MedPlan = MedicationPlan.table(
   'MedPlan',
   {
     id: bigserial({ mode: 'bigint' }).primaryKey(),
-    timestamp: timestamp({ mode: 'date' }).notNull(),
+    timestamp: timestamp({ withTimezone: true }).notNull(),
     patient_id: integer()
       .notNull()
       .references(() => InPatient.id),
@@ -33,7 +33,7 @@ export const MedPlan = MedicationPlan.table(
     frequency: decimal({ precision: 10, scale: 2 }).notNull(),
     duration_days: decimal({ precision: 10, scale: 2 }).notNull(),
     mixed_with: bigint({ mode: 'bigint' }),
-    discontinued_at: timestamp({ mode: 'date' }),
+    discontinued_at: timestamp({ withTimezone: true }),
     discontinue_phys_id: smallint().references(() => Staff.id),
     discontinue_phys_signature: varchar({ length: 256 }),
     discontinue_phys_sign_key_id: bigint({ mode: 'bigint' }).references(
@@ -51,7 +51,7 @@ export const MedPlan = MedicationPlan.table(
 
 export const MedPlan_note = MedicationPlan.table('MedPlan_note', {
   id: bigserial({ mode: 'bigint' }).primaryKey(),
-  timestamp: timestamp({ mode: 'date' }).notNull(),
+  timestamp: timestamp({ withTimezone: true }).notNull(),
   med_plan_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => MedPlan.id),
@@ -84,7 +84,7 @@ export const MedPlan_sign_nurse = MedicationPlan.table('MedPlan_sign_nurse', {
   nurse_sign_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  signature_time: timestamp({ mode: 'date' }).notNull(),
+  signature_time: timestamp({ withTimezone: true }).notNull(),
 });
 
 export const MedPlan_sign_pharm = MedicationPlan.table('MedPlan_sign_pharm', {
@@ -98,7 +98,7 @@ export const MedPlan_sign_pharm = MedicationPlan.table('MedPlan_sign_pharm', {
   pharm_signature_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  signature_time: timestamp({ mode: 'date' }).notNull(),
+  signature_time: timestamp({ withTimezone: true }).notNull(),
 });
 
 export const MedPlan_sign_phys = MedicationPlan.table('MedPlan_sign_phys', {
@@ -112,5 +112,5 @@ export const MedPlan_sign_phys = MedicationPlan.table('MedPlan_sign_phys', {
   phys_signature_key_id: bigint({ mode: 'bigint' })
     .notNull()
     .references(() => Sec_pb_key.id),
-  signature_time: timestamp({ mode: 'date' }).notNull(),
+  signature_time: timestamp({ withTimezone: true }).notNull(),
 });
