@@ -11,6 +11,8 @@ export function convertGoogleSheetsDateToJSDate(serial: number) {
   const sheetsEpoch = new Date(1899, 11, 30); // December 30, 1899
   const jsDate = new Date(sheetsEpoch.getTime() + serial * 24 * 60 * 60 * 1000);
 
+  jsDate.setMinutes(jsDate.getMinutes() + 6);
+
   return jsDate;
 }
 
@@ -28,7 +30,7 @@ export function getAge(birthdate: number | Date | string) {
 export function getDuration(
   start: Date,
   end: Date,
-  unit: QUnitType | OpUnitType = 'days'
+  unit: QUnitType | OpUnitType = 'days',
 ) {
   return dayjs(end).diff(dayjs(start), unit);
 }
@@ -38,9 +40,9 @@ export function getTermed(number: number, term: string, termPlural: string) {
     number === 1
       ? term + ' واحد'
       : number === 2
-      ? term + 'ان'
-      : number < 11
-      ? termPlural
-      : term + 'ا'
+        ? term + 'ان'
+        : number < 11
+          ? termPlural
+          : term + 'ا'
   }`;
 }
