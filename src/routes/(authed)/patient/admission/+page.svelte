@@ -10,12 +10,12 @@
   const { data, form } = $props();
 
   let personName = $state('');
-  let firstName = $state(form?.firstName ?? '');
-  let fatherName = $state(form?.fatherName ?? '');
-  let grandfatherName = $state(form?.grandfatherName ?? '');
-  let familyName = $state(form?.familyName ?? '');
-  let idDocType = $state(form?.idDocType ? Number(form.idDocType) : 1);
-  let idDocNum = $state(form?.idDocNum ?? '');
+  let firstName = $derived(form?.firstName ?? '');
+  let fatherName = $derived(form?.fatherName ?? '');
+  let grandfatherName = $derived(form?.grandfatherName ?? '');
+  let familyName = $derived(form?.familyName ?? '');
+  let idDocType = $derived(form?.idDocType ? Number(form.idDocType) : 1);
+  let idDocNum = $derived(form?.idDocNum ?? '');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
