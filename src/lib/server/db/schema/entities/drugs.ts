@@ -30,6 +30,7 @@ export const ActiveIngredient_Unit = Drug.table('ActiveIngredient_Unit', {
   fullname_ar: varchar({ length: 15 }).notNull(),
 });
 
+// The role in a formula according to other ingredients (e.g. synergist, additive, excipient, ...etc)
 export const ActiveIngredient_Role = Drug.table('ActiveIngredient_Role', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
@@ -60,6 +61,8 @@ export const ActiveIngredient_Use = Drug.table('ActiveIngredient_Use', {
   use_id: smallint().references(() => Usage.id),
 });
 
+// The product itself (Brand-name) packages.
+// todo: add gtin: bigint({ mode: 'bigint' }).unique(),
 export const Product_drug = Drug.table('Product_drug', {
   id: smallserial().primaryKey(),
   formulary_id: integer().references(() => Formulary.id),
@@ -74,7 +77,8 @@ export const Product_drug = Drug.table('Product_drug', {
   producer: varchar({ length: 45 }),
 });
 
-export const DosageUnit_look_like = Drug.table('DosageUnit_look_like', {
+// List for products whom their shape, or appearance could be deceptively misleading or mistakenly dispensed.
+export const Product_looks_like = Drug.table('Product_looks_like', {
   id: smallserial().primaryKey(),
   brand_name_id: smallint()
     .notNull()
@@ -84,6 +88,7 @@ export const DosageUnit_look_like = Drug.table('DosageUnit_look_like', {
     .references(() => Product_drug.id),
 });
 
+// Index of all available formulae. Each formula should have a separate identifier if it should be administered through a different route, or it has a different concentration.
 export const Formulary = Drug.table('Formulary', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
@@ -96,6 +101,7 @@ export const Formulary = Drug.table('Formulary', {
     .notNull(),
 });
 
+// the ingredients of every formula
 export const Formulation = Drug.table(
   'Formulation',
   {
@@ -148,16 +154,19 @@ export const Formulation_Dosing_Category = Drug.table('Dosing_category', {
   name: varchar({ length: 25 }).notNull(),
 });
 
+// Routes of dosage administration (e.g. Oral[for tablets and syrups], transdermal [patches and creams], ...etc)
 export const RouteOfAdministration = Drug.table('RouteOfAdministration', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
 });
 
+// Pharmaceutical dosage form (e.g. bottle, tablet, capsule, patch, ...etc)
 export const DosageForm = Drug.table('DosageForm', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }).notNull(),
 });
 
+// Pharmaceutical Effect (e.g. antihypertensive, CNS stimulant, ...etc)
 export const Usage = Drug.table('Usage', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 45 }).notNull(),
