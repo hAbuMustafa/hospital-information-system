@@ -11,6 +11,7 @@ import {
   boolean,
   smallint,
   smallserial,
+  numeric,
 } from 'drizzle-orm/pg-core';
 
 export const Drug = pgSchema('Drug');
@@ -68,14 +69,10 @@ export const Product_drug = Drug.table('Product_drug', {
   formulary_id: integer().references(() => Formulary.id),
   name: varchar({ length: 45 }).notNull(),
   name_ar: varchar({ length: 45 }),
-  gtin: bigint({ mode: 'bigint' }).unique(),
-  size: decimal({ precision: 10, scale: 5 }),
-  size_unit: smallint().references(() => ProductUnit.id),
-  unit_representation: varchar({ length: 3 }),
+  unit: smallint().references(() => ProductUnit.id),
+  volume_in_ml: numeric({ precision: 7, scale: 2, mode: 'number' }).default(1.0), // for liquid forms only
   is_imported: boolean(),
-  modifier: varchar({ length: 20 }), // (eg. ROM or With Rubber Cap)
   smc_code: integer(),
-  producer: varchar({ length: 45 }),
 });
 
 // package info
@@ -84,9 +81,10 @@ export const Product_Drug_Package = Drug.table('Product_Package', {
   product_drug_id: integer()
     .references(() => Product_drug.id)
     .notNull(),
+  quantity: smallint().notNull(),
   package_type_id: smallint().references(() => Product_Drug_Packaging_type.id),
   gtin: bigint({ mode: 'bigint' }).unique(),
-  quantity: smallint().notNull(),
+  producer: varchar({ length: 45 }),
 });
 
 // List for products whom their shape, or appearance could be deceptively misleading or mistakenly dispensed.
