@@ -2,6 +2,7 @@ import {
   pgSchema,
   serial,
   varchar,
+  text,
   char,
   foreignKey,
   bigint,
@@ -75,6 +76,17 @@ export const Product_drug = Drug.table('Product_drug', {
   modifier: varchar({ length: 20 }), // (eg. ROM or With Rubber Cap)
   smc_code: integer(),
   producer: varchar({ length: 45 }),
+});
+
+// package info
+export const Product_Drug_Package = Drug.table('Product_Package', {
+  id: serial().primaryKey(),
+  product_drug_id: integer()
+    .references(() => Product_drug.id)
+    .notNull(),
+  package_type_id: smallint().references(() => Product_Drug_Packaging_type.id),
+  gtin: bigint({ mode: 'bigint' }).unique(),
+  quantity: smallint().notNull(),
 });
 
 // List for products whom their shape, or appearance could be deceptively misleading or mistakenly dispensed.
@@ -170,4 +182,10 @@ export const DosageForm = Drug.table('DosageForm', {
 export const Usage = Drug.table('Usage', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 45 }).notNull(),
+});
+
+// e.g. blister-pack, bottle, promo-pack, ...etc
+export const Product_Drug_Packaging_type = Drug.table('Product_Drug_Packaging_type', {
+  id: smallserial().primaryKey(),
+  name: text().notNull(),
 });
