@@ -62,12 +62,12 @@ export const ActiveIngredient_Use = Drug.table('ActiveIngredient_Use', {
 });
 
 // The product itself (Brand-name) packages.
-// todo: add gtin: bigint({ mode: 'bigint' }).unique(),
 export const Product_drug = Drug.table('Product_drug', {
-  id: smallserial().primaryKey(),
+  id: serial().primaryKey(),
   formulary_id: integer().references(() => Formulary.id),
   name: varchar({ length: 45 }).notNull(),
   name_ar: varchar({ length: 45 }),
+  gtin: bigint({ mode: 'bigint' }).unique(),
   size: decimal({ precision: 10, scale: 5 }),
   size_unit: smallint().references(() => ProductUnit.id),
   unit_representation: varchar({ length: 3 }),
@@ -80,10 +80,10 @@ export const Product_drug = Drug.table('Product_drug', {
 // List for products whom their shape, or appearance could be deceptively misleading or mistakenly dispensed.
 export const Product_looks_like = Drug.table('Product_looks_like', {
   id: smallserial().primaryKey(),
-  brand_name_id: smallint()
+  brand_name_id: integer()
     .notNull()
     .references(() => Product_drug.id),
-  look_like_id: smallint()
+  look_like_id: integer()
     .notNull()
     .references(() => Product_drug.id),
 });

@@ -26,7 +26,7 @@ export const StockCategory = Pharmacy.table('StockCategory', {
 
 export const Stock_Drugs = Pharmacy.table('Stock_Drugs', {
   id: serial().primaryKey(),
-  brand_name_id: smallint()
+  brand_name_id: integer()
     .notNull()
     .references(() => Product_drug.id),
   amount: integer().notNull(),
