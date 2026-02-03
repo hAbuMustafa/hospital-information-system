@@ -21,10 +21,11 @@ export const ActiveIngredient = Drug.table('ActiveIngredient', {
   name: varchar({ length: 100 }).notNull(),
   name_ar: varchar({ length: 100 }).notNull(),
   alias: varchar({ length: 45 }),
+  alias_ar: varchar({ length: 45 }),
 });
 
-// Represents only ISO Units (liter, Gram, .. etc) without modifiers (milli-, Kilo-)
-export const ActiveIngredient_Unit = Drug.table('ActiveIngredient_Unit', {
+// Represents only ISO Units (Gram, iu .. etc) without modifiers (milli-, Kilo-)
+export const PreparationUnit = Drug.table('PreparationUnit', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 2 }).notNull(),
   name_ar: varchar({ length: 2 }).notNull(),
@@ -40,17 +41,14 @@ export const ActiveIngredient_Role = Drug.table('ActiveIngredient_Role', {
 });
 
 // Modifier for parts (nano-, micro-, milli-, centi-, deci-) and multipliers (Kilo-, Mega-, Giga-)
-export const ActiveIngredient_Unit_Modifier = Drug.table(
-  'ActiveIngredient_Unit_Modifier',
-  {
-    id: smallserial().primaryKey(),
-    name: varchar({ length: 2 }).notNull(),
-    name_ar: varchar({ length: 2 }).notNull(),
-    multiplier: decimal().notNull(),
-  },
-);
+export const PreparationUnit_modifier = Drug.table('PreparationUnit_modifier', {
+  id: smallserial().primaryKey(),
+  name: char({ length: 1 }).notNull(),
+  name_ar: varchar({ length: 2 }).notNull(),
+});
 
-// (Bottle, Tablet, .. etc)
+// The smallest sale unit
+// (Bottle, Tube, blister-pack, jar .. etc)
 export const ProductUnit = Drug.table('ProductUnit', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 15 }),
@@ -69,7 +67,7 @@ export const Product_drug = Drug.table('Product_drug', {
   formulary_id: integer().references(() => Formulary.id),
   name: varchar({ length: 45 }).notNull(),
   name_ar: varchar({ length: 45 }),
-  unit: smallint().references(() => ProductUnit.id),
+  product_unit_id: smallint().references(() => ProductUnit.id),
   volume_in_ml: numeric({ precision: 7, scale: 2, mode: 'number' }).default(1.0), // for liquid forms only
   is_imported: boolean(),
   smc_code: integer(),
@@ -82,7 +80,7 @@ export const Product_Drug_Package = Drug.table('Product_Package', {
     .references(() => Product_drug.id)
     .notNull(),
   quantity: smallint().notNull(),
-  package_type_id: smallint().references(() => Product_Drug_Packaging_type.id),
+  unit_id: smallint().references(() => ProductUnit.id),
   gtin: bigint({ mode: 'bigint' }).unique(),
   producer: varchar({ length: 45 }),
 });
@@ -102,12 +100,9 @@ export const Product_looks_like = Drug.table('Product_looks_like', {
 export const Formulary = Drug.table('Formulary', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
-  cat_strategy: boolean().default(false),
-  cat_high_concentration_electrolyte: boolean().default(false),
-  cat_dangerous: boolean().default(false),
   upa_code: bigint({ mode: 'bigint' }),
-  formulation_cat_id: smallint()
-    .references(() => Formulation_Dosing_Category.id)
+  dosing_unit_id: smallint()
+    .references(() => DosingUnit.id)
     .notNull(),
 });
 
@@ -121,9 +116,10 @@ export const Formulation = Drug.table(
     amount: decimal({ precision: 10, scale: 6 }).notNull(),
     amount_unit: smallint()
       .notNull()
-      .references(() => ActiveIngredient_Unit.id)
+      .references(() => PreparationUnit.id)
       .notNull(),
-    amount_unit_fraction: smallint().references(() => ActiveIngredient_Unit_Modifier.id),
+    amount_unit_fraction: smallint().references(() => PreparationUnit_modifier.id),
+    is_per_ml: boolean().notNull().default(false),
     role: varchar({ length: 45 }).notNull(),
     role_target: integer(),
   },
@@ -158,10 +154,18 @@ export const Formulary_ROA = Drug.table('Formulary_ROA', {
 });
 
 // Helps calculate concentrations
-// compressed, metered, powder for reconstitution, solution, spreadable
-export const Formulation_Dosing_Category = Drug.table('Dosing_category', {
+export const DosingUnit = Drug.table('DosingUnit', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 25 }).notNull(),
+  category: text({
+    enum: [
+      'compressed', // tab. / cap. / transdermal patch / pessary / supp.
+      'metered', // mdi
+      'powder for reconstitution', // vial / susp.
+      'solution', // inj. / syp. / tpn sol. / vol. expanders
+      'bulk', // cream / oint. / gel
+    ],
+  }),
 });
 
 // Routes of dosage administration (e.g. Oral[for tablets and syrups], transdermal [patches and creams], ...etc)
@@ -170,20 +174,8 @@ export const RouteOfAdministration = Drug.table('RouteOfAdministration', {
   name: varchar({ length: 15 }).notNull(),
 });
 
-// Pharmaceutical dosage form (e.g. bottle, tablet, capsule, patch, ...etc)
-export const DosageForm = Drug.table('DosageForm', {
-  id: smallserial().primaryKey(),
-  name: varchar({ length: 15 }).notNull(),
-});
-
 // Pharmaceutical Effect (e.g. antihypertensive, CNS stimulant, ...etc)
 export const Usage = Drug.table('Usage', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 45 }).notNull(),
-});
-
-// e.g. blister-pack, bottle, promo-pack, ...etc
-export const Product_Drug_Packaging_type = Drug.table('Product_Drug_Packaging_type', {
-  id: smallserial().primaryKey(),
-  name: text().notNull(),
 });
