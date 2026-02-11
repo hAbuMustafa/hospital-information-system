@@ -20,10 +20,17 @@
         style?: { color?: string; backgroundColor?: string };
       }
     >;
+    pickColumns?: string[];
   };
 
-  const { rows, dateColumns, renameColumns, actionColumns, detailsColumn }: PropsT =
-    $props();
+  const {
+    rows,
+    dateColumns,
+    renameColumns,
+    actionColumns,
+    detailsColumn,
+    pickColumns,
+  }: PropsT = $props();
 
   function getRows() {
     return rows;
@@ -45,6 +52,12 @@
     return renameColumns;
   }
 
+  function getPickedColumns() {
+    return [pickColumns || columnNames, actionColumns ? Object.keys(actionColumns) : null]
+      .filter(Boolean)
+      .flat();
+  }
+
   let columnNames: string[] = $state([]);
   if (getRows() && getRows().length > 0 && typeof getRows()[0] === 'object') {
     columnNames.push(
@@ -61,7 +74,7 @@
     }
   }
 
-  setContext('column names', () => columnNames);
+  setContext('column names', getPickedColumns);
   if (getDateColumns()) setContext('date columns', getDateColumns);
   if (getRenamedColumn()) setContext('rename columns', getRenamedColumn);
   if (getActionColumns()) setContext('action columns', getActionColumns);
@@ -77,9 +90,7 @@
     <SheetHead />
     <tbody>
       {#each getRows() as row, i (i)}
-        {#if row[columnNames[0]] !== columnNames[0]}
-          <Row dataObj={row} />
-        {/if}
+        <Row dataObj={row} />
       {/each}
     </tbody>
   {/if}

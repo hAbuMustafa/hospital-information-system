@@ -7,7 +7,7 @@
   let { data } = $props();
   let patientsByWard = Object.groupBy(
     data.patients,
-    (p: typeof inPatient_view.$inferSelect) => p.ward_name
+    (p: typeof inPatient_view.$inferSelect) => p.ward_name,
   );
 </script>
 
@@ -30,35 +30,8 @@
       </span>
     </h2>
     <Sheet
-      rows={patientsByWard[ward_name]!.map((p) => {
-        const {
-          ward_name,
-          first_name,
-          father_name,
-          grandfather_name,
-          family_name,
-          id_doc_type_id,
-          meal_type,
-          recent_ward_id,
-          ward_floor,
-          ward_tags,
-          security_status,
-          admitted_from,
-          discharge_notes,
-          discharge_order_id,
-          discharge_reason,
-          discharge_time,
-          person_id,
-          id_doc_number,
-          id_doc_type,
-          birthdate,
-          health_insurance,
-          gender,
-          patient_file_number,
-          ...rest
-        } = p;
-        return rest;
-      })}
+      rows={patientsByWard[ward_name]}
+      pickColumns={['patient_id', 'full_name', 'admission_time', 'admission_notes']}
       dateColumns={{ admission_time: 'YYYY/MM/DD' }}
       renameColumns={{
         admission_time: 'تاريخ الدخول',
