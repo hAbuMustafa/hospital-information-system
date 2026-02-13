@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "anyOf": [
+        {
+            "properties": {
+                "all": {
+                    "const": true,
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "all"
+            ],
+            "type": "object"
+        },
+        {
+            "properties": {
+                "data": {
+                    "type": "boolean"
+                },
+                "diagnoses": {
+                    "type": "boolean"
+                },
+                "menus": {
+                    "type": "boolean"
+                },
+                "user": {
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        {
+            "properties": {
+                "patient": {
+                    "anyOf": [
+                        {
+                            "properties": {
+                                "admissions": {
+                                    "type": "boolean"
+                                },
+                                "discharges": {
+                                    "type": "boolean"
+                                },
+                                "transfers": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "patient"
+            ],
+            "type": "object"
+        },
+        {
+            "properties": {
+                "menus": {
+                    "properties": {
+                        "contact_types": {
+                            "type": "boolean"
+                        },
+                        "discharge_reasons": {
+                            "type": "boolean"
+                        },
+                        "dosage_unit": {
+                            "type": "boolean"
+                        },
+                        "id_doc_types": {
+                            "type": "boolean"
+                        },
+                        "stock_categories": {
+                            "type": "boolean"
+                        },
+                        "wards": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "required": [
+                "menus"
+            ],
+            "type": "object"
+        }
+    ]
+}
+
