@@ -64,20 +64,21 @@ export async function beginSeed() {
   console.time('total seeding time');
 
   // Seed Menu Lists
-  if (config.all || config.menus || config.wards) await seed(ward_list, createWard);
-  if (config.all || config.menus || config.id_doc_types)
+  if (config.all || config.menus || config.menus?.wards)
+    await seed(ward_list, createWard);
+  if (config.all || config.menus || config.menus?.id_doc_types)
     await seed(id_doc_type_list, createIdDocType);
-  if (config.all || config.menus || config.discharge_reasons)
+  if (config.all || config.menus || config.menus?.discharge_reasons)
     await seed(discharge_reason_list, createDischargeReason);
-  if (config.all || config.menus || config.dosage_unit)
+  if (config.all || config.menus || config.menus?.dosage_unit)
     await seed(dosage_unit_list, createDrugUnit);
-  if (config.all || config.menus || config.stock_categories)
+  if (config.all || config.menus || config.menus?.stock_categories)
     await seed(stock_category_list, createDrugCategory);
-  if (config.all || config.menus || config.contact_types)
+  if (config.all || config.menus || config.menus?.contact_types)
     await seed(contact_type_list, createContactType);
 
   // Diagnoses
-  if (config.all || config.diagnoses) {
+  if (config.all || config.data || config.diagnoses) {
     const new_Diagnoses = Array.from(
       new Set(
         new_PatientAdmissions
