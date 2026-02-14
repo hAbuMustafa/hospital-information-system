@@ -28,7 +28,7 @@
           <hr />
         {/if}
         {#each linkGroup as link, j (j)}
-          <li><a href={link.href}>{link.label}</a></li>
+          <li><a href={link.href} data-sveltekit-reload>{link.label}</a></li>
         {/each}
       {/each}
     </ul>
