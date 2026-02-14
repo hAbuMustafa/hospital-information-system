@@ -66,7 +66,7 @@ export const actions: Actions = {
 
     const result = await createTokens(userData, sessionMaxAge);
 
-    if (!result.success)
+    if (!result?.success)
       return fail(401, { message: 'حدث خطأ غير متوقع أثناء إثبات الجلسة' });
 
     cookies.set(ACCESS_COOKIE_NAME, result.accessToken, {
