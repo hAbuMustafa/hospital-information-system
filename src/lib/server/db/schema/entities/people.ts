@@ -9,6 +9,7 @@ import {
   boolean,
   smallserial,
   smallint,
+  char,
 } from 'drizzle-orm/pg-core';
 
 export const People = pgSchema('People');
@@ -20,6 +21,7 @@ export const Person = People.table('Person', {
   grandfather_name: varchar({ length: 45 }).notNull(),
   family_name: varchar({ length: 45 }),
   gender: boolean(),
+  nationality: char({ length: 2 }),
   birthdate: date(),
   race: varchar({ length: 16 }),
   marital_status: boolean(),

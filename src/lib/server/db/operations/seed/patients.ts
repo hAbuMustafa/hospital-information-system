@@ -36,8 +36,8 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
           .where(
             and(
               eq(people_view.full_name, admission.name),
-              isNull(people_view.id_doc_number),
-            ),
+              isNull(people_view.id_doc_number)
+            )
           );
         foundPersonId = first_result?.id;
       }
@@ -53,6 +53,33 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
         const { name: patient_name, ...restOfPatientData } = admission;
         const [first_name, father_name, grandfather_name, ...family_name] =
           patient_name.split(' ');
+
+        let patientCountry: string;
+
+        if (!restOfPatientData.admission_notes) {
+          patientCountry = 'EG';
+        } else if (restOfPatientData.admission_notes.includes('جنوب السودان')) {
+          patientCountry = 'SS';
+          restOfPatientData.admission_notes = restOfPatientData.admission_notes
+            .replace('جنوب السودان', '')
+            .replace(/\s+/, ' ')
+            .trim();
+        } else if (restOfPatientData.admission_notes.includes('السودان')) {
+          patientCountry = 'SD';
+          restOfPatientData.admission_notes = restOfPatientData.admission_notes
+            .replace('السودان', '')
+            .replace(/\s+/, ' ')
+            .trim();
+        } else if (restOfPatientData.admission_notes.includes('فلسطين')) {
+          patientCountry = 'PS';
+          restOfPatientData.admission_notes = restOfPatientData.admission_notes
+            .replace('فلسطين', '')
+            .replace(/\s+/, ' ')
+            .trim();
+        } else {
+          patientCountry = 'EG';
+        }
+
         let [newPersonInsert] = await tx
           .insert(Person)
           .values({
@@ -61,6 +88,7 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
             father_name,
             grandfather_name,
             family_name: family_name.join(' '),
+            nationality: patientCountry,
           })
           .returning();
         foundPersonId = newPersonInsert.id;
@@ -78,7 +106,10 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
 
       if (admission.admission_notes?.includes('مسجون')) {
         admission.security_status = true;
-        admission.admission_notes?.replace('مسجون', '');
+        admission.admission_notes = admission.admission_notes
+          .replace('مسجون', '')
+          .replace(/\s+/, ' ')
+          .trim();
       }
 
       const [newPatient] = await tx
@@ -146,7 +177,7 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
               currentDiagnosisText,
               'for patient',
               newPatient.id,
-              admission.name,
+              admission.name
             );
             continue;
           }
@@ -219,7 +250,7 @@ export async function seedPatientDischarge(discharge: seedDischargeT) {
         .select()
         .from(InPatient_file)
         .where(
-          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber)),
+          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
         );
 
       if (patient) {
