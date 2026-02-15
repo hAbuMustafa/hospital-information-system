@@ -9,9 +9,10 @@ import {
   Insurance_Doc,
   transfers_view,
   Discharge,
+  inPatient_view,
 } from '$lib/server/db/schema/entities/patients';
 import { Person } from '$lib/server/db/schema/entities/people';
-import { eq, max } from 'drizzle-orm';
+import { and, eq, isNull, max } from 'drizzle-orm';
 import type { newPatientT } from './types';
 import { createDiagnosis } from './menus';
 
@@ -76,7 +77,7 @@ export async function createAdmission(patient: newPatientT) {
               'failed creating diagnosis',
               currentDiagnosisText,
               'for patient',
-              newPatient.id
+              newPatient.id,
             );
             continue;
           }
@@ -154,4 +155,13 @@ export async function getLastPatientFileNumber(year: number) {
     .where(eq(InPatient_file.year, year - 2000));
 
   return num?.number || 0;
+}
+
+export async function checkIfHospitalized(patient_id: number) {
+  const count = await db.$count(
+    inPatient_view,
+    and(eq(inPatient_view.patient_id, patient_id), isNull(inPatient_view.discharge_time)),
+  );
+
+  return Boolean(count);
 }
