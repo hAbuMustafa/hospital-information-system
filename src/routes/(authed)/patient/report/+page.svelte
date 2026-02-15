@@ -73,6 +73,7 @@
       detailsColumn={{
         patient_id: (p: typeof inPatient_view.$inferSelect) => `/patient/${p.patient_id}`,
       }}
+      topOffset="1.75rem"
     />
   {/if}
 {/each}
@@ -81,6 +82,9 @@
   h2 {
     display: flex;
     justify-content: space-around;
+    position: sticky;
+    inset-block-start: 0;
+    background-color: var(--main-bg-color);
 
     @media print {
       break-after: avoid;

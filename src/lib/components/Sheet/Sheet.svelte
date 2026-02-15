@@ -21,6 +21,7 @@
       }
     >;
     pickColumns?: string[];
+    topOffset?: string;
   };
 
   const {
@@ -30,6 +31,7 @@
     actionColumns,
     detailsColumn,
     pickColumns,
+    topOffset,
   }: PropsT = $props();
 
   function getRows() {
@@ -81,7 +83,7 @@
   if (getDetailsColumn()) setContext('details column', getDetailsColumn);
 </script>
 
-<table>
+<table style:--top-offset={topOffset ?? null}>
   {#if columnNames.length === 0}
     <tbody>
       <NoData />

@@ -14,7 +14,7 @@
   const actionColumnNames = actionColumns?.() ? Object.keys(actionColumns?.()) : [];
 </script>
 
-<thead>
+<thead style:--top-offset="inherit">
   <tr>
     {#each columnNames() as colName, i (i)}
       <th class:action_column={actionColumnNames.includes(colName)}>
@@ -29,7 +29,7 @@
 <style>
   thead {
     position: sticky;
-    inset-block-start: 0;
+    inset-block-start: var(--top-offset, 0);
   }
 
   tr {
