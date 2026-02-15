@@ -12,6 +12,7 @@ import {
   smallint,
   check,
   unique,
+  char,
 } from 'drizzle-orm/pg-core';
 import { Staff, Ward } from './hospital';
 import { Sec_pb_key } from './system';
@@ -45,10 +46,10 @@ export const InPatient_file = Patient.table(
   (table) => [
     check(
       'year_check',
-      sql`${table.year} >= (2024-2000) AND ${table.year} <= (date_part('year', CURRENT_DATE)-2000)`,
+      sql`${table.year} >= (2024-2000) AND ${table.year} <= (date_part('year', CURRENT_DATE)-2000)`
     ),
     unique('unique_file_number_in_a_year').on(table.year, table.number),
-  ],
+  ]
 );
 
 export const inPatient_view = Patient.view('inPatient_view', {
@@ -72,6 +73,7 @@ export const inPatient_view = Patient.view('inPatient_view', {
   security_status: boolean(),
   gender: boolean(),
   birthdate: date(),
+  nationality: char({ length: 2 }),
   admission_time: timestamp({ withTimezone: true }).notNull(),
   admission_notes: text(),
   admitted_from: varchar({ length: 100 }),
@@ -101,6 +103,7 @@ w.tags AS ward_tags,
 p.security_status,
 pr.gender,
 pr.birthdate,
+pr.nationality,
 adm.timestamp as admission_time,
 adm.admission_notes,
 adm.referred_from as admitted_from,
@@ -119,7 +122,7 @@ FROM "Patient"."InPatient" p
  LEFT JOIN "Patient"."Discharge_Reason" r ON d.discharge_reason = r.id
  LEFT JOIN "Patient"."Admission" adm ON p.id = adm.patient_id
 ORDER BY p.id
-`,
+`
 );
 
 export const Insurance_Doc = Patient.table('Insurance_Doc', {
@@ -303,5 +306,5 @@ export const transfers_view = Patient.view('transfers_view', {
     FROM "Patient"."Transfer" t
     LEFT JOIN "Hospital"."Ward" wf ON t.from_ward_id = wf.id
     LEFT JOIN "Hospital"."Ward" wt ON t.to_ward_id = wt.id
-  `,
+  `
 );
