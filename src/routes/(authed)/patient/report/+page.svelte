@@ -31,7 +31,13 @@
     </h2>
     <Sheet
       rows={patientsByWard[ward_name]}
-      pickColumns={['patient_id', 'full_name', 'admission_time', 'admission_notes']}
+      pickColumns={[
+        'patient_id',
+        'patient_file_number',
+        'full_name',
+        'admission_time',
+        'admission_notes',
+      ]}
       dateColumns={{ admission_time: 'YYYY/MM/DD' }}
       renameColumns={{
         admission_time: 'تاريخ الدخول',
