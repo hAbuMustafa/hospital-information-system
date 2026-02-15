@@ -64,10 +64,10 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
             .replace('جنوب السودان', '')
             .replace(/\s+/, ' ')
             .trim();
-        } else if (restOfPatientData.admission_notes.includes('السودان')) {
+        } else if (restOfPatientData.admission_notes.includes('سودان')) {
           patientCountry = 'SD';
           restOfPatientData.admission_notes = restOfPatientData.admission_notes
-            .replace('السودان', '')
+            .replace('سودان', '')
             .replace(/\s+/, ' ')
             .trim();
         } else if (restOfPatientData.admission_notes.includes('فلسطين')) {
