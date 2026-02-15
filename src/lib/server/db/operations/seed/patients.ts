@@ -64,16 +64,28 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
             .replace('جنوب السودان', '')
             .replace(/\s+/, ' ')
             .trim();
+          admission.admission_notes = admission.admission_notes
+            ?.replace('جنوب السودان', '')
+            .replace(/\s+/, ' ')
+            .trim();
         } else if (restOfPatientData.admission_notes.includes('سودان')) {
           patientCountry = 'SD';
           restOfPatientData.admission_notes = restOfPatientData.admission_notes
             .replace('سودان', '')
             .replace(/\s+/, ' ')
             .trim();
+          admission.admission_notes = admission.admission_notes
+            ?.replace('سودان', '')
+            .replace(/\s+/, ' ')
+            .trim();
         } else if (restOfPatientData.admission_notes.includes('فلسطين')) {
           patientCountry = 'PS';
           restOfPatientData.admission_notes = restOfPatientData.admission_notes
             .replace('فلسطين', '')
+            .replace(/\s+/, ' ')
+            .trim();
+          admission.admission_notes = admission.admission_notes
+            ?.replace('فلسطين', '')
             .replace(/\s+/, ' ')
             .trim();
         } else {
