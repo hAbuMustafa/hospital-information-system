@@ -16,9 +16,9 @@
     };
   });
 
-  const icuWard_ids = data
-    .wards!.filter((w) => w.tags.some((t) => t === 'icu'))
-    .map((w) => w.id);
+  const icuWard_ids = $derived(
+    data.wards!.filter((w) => w.tags.some((t) => t === 'icu')).map((w) => w.id),
+  );
 </script>
 
 <nav aria-label="Month Navigation">
@@ -32,10 +32,10 @@
 
 {#if data.stats}
   {@const icuAdmissions = data.stats.transfers.filter((t) =>
-    icuWard_ids.some((w_id) => w_id === t.to_ward_id)
+    icuWard_ids.some((w_id) => w_id === t.to_ward_id),
   )}
   {@const icuDischarges = data.stats.discharges.filter((d) =>
-    icuWard_ids.some((w_id) => w_id === d.recent_ward_id)
+    icuWard_ids.some((w_id) => w_id === d.recent_ward_id),
   )}
   {@const transfersByPatient = Object.groupBy(data.stats.transfers, (t) => t.patient_id)}
 
@@ -83,7 +83,7 @@
         (total, currentPatient) =>
           total +
           getDuration(currentPatient.admission_time, currentPatient.discharge_time),
-        0
+        0,
       )}
     </dd>
   </dl>
@@ -106,9 +106,9 @@
             (w_id) =>
               w_id ===
               icuAdmissions.find(
-                (t) => t.patient_id === adm.patient_id && t.notes?.includes('admission')
-              )?.to_ward_id
-          )
+                (t) => t.patient_id === adm.patient_id && t.notes?.includes('admission'),
+              )?.to_ward_id,
+          ),
       ).length}
     </dd>
     <dt>إجمالي حالات الدخول عن طريق الأقسام الداخلية:</dt>
@@ -116,13 +116,13 @@
       {data.stats.transfers.filter(
         (t) =>
           icuWard_ids.some((w_id) => w_id === t.to_ward_id) &&
-          !t.notes?.includes('admission')
+          !t.notes?.includes('admission'),
       ).length}
     </dd>
     <dt>إجمالي حالات الدخول عن طريق تنسيق المديرية:</dt>
     <dd>
       {data.stats.admissions.filter(
-        (adm) => adm.admitted_from && !adm.admitted_from.includes('reception')
+        (adm) => adm.admitted_from && !adm.admitted_from.includes('reception'),
       ).length}
     </dd>
   </dl>
@@ -140,7 +140,7 @@
     <dt>حالات التحويل من الرعاية للأقسام الداخلية:</dt>
     <dd>
       {data.stats.transfers.filter((t) =>
-        icuWard_ids.some((w_id) => w_id === t.from_ward_id)
+        icuWard_ids.some((w_id) => w_id === t.from_ward_id),
       ).length}
     </dd>
   </dl>

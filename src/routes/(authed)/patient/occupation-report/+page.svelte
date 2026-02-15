@@ -3,7 +3,7 @@
 
   let { data } = $props();
 
-  let patientsByWard = Object.groupBy(data.patients, (p) => p.recent_ward_id);
+  let patientsByWard = $derived(Object.groupBy(data.patients, (p) => p.recent_ward_id));
 </script>
 
 <h2>{formatDate(new Date(), 'ليوم YYYY/MM/DD الساعة hh:mm')}</h2>

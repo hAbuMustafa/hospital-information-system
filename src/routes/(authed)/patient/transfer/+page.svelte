@@ -7,18 +7,18 @@
 
   const { data, form } = $props();
 
-  let patientName = $state(data.patient?.full_name ?? form?.patientName ?? '');
-  let selectedPatientId = $state(data.patient?.patient_id ?? form?.patientId ?? '');
-  let selectedPatientRecentWardId = $state(
-    data.patient?.recent_ward_id ?? form?.selectedPatientRecentWardId ?? 0
+  let patientName = $derived(data.patient?.full_name ?? form?.patientName ?? '');
+  let selectedPatientId = $derived(data.patient?.patient_id ?? form?.patientId ?? '');
+  let selectedPatientRecentWardId = $derived(
+    data.patient?.recent_ward_id ?? form?.selectedPatientRecentWardId ?? 0,
   );
-  let selectedWard = $state(form?.transferTo ? Number(form?.transferTo) : 0);
-  let transferDate = $state(
-    form?.transferTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
+  let selectedWard = $derived(form?.transferTo ? Number(form?.transferTo) : 0);
+  let transferDate = $derived(
+    form?.transferTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm'),
   );
 
   let hasSelectedPatient = $derived(
-    !!(data.patient?.patient_id ?? form?.patientId ?? selectedPatientId)
+    !!(data.patient?.patient_id ?? form?.patientId ?? selectedPatientId),
   );
 </script>
 

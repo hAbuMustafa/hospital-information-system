@@ -7,17 +7,17 @@
 
   const { data, form } = $props();
 
-  let patientName = $state(data.patient?.full_name ?? form?.patientName ?? '');
-  let selectedPatientId = $state(data.patient?.patient_id ?? form?.patientId ?? '');
-  let selectedDischargeReason = $state(
-    form?.dischargeReason ? Number(form.dischargeReason) : 0
+  let patientName = $derived(data.patient?.full_name ?? form?.patientName ?? '');
+  let selectedPatientId = $derived(data.patient?.patient_id ?? form?.patientId ?? '');
+  let selectedDischargeReason = $derived(
+    form?.dischargeReason ? Number(form.dischargeReason) : 0,
   );
-  let dischargeDate = $state(
-    form?.dischargeTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
+  let dischargeDate = $derived(
+    form?.dischargeTime ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm'),
   );
 
   let hasSelectedPatient = $derived(
-    !!(data.patient?.patient_id ?? form?.patientId ?? selectedPatientId)
+    !!(data.patient?.patient_id ?? form?.patientId ?? selectedPatientId),
   );
 </script>
 

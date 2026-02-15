@@ -5,9 +5,8 @@
   import type { inPatient_view } from '$server/db/schema/entities/patients';
 
   let { data } = $props();
-  let patientsByWard = Object.groupBy(
-    data.patients,
-    (p: typeof inPatient_view.$inferSelect) => p.ward_name,
+  let patientsByWard = $derived(
+    Object.groupBy(data.patients, (p: typeof inPatient_view.$inferSelect) => p.ward_name),
   );
 </script>
 

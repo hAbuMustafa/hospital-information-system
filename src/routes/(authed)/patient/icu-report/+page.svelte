@@ -3,9 +3,8 @@
 
   const { data } = $props();
 
-  const icuBedCount = data.wards.reduce(
-    (total, currentWard) => total + currentWard.capacity,
-    0
+  const icuBedCount = $derived(
+    data.wards.reduce((total, currentWard) => total + currentWard.capacity, 0),
   );
 
   let totalVents = $state('12');
