@@ -1,5 +1,8 @@
 import { discharge_reason_list } from '$lib/server/db/menus';
-import { dischargePatient } from '$lib/server/db/operations/patients';
+import {
+  checkIfHospitalized,
+  dischargePatient,
+} from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 import type { inPatient_view } from '$server/db/schema/entities/patients';
 
@@ -74,6 +77,16 @@ export const actions = {
     } catch (error) {
       return failWithMessages([{ message: 'البيانات المدخلة غير صحيحة', type: 'error' }]);
     }
+
+    const isHospitalized = await checkIfHospitalized(patientId);
+
+    if (!isHospitalized)
+      return failWithMessages([
+        {
+          message: 'لا يمكن تسجيل خروج لمريض غير مقيم بالمستشفى',
+          type: 'error',
+        },
+      ]);
 
     const result = await dischargePatient({
       patient_id: patientId,

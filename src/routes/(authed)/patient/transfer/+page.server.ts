@@ -1,5 +1,5 @@
 import { ward_list } from '$lib/server/db/menus';
-import { transferPatient } from '$lib/server/db/operations/patients';
+import { checkIfHospitalized, transferPatient } from '$lib/server/db/operations/patients';
 import { failWithFormFieldsAndMessageArrayBuilder } from '$lib/utils/form-actions';
 import type { inPatient_view } from '$server/db/schema/entities/patients.js';
 
@@ -75,6 +75,16 @@ export const actions = {
     } catch (error) {
       return failWithMessages([{ message: 'البيانات المدخلة غير صحيحة', type: 'error' }]);
     }
+
+    const isHospitalized = await checkIfHospitalized(patientId);
+
+    if (!isHospitalized)
+      return failWithMessages([
+        {
+          message: 'لا يمكن تحويل المريض لقسم آخر حيث أنه غير مقيم بالمستشفى',
+          type: 'error',
+        },
+      ]);
 
     const result = await transferPatient({
       patient_id: patientId,
