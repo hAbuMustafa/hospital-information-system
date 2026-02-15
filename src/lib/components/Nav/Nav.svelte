@@ -13,12 +13,14 @@
 
   const { user }: { user: App.Locals['user'] } = $props();
 
-  const userSpecificMenus = menus.filter(menuFilterPredicate).map((m) => {
-    m.links = m.links
-      .map((linkGroup) => linkGroup.filter(menuFilterPredicate))
-      .filter((linkGroup) => linkGroup.length);
-    return m;
-  });
+  const userSpecificMenus = $derived(
+    menus.filter(menuFilterPredicate).map((m) => {
+      m.links = m.links
+        .map((linkGroup) => linkGroup.filter(menuFilterPredicate))
+        .filter((linkGroup) => linkGroup.length);
+      return m;
+    })
+  );
 
   const accountMenu: MenuT = {
     name: 'account',
