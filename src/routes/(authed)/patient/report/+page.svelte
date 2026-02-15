@@ -6,7 +6,7 @@
 
   let { data } = $props();
   let patientsByWard = $derived(
-    Object.groupBy(data.patients, (p: typeof inPatient_view.$inferSelect) => p.ward_name),
+    Object.groupBy(data.patients, (p: typeof inPatient_view.$inferSelect) => p.ward_name)
   );
 </script>
 
@@ -17,67 +17,76 @@
     {@const wardOccupationRatio = wardOccupiedBeds / currWard.capacity}
     {@const progressColor =
       wardOccupationRatio < 0.5 ? 'green' : wardOccupationRatio < 0.8 ? 'orange' : 'red'}
-    <h2 id={currWard.id.toString()}>
-      <span>
-        {currWard.name}
-      </span>
-      <span>
-        {getTermed(wardOccupiedBeds, 'مريض', 'مرضى')}
-        <progress value={wardOccupationRatio} style="accent-color: {progressColor};"
-        ></progress>
-        {getTermed(currWard.capacity, 'سرير', 'أسرَّة')}
-      </span>
-    </h2>
-    <Sheet
-      rows={patientsByWard[ward_name]}
-      pickColumns={[
-        'patient_id',
-        'patient_file_number',
-        'full_name',
-        'admission_time',
-        'admission_notes',
-      ]}
-      dateColumns={{ admission_time: 'YYYY/MM/DD' }}
-      renameColumns={{
-        admission_time: 'تاريخ الدخول',
-        admission_notes: 'ملاحظات',
-        patient_file_number: 'رقم الملف',
-        patient_id: 'قيد الإقامة',
-        full_name: 'اسم المريض',
-        diagnosis: 'التشخيص',
-        discharge: 'خروج',
-        transfer: 'تحويل',
-      }}
-      actionColumns={{
-        transfer: {
-          actionName: 'تحويل',
-          onclick: function (p: typeof inPatient_view.$inferSelect) {
-            goto(`/patient/transfer?patient_id=${p.patient_id}`);
+    <div class="ward-wrapper">
+      <h2 id={currWard.id.toString()}>
+        <span>
+          {currWard.name}
+        </span>
+        <span>
+          {getTermed(wardOccupiedBeds, 'مريض', 'مرضى')}
+          <progress value={wardOccupationRatio} style="accent-color: {progressColor};"
+          ></progress>
+          {getTermed(currWard.capacity, 'سرير', 'أسرَّة')}
+        </span>
+      </h2>
+      <Sheet
+        rows={patientsByWard[ward_name]}
+        pickColumns={[
+          'patient_id',
+          'patient_file_number',
+          'full_name',
+          'admission_time',
+          'admission_notes',
+        ]}
+        dateColumns={{ admission_time: 'YYYY/MM/DD' }}
+        renameColumns={{
+          admission_time: 'تاريخ الدخول',
+          admission_notes: 'ملاحظات',
+          patient_file_number: 'رقم الملف',
+          patient_id: 'قيد الإقامة',
+          full_name: 'اسم المريض',
+          diagnosis: 'التشخيص',
+          discharge: 'خروج',
+          transfer: 'تحويل',
+        }}
+        actionColumns={{
+          transfer: {
+            actionName: 'تحويل',
+            onclick: function (p: typeof inPatient_view.$inferSelect) {
+              goto(`/patient/transfer?patient_id=${p.patient_id}`);
+            },
+            style: {
+              color: 'var(--main-bg-color)',
+              backgroundColor: 'orange',
+            },
           },
-          style: {
-            color: 'var(--main-bg-color)',
-            backgroundColor: 'orange',
+          discharge: {
+            actionName: 'خروج',
+            onclick: function (p: typeof inPatient_view.$inferSelect) {
+              goto(`/patient/discharge?patient_id=${p.patient_id}`);
+            },
+            style: {
+              backgroundColor: 'light-dark(salmon, maroon)',
+            },
           },
-        },
-        discharge: {
-          actionName: 'خروج',
-          onclick: function (p: typeof inPatient_view.$inferSelect) {
-            goto(`/patient/discharge?patient_id=${p.patient_id}`);
-          },
-          style: {
-            backgroundColor: 'light-dark(salmon, maroon)',
-          },
-        },
-      }}
-      detailsColumn={{
-        patient_id: (p: typeof inPatient_view.$inferSelect) => `/patient/${p.patient_id}`,
-      }}
-      topOffset="1.75rem"
-    />
+        }}
+        detailsColumn={{
+          patient_id: (p: typeof inPatient_view.$inferSelect) =>
+            `/patient/${p.patient_id}`,
+        }}
+        topOffset="1.75rem"
+      />
+    </div>
   {/if}
 {/each}
 
 <style>
+  .ward-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 4.5rem 1fr;
+  }
+
   h2 {
     display: flex;
     justify-content: space-around;
