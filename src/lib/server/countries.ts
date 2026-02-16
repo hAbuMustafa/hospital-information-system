@@ -1,4 +1,23 @@
-export const arr = [
+type CountryT = {
+  name: string;
+  code: string;
+  capital: string;
+  region: string;
+  currency: {
+    code: string;
+    name: string;
+    symbol: string;
+  };
+  language: {
+    code: string;
+    name: string;
+  };
+  dialling_code: string;
+  isoCode: string;
+  name_ar: string;
+};
+
+export const arr: CountryT[] = [
   {
     name: 'Afghanistan',
     code: 'AF',
@@ -4159,7 +4178,7 @@ export const arr = [
   },
 ];
 
-export const obj = {
+export const obj: Record<string, CountryT> = {
   AF: {
     name: 'Afghanistan',
     code: 'AF',
