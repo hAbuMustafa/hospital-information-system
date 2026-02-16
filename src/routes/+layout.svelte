@@ -113,6 +113,7 @@
 
     @media (max-width: 700px) {
       grid-column: 1 / -1;
+      padding: 0;
     }
   }
 </style>

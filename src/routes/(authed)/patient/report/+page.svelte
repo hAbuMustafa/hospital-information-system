@@ -106,6 +106,8 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: repeat(max-content, 2);
+
+    overflow-x: scroll;
   }
 
   h2 {
@@ -115,6 +117,15 @@
     inset-block-start: 0;
     background-color: var(--main-bg-color);
     padding-block: 1rem;
+
+    @media (max-width: 400px) {
+      flex-direction: column;
+      align-items: center;
+
+      progress {
+        width: 20vw;
+      }
+    }
 
     @media print {
       break-after: avoid;
