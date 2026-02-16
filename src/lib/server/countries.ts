@@ -3406,7 +3406,7 @@ export const arr = [
     name: 'South Sudan',
     code: 'SS',
     capital: 'Juba',
-    region: 'Africa',
+    region: 'AF',
     currency: {
       code: 'SSP',
       name: 'South Sudanese Pound',
@@ -3417,7 +3417,7 @@ export const arr = [
       name: 'English',
     },
     dialling_code: '+211',
-    isoCode: 'SSD',
+    isoCode: '728',
   },
   {
     name: 'Suriname',
@@ -7353,7 +7353,7 @@ export const obj = {
     name: 'South Sudan',
     code: 'SS',
     capital: 'Juba',
-    region: 'Africa',
+    region: 'AF',
     currency: {
       code: 'SSP',
       name: 'South Sudanese Pound',
@@ -7364,7 +7364,7 @@ export const obj = {
       name: 'English',
     },
     dialling_code: '+211',
-    isoCode: 'SSD',
+    isoCode: '728',
   },
   SR: {
     name: 'Suriname',
