@@ -43,6 +43,7 @@ export type PatientSeedT = {
   admission_notes?: string;
   gender?: boolean;
   birthdate?: Date;
+  nationality?: string;
   health_insurance?: boolean;
   id_doc_type?: number;
   discharge_reason?: number;

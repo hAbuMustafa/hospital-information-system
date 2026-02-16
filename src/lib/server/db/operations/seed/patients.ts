@@ -50,47 +50,37 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
           if (!numberValidity) admission.id_doc_num = admission.id_doc_num + ' INVALID';
         }
 
-        const { name: patient_name, ...restOfPatientData } = admission;
-        const [first_name, father_name, grandfather_name, ...family_name] =
-          patient_name.split(' ');
-
-        let patientCountry: string;
-
-        if (!restOfPatientData.admission_notes) {
-          patientCountry = 'EG';
-        } else if (restOfPatientData.admission_notes.includes('جنوب السودان')) {
-          patientCountry = 'SS';
-          restOfPatientData.admission_notes = restOfPatientData.admission_notes
+        if (!admission.admission_notes) {
+          admission.nationality = 'EG';
+        } else if (admission.admission_notes?.includes('جنوب السودان')) {
+          admission.nationality = 'SS';
+          admission.admission_notes = admission.admission_notes
             .replace('جنوب السودان', '')
             .replace(/\s+/, ' ')
             .trim();
+          if (admission.admission_notes === '') admission.admission_notes === undefined;
+        } else if (admission.admission_notes.includes('سودان')) {
+          admission.nationality = 'SD';
           admission.admission_notes = admission.admission_notes
-            ?.replace('جنوب السودان', '')
-            .replace(/\s+/, ' ')
-            .trim();
-        } else if (restOfPatientData.admission_notes.includes('سودان')) {
-          patientCountry = 'SD';
-          restOfPatientData.admission_notes = restOfPatientData.admission_notes
             .replace('سودان', '')
             .replace(/\s+/, ' ')
             .trim();
+          if (admission.admission_notes === '') admission.admission_notes === undefined;
+        } else if (admission.admission_notes.includes('فلسطين')) {
+          admission.nationality = 'PS';
           admission.admission_notes = admission.admission_notes
-            ?.replace('سودان', '')
-            .replace(/\s+/, ' ')
-            .trim();
-        } else if (restOfPatientData.admission_notes.includes('فلسطين')) {
-          patientCountry = 'PS';
-          restOfPatientData.admission_notes = restOfPatientData.admission_notes
             .replace('فلسطين', '')
             .replace(/\s+/, ' ')
             .trim();
-          admission.admission_notes = admission.admission_notes
-            ?.replace('فلسطين', '')
-            .replace(/\s+/, ' ')
-            .trim();
+          if (admission.admission_notes === '') admission.admission_notes === undefined;
         } else {
-          patientCountry = 'EG';
+          admission.nationality = 'EG';
+          if (admission.admission_notes === '') admission.admission_notes === undefined;
         }
+
+        const { name: patient_name, ...restOfPatientData } = admission;
+        const [first_name, father_name, grandfather_name, ...family_name] =
+          patient_name.split(' ');
 
         let [newPersonInsert] = await tx
           .insert(Person)
@@ -100,7 +90,6 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
             father_name,
             grandfather_name,
             family_name: family_name.join(' '),
-            nationality: patientCountry,
           })
           .returning();
         foundPersonId = newPersonInsert.id;
