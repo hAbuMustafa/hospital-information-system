@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import Sheet from '$lib/components/Sheet/Sheet.svelte';
-  import { getTermed } from '$lib/utils/date-format';
+  import { formatDate, getTermed } from '$lib/utils/date-format';
+  import { getFlagEmoji, obj as countries } from '$lib/utils/countries';
   import type { inPatient_view } from '$server/db/schema/entities/patients';
 
   let { data } = $props();
@@ -29,53 +28,75 @@
           {getTermed(currWard.capacity, 'سرير', 'أسرَّة')}
         </span>
       </h2>
-      <Sheet
-        rows={patientsByWard[ward_name]}
-        pickColumns={[
-          'patient_id',
-          'patient_file_number',
-          'full_name',
-          'admission_time',
-          'admission_notes',
-        ]}
-        dateColumns={{ admission_time: 'YYYY/MM/DD' }}
-        renameColumns={{
-          admission_time: 'تاريخ الدخول',
-          admission_notes: 'ملاحظات',
-          patient_file_number: 'رقم الملف',
-          patient_id: 'قيد الإقامة',
-          full_name: 'اسم المريض',
-          diagnosis: 'التشخيص',
-          discharge: 'خروج',
-          transfer: 'تحويل',
-        }}
-        actionColumns={{
-          transfer: {
-            actionName: 'تحويل',
-            onclick: function (p: typeof inPatient_view.$inferSelect) {
-              goto(`/patient/transfer?patient_id=${p.patient_id}`);
-            },
-            style: {
-              color: 'var(--main-bg-color)',
-              backgroundColor: 'orange',
-            },
-          },
-          discharge: {
-            actionName: 'خروج',
-            onclick: function (p: typeof inPatient_view.$inferSelect) {
-              goto(`/patient/discharge?patient_id=${p.patient_id}`);
-            },
-            style: {
-              backgroundColor: 'light-dark(salmon, maroon)',
-            },
-          },
-        }}
-        detailsColumn={{
-          patient_id: (p: typeof inPatient_view.$inferSelect) =>
-            `/patient/${p.patient_id}`,
-        }}
-        topOffset="1.75rem"
-      />
+
+      <table>
+        <colgroup>
+          <col class="patient-identifier" />
+          <col class="patient-cards" />
+          <col class="patient-dates" />
+          <col class="patient-actions" span="2" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>رقم الملف</th>
+            <th>اسم المريض</th>
+            <th>تاريخ الدخول</th>
+            <th>تحويل</th>
+            <th>خروج</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each patientsByWard[ward_name] as patient, ii (patient.patient_file_number)}
+            <tr>
+              <td>
+                <a href="/patient/{patient.patient_id}" class="button"
+                  >{patient.patient_file_number}</a
+                >
+              </td>
+              <td>
+                <div class="patient-card">
+                  <span class="patient-name">{patient.full_name}</span>
+                  {#if patient.gender !== null && patient.gender !== true}
+                    <span class="patient-gender" title="(أنثى)">♀️</span>
+                  {/if}
+                  {#if patient.nationality !== null && patient.nationality !== 'EG'}
+                    <span
+                      class="patient-nationality"
+                      title="({countries[patient.nationality].name_ar})"
+                    >
+                      {getFlagEmoji(patient.nationality)}
+                    </span>
+                  {/if}
+                  {#if patient.security_status !== null && patient.security_status === true}
+                    <span class="patient-security_status" title="(مسجون)">⛓️‍💥</span>
+                  {/if}
+                </div>
+              </td>
+              <td>{formatDate(patient.admission_time, 'YYYY/MM/DD')}</td>
+              <td>
+                <a
+                  href="/patient/transfer?patient_id={patient.patient_id}"
+                  class="button"
+                  style:background-color="orange"
+                  style:color="light-dark(var(--main-text-color),var(--main-bg-color))"
+                >
+                  تحويل
+                </a>
+              </td>
+              <td>
+                <a
+                  href="/patient/discharge?patient_id={patient.patient_id}"
+                  class="button"
+                  style:background-color="light-dark(salmon, maroon)"
+                  style:color="light-dark(var(--main-text-color),var(--main-text-color))"
+                >
+                  خروج
+                </a>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
     </div>
   {/if}
 {/each}
@@ -96,6 +117,88 @@
 
     @media print {
       break-after: avoid;
+    }
+  }
+
+  table {
+    justify-self: center;
+    border-collapse: collapse;
+
+    white-space: nowrap;
+  }
+
+  .patient-identifier {
+    width: 9ch;
+  }
+  .patient-cards {
+    width: 30ch;
+  }
+  .patient-dates {
+    width: 12ch;
+  }
+  .patient-actions {
+    width: 9ch;
+  }
+
+  thead {
+    position: sticky;
+    inset-block-start: 2rem;
+  }
+
+  tr:has(th) {
+    background-color: hsl(from var(--main-bg-color) h s 60%);
+    color: var(--main-bg-color);
+    border: var(--main-border);
+  }
+
+  th {
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  th:not(:last-of-type) {
+    border-inline-end: var(--main-border);
+  }
+
+  tbody {
+    tr {
+      border: var(--main-border);
+      transition:
+        transform 0.2s ease-in-out,
+        background-color 0.5s ease-in-out;
+    }
+
+    tr:is(:hover, :focus-within, :active) {
+      background-color: light-dark(
+        hsl(from var(--main-bg-color) h s 80%),
+        hsl(from var(--main-bg-color) h s 30%)
+      );
+      transform: scale(1.03);
+    }
+
+    td {
+      border: var(--main-border);
+      padding: 0.5rem;
+      text-align: center;
+      text-wrap: wrap;
+    }
+
+    a.button {
+      display: inline-block;
+      width: 80%;
+
+      @media print {
+        all: unset;
+      }
+    }
+
+    .patient-card {
+      display: flex;
+      justify-content: space-between;
+
+      .patient-name {
+        flex-basis: 1;
+      }
     }
   }
 </style>
