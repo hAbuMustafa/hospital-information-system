@@ -4,12 +4,12 @@
 
   const { data } = $props();
 
-  let firstName = $state(data.person.first_name);
-  let fatherName = $state(data.person.father_name);
-  let grandfatherName = $state(data.person.grandfather_name);
-  let familyName = $state(data.person.family_name ?? '');
-  let idDocType = $state(data.person.id_doc_type_id ?? 1);
-  let idDocNum = $state(data.person.id_doc_number ?? '');
+  let firstName = $derived(data.person.first_name);
+  let fatherName = $derived(data.person.father_name);
+  let grandfatherName = $derived(data.person.grandfather_name);
+  let familyName = $derived(data.person.family_name ?? '');
+  let idDocType = $derived(data.person.id_doc_type_id ?? 1);
+  let idDocNum = $derived(data.person.id_doc_number ?? '');
   let isNationalId = $derived(idDocType === 1 && nationalIdPattern.test(idDocNum));
   let gender = $derived.by(() => {
     if (isNationalId) {
