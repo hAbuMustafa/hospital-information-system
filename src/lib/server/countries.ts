@@ -15,6 +15,7 @@ export const arr = [
     },
     dialling_code: '+93',
     isoCode: '004',
+    name_ar: 'أفغانستان',
   },
   {
     name: 'Albania',
@@ -32,6 +33,7 @@ export const arr = [
     },
     dialling_code: '+355',
     isoCode: '008',
+    name_ar: 'ألبانيا',
   },
   {
     name: 'Algeria',
@@ -49,6 +51,7 @@ export const arr = [
     },
     dialling_code: '+213',
     isoCode: '012',
+    name_ar: 'الجزائر',
   },
   {
     name: 'American Samoa',
@@ -66,6 +69,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '016',
+    name_ar: 'ساموا الأمريكية',
   },
   {
     name: 'Andorra',
@@ -83,6 +87,7 @@ export const arr = [
     },
     dialling_code: '+376',
     isoCode: '020',
+    name_ar: 'أندورا',
   },
   {
     name: 'Angola',
@@ -100,6 +105,7 @@ export const arr = [
     },
     dialling_code: '+244',
     isoCode: '024',
+    name_ar: 'أنغولا',
   },
   {
     name: 'Anguilla',
@@ -115,8 +121,9 @@ export const arr = [
       code: 'en',
       name: 'English',
     },
-    dialling_code: '+43',
+    dialling_code: '+443',
     isoCode: '660',
+    name_ar: 'أنغيلا',
   },
   {
     name: 'Antigua and Barbuda',
@@ -134,6 +141,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '028',
+    name_ar: 'أنتيغوا وبربودا',
   },
   {
     name: 'Argentina',
@@ -151,6 +159,7 @@ export const arr = [
     },
     dialling_code: '+54',
     isoCode: '032',
+    name_ar: 'الأرجنتين',
   },
   {
     name: 'Armenia',
@@ -168,6 +177,7 @@ export const arr = [
     },
     dialling_code: '+374',
     isoCode: '051',
+    name_ar: 'أرمينيا',
   },
   {
     name: 'Aruba',
@@ -185,6 +195,7 @@ export const arr = [
     },
     dialling_code: '+297',
     isoCode: '533',
+    name_ar: 'أروبا',
   },
   {
     name: 'Australia',
@@ -202,6 +213,7 @@ export const arr = [
     },
     dialling_code: '+61',
     isoCode: '036',
+    name_ar: 'أستراليا',
   },
   {
     name: 'Azerbaijan',
@@ -219,6 +231,7 @@ export const arr = [
     },
     dialling_code: '+994',
     isoCode: '031',
+    name_ar: 'أذربيجان',
   },
   {
     name: 'Bahamas',
@@ -236,6 +249,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '044',
+    name_ar: 'جزر باهاما',
   },
   {
     name: 'Bahrain',
@@ -253,6 +267,7 @@ export const arr = [
     },
     dialling_code: '+973',
     isoCode: '048',
+    name_ar: 'البحرين',
   },
   {
     name: 'Bangladesh',
@@ -270,6 +285,7 @@ export const arr = [
     },
     dialling_code: '+880',
     isoCode: '050',
+    name_ar: 'بنغلاديش',
   },
   {
     name: 'Barbados',
@@ -287,6 +303,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '052',
+    name_ar: 'بربادوس',
   },
   {
     name: 'Belarus',
@@ -304,6 +321,7 @@ export const arr = [
     },
     dialling_code: '+375',
     isoCode: '112',
+    name_ar: 'بيلاروسيا',
   },
   {
     name: 'Belgium',
@@ -321,6 +339,7 @@ export const arr = [
     },
     dialling_code: '+32',
     isoCode: '056',
+    name_ar: 'بلجيكا',
   },
   {
     name: 'Belize',
@@ -338,6 +357,7 @@ export const arr = [
     },
     dialling_code: '+501',
     isoCode: '084',
+    name_ar: 'بليز',
   },
   {
     name: 'Benin',
@@ -355,6 +375,7 @@ export const arr = [
     },
     dialling_code: '+229',
     isoCode: '204',
+    name_ar: 'بنين',
   },
   {
     name: 'Bermuda',
@@ -372,6 +393,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '060',
+    name_ar: 'برمودا',
   },
   {
     name: 'Bhutan',
@@ -389,6 +411,7 @@ export const arr = [
     },
     dialling_code: '+975',
     isoCode: '064',
+    name_ar: 'بوتان',
   },
   {
     name: 'Bolivia (Plurinational State of)',
@@ -406,6 +429,7 @@ export const arr = [
     },
     dialling_code: '+591',
     isoCode: '068',
+    name_ar: 'بوليفيا (دولة - المتعددة القوميات)',
   },
   {
     name: 'Bosnia and Herzegovina',
@@ -423,6 +447,7 @@ export const arr = [
     },
     dialling_code: '+387',
     isoCode: '070',
+    name_ar: 'البوسنة والهرسك',
   },
   {
     name: 'Botswana',
@@ -440,6 +465,7 @@ export const arr = [
     },
     dialling_code: '+267',
     isoCode: '072',
+    name_ar: 'بوتسوانا',
   },
   {
     name: 'Brazil',
@@ -457,6 +483,7 @@ export const arr = [
     },
     dialling_code: '+55',
     isoCode: '076',
+    name_ar: 'البرازيل',
   },
   {
     name: 'British Indian Ocean Territory',
@@ -474,6 +501,7 @@ export const arr = [
     },
     dialling_code: '+246',
     isoCode: '086',
+    name_ar: 'الإقليم البريطاني في المحيط الهندي',
   },
   {
     name: 'Virgin Islands (British)',
@@ -491,6 +519,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '092',
+    name_ar: 'جزر العذراء (البريطانية)',
   },
   {
     name: 'Virgin Islands (U.S.)',
@@ -508,6 +537,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '850',
+    name_ar: 'جزر العذراء (الولايات المتحدة)',
   },
   {
     name: 'Brunei Darussalam',
@@ -525,6 +555,7 @@ export const arr = [
     },
     dialling_code: '+673',
     isoCode: '096',
+    name_ar: 'بروناي دار السلام',
   },
   {
     name: 'Bulgaria',
@@ -542,6 +573,7 @@ export const arr = [
     },
     dialling_code: '+359',
     isoCode: '100',
+    name_ar: 'بلغاريا',
   },
   {
     name: 'Burkina Faso',
@@ -559,6 +591,7 @@ export const arr = [
     },
     dialling_code: '+226',
     isoCode: '854',
+    name_ar: 'بوركينا فاسو',
   },
   {
     name: 'Burundi',
@@ -576,6 +609,7 @@ export const arr = [
     },
     dialling_code: '+257',
     isoCode: '108',
+    name_ar: 'بوروندي',
   },
   {
     name: 'Cambodia',
@@ -593,6 +627,7 @@ export const arr = [
     },
     dialling_code: '+855',
     isoCode: '116',
+    name_ar: 'كمبوديا',
   },
   {
     name: 'Cameroon',
@@ -610,6 +645,7 @@ export const arr = [
     },
     dialling_code: '+237',
     isoCode: '120',
+    name_ar: 'الكاميرون',
   },
   {
     name: 'Canada',
@@ -627,6 +663,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '124',
+    name_ar: 'كندا',
   },
   {
     name: 'Cabo Verde',
@@ -646,6 +683,7 @@ export const arr = [
     },
     dialling_code: '+238',
     isoCode: '132',
+    name_ar: 'كابو فيردي',
   },
   {
     name: 'Cayman Islands',
@@ -664,6 +702,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '136',
+    name_ar: 'جزر كايمان',
   },
   {
     name: 'Central African Republic',
@@ -681,23 +720,7 @@ export const arr = [
     },
     dialling_code: '+236',
     isoCode: '140',
-  },
-  {
-    name: 'Central African Republic',
-    code: 'CF',
-    capital: 'Bangui',
-    region: 'AF',
-    currency: {
-      code: 'XAF',
-      name: 'Central African CFA franc',
-      symbol: 'Fr',
-    },
-    language: {
-      code: 'fr',
-      name: 'French',
-    },
-    dialling_code: '+236',
-    isoCode: '140',
+    name_ar: 'جمهورية أفريقيا الوسطى',
   },
   {
     name: 'Chile',
@@ -717,6 +740,7 @@ export const arr = [
     },
     dialling_code: '+56',
     isoCode: '152',
+    name_ar: 'تشيلي',
   },
   {
     name: 'China',
@@ -734,6 +758,7 @@ export const arr = [
     },
     dialling_code: '+86',
     isoCode: '156',
+    name_ar: 'الصين',
   },
   {
     name: 'Colombia',
@@ -751,6 +776,7 @@ export const arr = [
     },
     dialling_code: '+57',
     isoCode: '170',
+    name_ar: 'كولومبيا',
   },
   {
     name: 'Comoros',
@@ -768,6 +794,7 @@ export const arr = [
     },
     dialling_code: '+269',
     isoCode: '174',
+    name_ar: 'جزر القمر',
   },
   {
     name: 'Congo',
@@ -785,6 +812,7 @@ export const arr = [
     },
     dialling_code: '+242',
     isoCode: '178',
+    name_ar: 'الكونغو',
   },
   {
     name: 'Congo (Democratic Republic of the)',
@@ -802,6 +830,7 @@ export const arr = [
     },
     dialling_code: '+243',
     isoCode: '180',
+    name_ar: 'الكونغو (جمهورية الكونغو الديمقراطية)',
   },
   {
     name: 'Cook Islands',
@@ -819,6 +848,7 @@ export const arr = [
     },
     dialling_code: '+682',
     isoCode: '184',
+    name_ar: 'جزر كوك',
   },
   {
     name: 'Costa Rica',
@@ -836,6 +866,7 @@ export const arr = [
     },
     dialling_code: '+506',
     isoCode: '188',
+    name_ar: 'كوستاريكا',
   },
   {
     name: 'Croatia',
@@ -853,6 +884,7 @@ export const arr = [
     },
     dialling_code: '+385',
     isoCode: '191',
+    name_ar: 'كرواتيا',
   },
   {
     name: 'Cuba',
@@ -870,23 +902,7 @@ export const arr = [
     },
     dialling_code: '+53',
     isoCode: '192',
-  },
-  {
-    name: 'Cuba',
-    code: 'CU',
-    capital: 'Havana',
-    region: 'NA',
-    currency: {
-      code: 'CUC',
-      name: 'Cuban convertible peso',
-      symbol: '$',
-    },
-    language: {
-      code: 'es',
-      name: 'Spanish',
-    },
-    dialling_code: '+53',
-    isoCode: '192',
+    name_ar: 'كوبا',
   },
   {
     name: 'Cyprus',
@@ -904,6 +920,7 @@ export const arr = [
     },
     dialling_code: '+357',
     isoCode: '196',
+    name_ar: 'قبرص',
   },
   {
     name: 'Czech Republic',
@@ -921,6 +938,7 @@ export const arr = [
     },
     dialling_code: '+420',
     isoCode: '203',
+    name_ar: 'جمهورية التشيك',
   },
   {
     name: 'Denmark',
@@ -938,6 +956,7 @@ export const arr = [
     },
     dialling_code: '+45',
     isoCode: '208',
+    name_ar: 'الدانمرك',
   },
   {
     name: 'Djibouti',
@@ -955,6 +974,7 @@ export const arr = [
     },
     dialling_code: '+253',
     isoCode: '262',
+    name_ar: 'جيبوتي',
   },
   {
     name: 'Dominica',
@@ -972,6 +992,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '212',
+    name_ar: 'دومينيكا',
   },
   {
     name: 'Dominican Republic',
@@ -989,6 +1010,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '214',
+    name_ar: 'جمهورية الدومينيكان',
   },
   {
     name: 'Ecuador',
@@ -1006,6 +1028,7 @@ export const arr = [
     },
     dialling_code: '+593',
     isoCode: '218',
+    name_ar: 'الإكوادور',
   },
   {
     name: 'Egypt',
@@ -1023,6 +1046,7 @@ export const arr = [
     },
     dialling_code: '+20',
     isoCode: '818',
+    name_ar: 'مصر',
   },
   {
     name: 'El Salvador',
@@ -1040,6 +1064,7 @@ export const arr = [
     },
     dialling_code: '+503',
     isoCode: '222',
+    name_ar: 'السلفادور',
   },
   {
     name: 'Equatorial Guinea',
@@ -1059,6 +1084,7 @@ export const arr = [
     },
     dialling_code: '+240',
     isoCode: '226',
+    name_ar: 'غينيا الاستوائية',
   },
   {
     name: 'Eritrea',
@@ -1076,6 +1102,7 @@ export const arr = [
     },
     dialling_code: '+291',
     isoCode: '232',
+    name_ar: 'إريتريا',
   },
   {
     name: 'Estonia',
@@ -1093,6 +1120,7 @@ export const arr = [
     },
     dialling_code: '+372',
     isoCode: '233',
+    name_ar: 'إستونيا',
   },
   {
     name: 'Ethiopia',
@@ -1110,6 +1138,7 @@ export const arr = [
     },
     dialling_code: '+251',
     isoCode: '231',
+    name_ar: 'إثيوبيا',
   },
   {
     name: 'Falkland Islands (Malvinas)',
@@ -1127,6 +1156,7 @@ export const arr = [
     },
     dialling_code: '+500',
     isoCode: '238',
+    name_ar: 'جزر فوكلاند (مالفيناس)',
   },
   {
     name: 'Faroe Islands',
@@ -1144,6 +1174,7 @@ export const arr = [
     },
     dialling_code: '+298',
     isoCode: '234',
+    name_ar: 'جزر فارو',
   },
   {
     name: 'Fiji',
@@ -1161,6 +1192,7 @@ export const arr = [
     },
     dialling_code: '+679',
     isoCode: '242',
+    name_ar: 'فيجي',
   },
   {
     name: 'Finland',
@@ -1180,6 +1212,7 @@ export const arr = [
     },
     dialling_code: '+358',
     isoCode: '246',
+    name_ar: 'فنلندا',
   },
   {
     name: 'France',
@@ -1198,6 +1231,7 @@ export const arr = [
     },
     dialling_code: '+33',
     isoCode: '250',
+    name_ar: 'فرنسا',
   },
   {
     name: 'French Guiana',
@@ -1215,6 +1249,7 @@ export const arr = [
     },
     dialling_code: '+594',
     isoCode: '254',
+    name_ar: 'غينيا الفرنسية',
   },
   {
     name: 'French Polynesia',
@@ -1232,6 +1267,7 @@ export const arr = [
     },
     dialling_code: '+689',
     isoCode: '258',
+    name_ar: 'بولينيزيا الفرنسية',
   },
   {
     name: 'Gabon',
@@ -1249,6 +1285,7 @@ export const arr = [
     },
     dialling_code: '+241',
     isoCode: '266',
+    name_ar: 'الغابون',
   },
   {
     name: 'Gambia',
@@ -1266,6 +1303,7 @@ export const arr = [
     },
     dialling_code: '+220',
     isoCode: '270',
+    name_ar: 'غامبيا',
   },
   {
     name: 'Georgia',
@@ -1283,6 +1321,7 @@ export const arr = [
     },
     dialling_code: '+995',
     isoCode: '268',
+    name_ar: 'جورجيا',
   },
   {
     name: 'Germany',
@@ -1300,6 +1339,7 @@ export const arr = [
     },
     dialling_code: '+49',
     isoCode: '276',
+    name_ar: 'ألمانيا',
   },
   {
     name: 'Ghana',
@@ -1317,6 +1357,7 @@ export const arr = [
     },
     dialling_code: '+233',
     isoCode: '288',
+    name_ar: 'غانا',
   },
   {
     name: 'Gibraltar',
@@ -1334,6 +1375,7 @@ export const arr = [
     },
     dialling_code: '+350',
     isoCode: '292',
+    name_ar: 'جبل طارق',
   },
   {
     name: 'Greece',
@@ -1351,6 +1393,7 @@ export const arr = [
     },
     dialling_code: '+30',
     isoCode: '300',
+    name_ar: 'اليونان',
   },
   {
     name: 'Greenland',
@@ -1368,6 +1411,7 @@ export const arr = [
     },
     dialling_code: '+299',
     isoCode: '304',
+    name_ar: 'جرينلاند',
   },
   {
     name: 'Grenada',
@@ -1385,6 +1429,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '308',
+    name_ar: 'غرينادا',
   },
   {
     name: 'Guadeloupe',
@@ -1402,6 +1447,7 @@ export const arr = [
     },
     dialling_code: '+590',
     isoCode: '312',
+    name_ar: 'جوادلوب',
   },
   {
     name: 'Guam',
@@ -1419,6 +1465,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '316',
+    name_ar: 'غوام',
   },
   {
     name: 'Guatemala',
@@ -1436,6 +1483,7 @@ export const arr = [
     },
     dialling_code: '+502',
     isoCode: '320',
+    name_ar: 'غواتيمالا',
   },
   {
     name: 'Guinea',
@@ -1453,6 +1501,7 @@ export const arr = [
     },
     dialling_code: '+224',
     isoCode: '324',
+    name_ar: 'غينيا',
   },
   {
     name: 'Guinea-Bissau',
@@ -1470,6 +1519,7 @@ export const arr = [
     },
     dialling_code: '+245',
     isoCode: '624',
+    name_ar: 'غينيا بيساو',
   },
   {
     name: 'Guyana',
@@ -1487,6 +1537,7 @@ export const arr = [
     },
     dialling_code: '+592',
     isoCode: '328',
+    name_ar: 'غيانا',
   },
   {
     name: 'Haiti',
@@ -1504,6 +1555,7 @@ export const arr = [
     },
     dialling_code: '+509',
     isoCode: '332',
+    name_ar: 'هايتي',
   },
   {
     name: 'Holy See',
@@ -1521,6 +1573,7 @@ export const arr = [
     },
     dialling_code: '+39',
     isoCode: '336',
+    name_ar: 'الكرسي الرسولي',
   },
   {
     name: 'Honduras',
@@ -1538,6 +1591,7 @@ export const arr = [
     },
     dialling_code: '+504',
     isoCode: '340',
+    name_ar: 'هندوراس',
   },
   {
     name: 'Hong Kong',
@@ -1555,6 +1609,7 @@ export const arr = [
     },
     dialling_code: '+852',
     isoCode: '344',
+    name_ar: 'هونغ كونغ',
   },
   {
     name: 'Hungary',
@@ -1572,6 +1627,7 @@ export const arr = [
     },
     dialling_code: '+36',
     isoCode: '348',
+    name_ar: 'المجر',
   },
   {
     name: 'Iceland',
@@ -1589,6 +1645,7 @@ export const arr = [
     },
     dialling_code: '+354',
     isoCode: '352',
+    name_ar: 'آيسلندا',
   },
   {
     name: 'India',
@@ -1606,6 +1663,7 @@ export const arr = [
     },
     dialling_code: '+91',
     isoCode: '356',
+    name_ar: 'الهند',
   },
   {
     name: 'Indonesia',
@@ -1623,6 +1681,7 @@ export const arr = [
     },
     dialling_code: '+62',
     isoCode: '360',
+    name_ar: 'إندونيسيا',
   },
   {
     name: "Côte d'Ivoire",
@@ -1640,6 +1699,7 @@ export const arr = [
     },
     dialling_code: '+225',
     isoCode: '384',
+    name_ar: 'كوت ديفوار',
   },
   {
     name: 'Iran (Islamic Republic of)',
@@ -1657,6 +1717,7 @@ export const arr = [
     },
     dialling_code: '+98',
     isoCode: '364',
+    name_ar: 'إيران (جمهورية - الإسلامية)',
   },
   {
     name: 'Iraq',
@@ -1674,6 +1735,7 @@ export const arr = [
     },
     dialling_code: '+964',
     isoCode: '368',
+    name_ar: 'العراق',
   },
   {
     name: 'Ireland',
@@ -1691,6 +1753,7 @@ export const arr = [
     },
     dialling_code: '+353',
     isoCode: '372',
+    name_ar: 'أيرلندا',
   },
   {
     name: 'Israel',
@@ -1708,6 +1771,7 @@ export const arr = [
     },
     dialling_code: '+972',
     isoCode: '376',
+    name_ar: 'إسرائيل',
   },
   {
     name: 'Italy',
@@ -1725,6 +1789,7 @@ export const arr = [
     },
     dialling_code: '+39',
     isoCode: '380',
+    name_ar: 'إيطاليا',
   },
   {
     name: 'Jamaica',
@@ -1742,6 +1807,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '388',
+    name_ar: 'جامايكا',
   },
   {
     name: 'Japan',
@@ -1759,6 +1825,7 @@ export const arr = [
     },
     dialling_code: '+81',
     isoCode: '392',
+    name_ar: 'اليابان',
   },
   {
     name: 'Jordan',
@@ -1776,6 +1843,7 @@ export const arr = [
     },
     dialling_code: '+962',
     isoCode: '400',
+    name_ar: 'الأردن',
   },
   {
     name: 'Kazakhstan',
@@ -1793,6 +1861,7 @@ export const arr = [
     },
     dialling_code: '+7',
     isoCode: '398',
+    name_ar: 'كازاخستان',
   },
   {
     name: 'Kenya',
@@ -1810,6 +1879,7 @@ export const arr = [
     },
     dialling_code: '+254',
     isoCode: '404',
+    name_ar: 'كينيا',
   },
   {
     name: 'Kiribati',
@@ -1827,6 +1897,7 @@ export const arr = [
     },
     dialling_code: '+686',
     isoCode: '296',
+    name_ar: 'كيريباس',
   },
   {
     name: 'Kuwait',
@@ -1844,6 +1915,7 @@ export const arr = [
     },
     dialling_code: '+965',
     isoCode: '414',
+    name_ar: 'الكويت',
   },
   {
     name: 'Kyrgyzstan',
@@ -1861,6 +1933,7 @@ export const arr = [
     },
     dialling_code: '+996',
     isoCode: '417',
+    name_ar: 'قيرغيزستان',
   },
   {
     name: "Lao People's Democratic Republic",
@@ -1878,6 +1951,7 @@ export const arr = [
     },
     dialling_code: '+856',
     isoCode: '418',
+    name_ar: 'لاوس (جمهورية - الديمقراطية الشعبية)',
   },
   {
     name: 'Latvia',
@@ -1895,6 +1969,7 @@ export const arr = [
     },
     dialling_code: '+371',
     isoCode: '428',
+    name_ar: 'لاتفيا',
   },
   {
     name: 'Lebanon',
@@ -1912,6 +1987,7 @@ export const arr = [
     },
     dialling_code: '+961',
     isoCode: '422',
+    name_ar: 'لبنان',
   },
   {
     name: 'Lesotho',
@@ -1929,6 +2005,7 @@ export const arr = [
     },
     dialling_code: '+266',
     isoCode: '426',
+    name_ar: 'ليسوتو',
   },
   {
     name: 'Liberia',
@@ -1946,6 +2023,7 @@ export const arr = [
     },
     dialling_code: '+231',
     isoCode: '430',
+    name_ar: 'ليبريا',
   },
   {
     name: 'Libya',
@@ -1963,6 +2041,7 @@ export const arr = [
     },
     dialling_code: '+218',
     isoCode: '434',
+    name_ar: 'ليبيا',
   },
   {
     name: 'Liechtenstein',
@@ -1980,6 +2059,7 @@ export const arr = [
     },
     dialling_code: '+423',
     isoCode: '438',
+    name_ar: 'ليختنشتاين',
   },
   {
     name: 'Lithuania',
@@ -1997,6 +2077,7 @@ export const arr = [
     },
     dialling_code: '+370',
     isoCode: '440',
+    name_ar: 'ليتوانيا',
   },
   {
     name: 'Luxembourg',
@@ -2014,6 +2095,7 @@ export const arr = [
     },
     dialling_code: '+352',
     isoCode: '442',
+    name_ar: 'لوكسمبورغ',
   },
   {
     name: 'Macao',
@@ -2031,6 +2113,7 @@ export const arr = [
     },
     dialling_code: '+853',
     isoCode: '446',
+    name_ar: 'ماكاو',
   },
   {
     name: 'Macedonia (the former Yugoslav Republic of)',
@@ -2048,6 +2131,7 @@ export const arr = [
     },
     dialling_code: '+389',
     isoCode: '807',
+    name_ar: 'مقدونيا (جمهورية - اليوغوسلافية السابقة)',
   },
   {
     name: 'Madagascar',
@@ -2065,6 +2149,7 @@ export const arr = [
     },
     dialling_code: '+261',
     isoCode: '450',
+    name_ar: 'مدغشقر',
   },
   {
     name: 'Malawi',
@@ -2082,6 +2167,7 @@ export const arr = [
     },
     dialling_code: '+265',
     isoCode: '454',
+    name_ar: 'مالاوي',
   },
   {
     name: 'Malaysia',
@@ -2099,6 +2185,7 @@ export const arr = [
     },
     dialling_code: '+60',
     isoCode: '458',
+    name_ar: 'ماليزيا',
   },
   {
     name: 'Maldives',
@@ -2116,6 +2203,7 @@ export const arr = [
     },
     dialling_code: '+960',
     isoCode: '462',
+    name_ar: 'جزر المالديف',
   },
   {
     name: 'Mali',
@@ -2133,6 +2221,7 @@ export const arr = [
     },
     dialling_code: '+223',
     isoCode: '466',
+    name_ar: 'مالي',
   },
   {
     name: 'Malta',
@@ -2150,6 +2239,7 @@ export const arr = [
     },
     dialling_code: '+356',
     isoCode: '470',
+    name_ar: 'مالطا',
   },
   {
     name: 'Marshall Islands',
@@ -2167,6 +2257,7 @@ export const arr = [
     },
     dialling_code: '+692',
     isoCode: '584',
+    name_ar: 'جزر مارشال',
   },
   {
     name: 'Martinique',
@@ -2184,6 +2275,7 @@ export const arr = [
     },
     dialling_code: '+596',
     isoCode: '474',
+    name_ar: 'مارتينيك',
   },
   {
     name: 'Mauritania',
@@ -2201,6 +2293,7 @@ export const arr = [
     },
     dialling_code: '+222',
     isoCode: '478',
+    name_ar: 'موريتانيا',
   },
   {
     name: 'Mauritius',
@@ -2218,6 +2311,7 @@ export const arr = [
     },
     dialling_code: '+230',
     isoCode: '480',
+    name_ar: 'موريشيوس',
   },
   {
     name: 'Mayotte',
@@ -2235,6 +2329,7 @@ export const arr = [
     },
     dialling_code: '+262',
     isoCode: '175',
+    name_ar: 'مايوت',
   },
   {
     name: 'Mexico',
@@ -2252,6 +2347,7 @@ export const arr = [
     },
     dialling_code: '+52',
     isoCode: '484',
+    name_ar: 'المكسيك',
   },
   {
     name: 'Micronesia (Federated States of)',
@@ -2269,6 +2365,7 @@ export const arr = [
     },
     dialling_code: '+691',
     isoCode: '583',
+    name_ar: 'ميكرونيزيا (ولايات - المتحدة)',
   },
   {
     name: 'Moldova (Republic of)',
@@ -2286,6 +2383,7 @@ export const arr = [
     },
     dialling_code: '+373',
     isoCode: '498',
+    name_ar: 'مولدوفا (جمهورية)',
   },
   {
     name: 'Monaco',
@@ -2303,6 +2401,7 @@ export const arr = [
     },
     dialling_code: '+377',
     isoCode: '492',
+    name_ar: 'موناكو',
   },
   {
     name: 'Mongolia',
@@ -2320,6 +2419,7 @@ export const arr = [
     },
     dialling_code: '+976',
     isoCode: '496',
+    name_ar: 'منغوليا',
   },
   {
     name: 'Montenegro',
@@ -2337,6 +2437,7 @@ export const arr = [
     },
     dialling_code: '+382',
     isoCode: '499',
+    name_ar: 'الجبل الأسود',
   },
   {
     name: 'Montserrat',
@@ -2354,6 +2455,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '500',
+    name_ar: 'مونتسرات',
   },
   {
     name: 'Morocco',
@@ -2371,6 +2473,7 @@ export const arr = [
     },
     dialling_code: '+212',
     isoCode: '504',
+    name_ar: 'المغرب',
   },
   {
     name: 'Mozambique',
@@ -2388,6 +2491,7 @@ export const arr = [
     },
     dialling_code: '+258',
     isoCode: '508',
+    name_ar: 'موزمبيق',
   },
   {
     name: 'Myanmar',
@@ -2405,6 +2509,7 @@ export const arr = [
     },
     dialling_code: '+95',
     isoCode: '104',
+    name_ar: 'ميانمار',
   },
   {
     name: 'Namibia',
@@ -2422,6 +2527,7 @@ export const arr = [
     },
     dialling_code: '+264',
     isoCode: '516',
+    name_ar: 'ناميبيا',
   },
   {
     name: 'Nauru',
@@ -2439,6 +2545,7 @@ export const arr = [
     },
     dialling_code: '+674',
     isoCode: '520',
+    name_ar: 'ناورو',
   },
   {
     name: 'Nepal',
@@ -2456,6 +2563,7 @@ export const arr = [
     },
     dialling_code: '+977',
     isoCode: '524',
+    name_ar: 'نيبال',
   },
   {
     name: 'Netherlands',
@@ -2473,6 +2581,7 @@ export const arr = [
     },
     dialling_code: '+31',
     isoCode: '528',
+    name_ar: 'هولندا',
   },
   {
     name: 'New Caledonia',
@@ -2490,6 +2599,7 @@ export const arr = [
     },
     dialling_code: '+687',
     isoCode: '540',
+    name_ar: 'كاليدونيا الجديدة',
   },
   {
     name: 'New Zealand',
@@ -2507,6 +2617,7 @@ export const arr = [
     },
     dialling_code: '+64',
     isoCode: '554',
+    name_ar: 'نيوزيلندا',
   },
   {
     name: 'Nicaragua',
@@ -2524,6 +2635,7 @@ export const arr = [
     },
     dialling_code: '+505',
     isoCode: '558',
+    name_ar: 'نيكاراغوا',
   },
   {
     name: 'Niger',
@@ -2541,6 +2653,7 @@ export const arr = [
     },
     dialling_code: '+227',
     isoCode: '562',
+    name_ar: 'النيجر',
   },
   {
     name: 'Nigeria',
@@ -2558,6 +2671,7 @@ export const arr = [
     },
     dialling_code: '+234',
     isoCode: '566',
+    name_ar: 'نيجيريا',
   },
   {
     name: 'Niue',
@@ -2575,6 +2689,7 @@ export const arr = [
     },
     dialling_code: '+683',
     isoCode: '570',
+    name_ar: 'نيوي',
   },
   {
     name: 'Norfolk Island',
@@ -2592,6 +2707,7 @@ export const arr = [
     },
     dialling_code: '+672',
     isoCode: '574',
+    name_ar: 'جزيرة نورفولك',
   },
   {
     name: "Korea (Democratic People's Republic of)",
@@ -2609,6 +2725,7 @@ export const arr = [
     },
     dialling_code: '+850',
     isoCode: '408',
+    name_ar: 'كوريا (جمهورية - الديمقراطية الشعبية)',
   },
   {
     name: 'Northern Mariana Islands',
@@ -2626,6 +2743,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '580',
+    name_ar: 'جزر ماريانا الشمالية',
   },
   {
     name: 'Norway',
@@ -2643,6 +2761,7 @@ export const arr = [
     },
     dialling_code: '+47',
     isoCode: '578',
+    name_ar: 'النرويج',
   },
   {
     name: 'Oman',
@@ -2660,6 +2779,7 @@ export const arr = [
     },
     dialling_code: '+968',
     isoCode: '512',
+    name_ar: 'عمان',
   },
   {
     name: 'Pakistan',
@@ -2677,6 +2797,7 @@ export const arr = [
     },
     dialling_code: '+92',
     isoCode: '586',
+    name_ar: 'باكستان',
   },
   {
     name: 'Palau',
@@ -2694,6 +2815,7 @@ export const arr = [
     },
     dialling_code: '+680',
     isoCode: '585',
+    name_ar: 'بالاو',
   },
   {
     name: 'Palestine, State of',
@@ -2711,6 +2833,7 @@ export const arr = [
     },
     dialling_code: '+970',
     isoCode: '275',
+    name_ar: 'فلسطين',
   },
   {
     name: 'Panama',
@@ -2728,6 +2851,7 @@ export const arr = [
     },
     dialling_code: '+507',
     isoCode: '591',
+    name_ar: 'بنما',
   },
   {
     name: 'Papua New Guinea',
@@ -2745,6 +2869,7 @@ export const arr = [
     },
     dialling_code: '+675',
     isoCode: '598',
+    name_ar: 'بابوا غينيا الجديدة',
   },
   {
     name: 'Paraguay',
@@ -2762,6 +2887,7 @@ export const arr = [
     },
     dialling_code: '+595',
     isoCode: '600',
+    name_ar: 'باراغواي',
   },
   {
     name: 'Peru',
@@ -2779,6 +2905,7 @@ export const arr = [
     },
     dialling_code: '+51',
     isoCode: '604',
+    name_ar: 'بيرو',
   },
   {
     name: 'Philippines',
@@ -2796,6 +2923,7 @@ export const arr = [
     },
     dialling_code: '+63',
     isoCode: '608',
+    name_ar: 'الفلبين',
   },
   {
     name: 'Poland',
@@ -2813,6 +2941,7 @@ export const arr = [
     },
     dialling_code: '+48',
     isoCode: '616',
+    name_ar: 'بولندا',
   },
   {
     name: 'Portugal',
@@ -2830,6 +2959,7 @@ export const arr = [
     },
     dialling_code: '+351',
     isoCode: '620',
+    name_ar: 'البرتغال',
   },
   {
     name: 'Puerto Rico',
@@ -2847,6 +2977,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '630',
+    name_ar: 'بورتوريكو',
   },
   {
     name: 'Qatar',
@@ -2864,6 +2995,7 @@ export const arr = [
     },
     dialling_code: '+974',
     isoCode: '634',
+    name_ar: 'قطر',
   },
   {
     name: 'Republic of Kosovo',
@@ -2881,6 +3013,7 @@ export const arr = [
     },
     dialling_code: '+381',
     isoCode: '383',
+    name_ar: 'جمهورية كوسوفو',
   },
   {
     name: 'Réunion',
@@ -2898,6 +3031,7 @@ export const arr = [
     },
     dialling_code: '+262',
     isoCode: '638',
+    name_ar: 'ريونيون',
   },
   {
     name: 'Romania',
@@ -2915,6 +3049,7 @@ export const arr = [
     },
     dialling_code: '+40',
     isoCode: '642',
+    name_ar: 'رومانيا',
   },
   {
     name: 'Russian Federation',
@@ -2932,6 +3067,7 @@ export const arr = [
     },
     dialling_code: '+7',
     isoCode: '643',
+    name_ar: 'الروسية الاتحادية',
   },
   {
     name: 'Rwanda',
@@ -2949,6 +3085,7 @@ export const arr = [
     },
     dialling_code: '+250',
     isoCode: '646',
+    name_ar: 'رواندا',
   },
   {
     name: 'Saint Barthélemy',
@@ -2966,6 +3103,7 @@ export const arr = [
     },
     dialling_code: '+590',
     isoCode: '652',
+    name_ar: 'سان بارتليمي',
   },
   {
     name: 'Saint Helena, Ascension and Tristan da Cunha',
@@ -2983,6 +3121,7 @@ export const arr = [
     },
     dialling_code: '+290',
     isoCode: '654',
+    name_ar: 'سانت هيلينا وأسينشن وتريستان دا كونها',
   },
   {
     name: 'Saint Kitts and Nevis',
@@ -3000,6 +3139,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '659',
+    name_ar: 'سانت كيتس ونيفيس',
   },
   {
     name: 'Saint Lucia',
@@ -3017,6 +3157,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '662',
+    name_ar: 'سانت لوسيا',
   },
   {
     name: 'Saint Martin (French part)',
@@ -3034,6 +3175,7 @@ export const arr = [
     },
     dialling_code: '+590',
     isoCode: '663',
+    name_ar: 'سانت مارتن (الجزء الفرنسي)',
   },
   {
     name: 'Saint Pierre and Miquelon',
@@ -3051,6 +3193,7 @@ export const arr = [
     },
     dialling_code: '+508',
     isoCode: '666',
+    name_ar: 'سانت بيير وميكولون',
   },
   {
     name: 'Saint Vincent and the Grenadines',
@@ -3068,6 +3211,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '670',
+    name_ar: 'سانت فينسنت وجزر غرينادين',
   },
   {
     name: 'Samoa',
@@ -3085,6 +3229,7 @@ export const arr = [
     },
     dialling_code: '+685',
     isoCode: '882',
+    name_ar: 'ساموا',
   },
   {
     name: 'San Marino',
@@ -3102,6 +3247,7 @@ export const arr = [
     },
     dialling_code: '+378',
     isoCode: '674',
+    name_ar: 'سان مارينو',
   },
   {
     name: 'Sao Tome and Principe',
@@ -3119,6 +3265,7 @@ export const arr = [
     },
     dialling_code: '+239',
     isoCode: '678',
+    name_ar: 'ساو تومي وبرينسيب',
   },
   {
     name: 'Saudi Arabia',
@@ -3136,6 +3283,7 @@ export const arr = [
     },
     dialling_code: '+966',
     isoCode: '682',
+    name_ar: 'المملكة العربية السعودية',
   },
   {
     name: 'Senegal',
@@ -3153,6 +3301,7 @@ export const arr = [
     },
     dialling_code: '+221',
     isoCode: '686',
+    name_ar: 'السنغال',
   },
   {
     name: 'Serbia',
@@ -3170,6 +3319,7 @@ export const arr = [
     },
     dialling_code: '+381',
     isoCode: '688',
+    name_ar: 'صربيا',
   },
   {
     name: 'Seychelles',
@@ -3187,6 +3337,7 @@ export const arr = [
     },
     dialling_code: '+248',
     isoCode: '690',
+    name_ar: 'سيشل',
   },
   {
     name: 'Sierra Leone',
@@ -3204,6 +3355,7 @@ export const arr = [
     },
     dialling_code: '+232',
     isoCode: '694',
+    name_ar: 'سيراليون',
   },
   {
     name: 'Singapore',
@@ -3221,23 +3373,7 @@ export const arr = [
     },
     dialling_code: '+65',
     isoCode: '702',
-  },
-  {
-    name: 'Singapore',
-    code: 'SG',
-    capital: 'Singapore',
-    region: 'AS',
-    currency: {
-      code: 'SGD',
-      name: 'Singapore dollar',
-      symbol: '$',
-    },
-    language: {
-      code: 'en',
-      name: 'English',
-    },
-    dialling_code: '+65',
-    isoCode: '702',
+    name_ar: 'سنغافورة',
   },
   {
     name: 'Slovakia',
@@ -3255,6 +3391,7 @@ export const arr = [
     },
     dialling_code: '+421',
     isoCode: '703',
+    name_ar: 'سلوفاكيا',
   },
   {
     name: 'Slovenia',
@@ -3272,6 +3409,7 @@ export const arr = [
     },
     dialling_code: '+386',
     isoCode: '705',
+    name_ar: 'سلوفينيا',
   },
   {
     name: 'Solomon Islands',
@@ -3289,6 +3427,7 @@ export const arr = [
     },
     dialling_code: '+677',
     isoCode: '090',
+    name_ar: 'جزر سليمان',
   },
   {
     name: 'Somalia',
@@ -3306,6 +3445,7 @@ export const arr = [
     },
     dialling_code: '+252',
     isoCode: '706',
+    name_ar: 'الصومال',
   },
   {
     name: 'South Africa',
@@ -3325,6 +3465,7 @@ export const arr = [
     },
     dialling_code: '+27',
     isoCode: '710',
+    name_ar: 'جنوب أفريقيا',
   },
   {
     name: 'Korea (Republic of)',
@@ -3342,6 +3483,7 @@ export const arr = [
     },
     dialling_code: '+82',
     isoCode: '410',
+    name_ar: 'كوريا (جمهورية)',
   },
   {
     name: 'Spain',
@@ -3359,6 +3501,7 @@ export const arr = [
     },
     dialling_code: '+34',
     isoCode: '724',
+    name_ar: 'إسبانيا',
   },
   {
     name: 'Sri Lanka',
@@ -3378,6 +3521,7 @@ export const arr = [
     },
     dialling_code: '+94',
     isoCode: '144',
+    name_ar: 'سريلانكا',
   },
   {
     name: 'Sudan',
@@ -3395,6 +3539,7 @@ export const arr = [
     },
     dialling_code: '+249',
     isoCode: '729',
+    name_ar: 'السودان',
   },
   {
     name: 'South Sudan',
@@ -3412,6 +3557,7 @@ export const arr = [
     },
     dialling_code: '+211',
     isoCode: '728',
+    name_ar: 'جنوب السودان',
   },
   {
     name: 'Suriname',
@@ -3429,6 +3575,7 @@ export const arr = [
     },
     dialling_code: '+597',
     isoCode: '740',
+    name_ar: 'سورينام',
   },
   {
     name: 'Swaziland',
@@ -3446,6 +3593,7 @@ export const arr = [
     },
     dialling_code: '+268',
     isoCode: '748',
+    name_ar: 'إسواتيني',
   },
   {
     name: 'Sweden',
@@ -3463,6 +3611,7 @@ export const arr = [
     },
     dialling_code: '+46',
     isoCode: '752',
+    name_ar: 'السويد',
   },
   {
     name: 'Switzerland',
@@ -3480,6 +3629,7 @@ export const arr = [
     },
     dialling_code: '+41',
     isoCode: '756',
+    name_ar: 'سويسرا',
   },
   {
     name: 'Syrian Arab Republic',
@@ -3497,6 +3647,7 @@ export const arr = [
     },
     dialling_code: '+963',
     isoCode: '760',
+    name_ar: 'الجمهورية العربية السورية',
   },
   {
     name: 'Taiwan',
@@ -3514,6 +3665,7 @@ export const arr = [
     },
     dialling_code: '+886',
     isoCode: '158',
+    name_ar: 'تايوان',
   },
   {
     name: 'Tajikistan',
@@ -3531,6 +3683,7 @@ export const arr = [
     },
     dialling_code: '+992',
     isoCode: '762',
+    name_ar: 'طاجيكستان',
   },
   {
     name: 'Tanzania, United Republic of',
@@ -3548,6 +3701,7 @@ export const arr = [
     },
     dialling_code: '+255',
     isoCode: '834',
+    name_ar: 'تنزانيا (جمهورية - المتحدة)',
   },
   {
     name: 'Thailand',
@@ -3565,6 +3719,7 @@ export const arr = [
     },
     dialling_code: '+66',
     isoCode: '764',
+    name_ar: 'تايلاند',
   },
   {
     name: 'Timor-Leste',
@@ -3582,6 +3737,7 @@ export const arr = [
     },
     dialling_code: '+670',
     isoCode: '626',
+    name_ar: 'تيمور-ليشتي',
   },
   {
     name: 'Togo',
@@ -3599,6 +3755,7 @@ export const arr = [
     },
     dialling_code: '+228',
     isoCode: '768',
+    name_ar: 'توغو',
   },
   {
     name: 'Tokelau',
@@ -3616,6 +3773,7 @@ export const arr = [
     },
     dialling_code: '+690',
     isoCode: '772',
+    name_ar: 'توكيلاو',
   },
   {
     name: 'Tonga',
@@ -3633,6 +3791,7 @@ export const arr = [
     },
     dialling_code: '+676',
     isoCode: '776',
+    name_ar: 'تونغا',
   },
   {
     name: 'Trinidad and Tobago',
@@ -3650,6 +3809,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '780',
+    name_ar: 'ترينيداد وتوباغو',
   },
   {
     name: 'Tunisia',
@@ -3667,6 +3827,7 @@ export const arr = [
     },
     dialling_code: '+216',
     isoCode: '788',
+    name_ar: 'تونس',
   },
   {
     name: 'Turkey',
@@ -3684,6 +3845,7 @@ export const arr = [
     },
     dialling_code: '+90',
     isoCode: '792',
+    name_ar: 'تركيا',
   },
   {
     name: 'Turkmenistan',
@@ -3701,6 +3863,7 @@ export const arr = [
     },
     dialling_code: '+993',
     isoCode: '795',
+    name_ar: 'تركمانستان',
   },
   {
     name: 'Turks and Caicos Islands',
@@ -3718,6 +3881,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '796',
+    name_ar: 'جزر توركس وكايكوس',
   },
   {
     name: 'Tuvalu',
@@ -3735,6 +3899,7 @@ export const arr = [
     },
     dialling_code: '+688',
     isoCode: '798',
+    name_ar: 'توفالو',
   },
   {
     name: 'Uganda',
@@ -3752,6 +3917,7 @@ export const arr = [
     },
     dialling_code: '+256',
     isoCode: '800',
+    name_ar: 'أوغندا',
   },
   {
     name: 'Ukraine',
@@ -3769,6 +3935,7 @@ export const arr = [
     },
     dialling_code: '+380',
     isoCode: '804',
+    name_ar: 'أوكرانيا',
   },
   {
     name: 'United Arab Emirates',
@@ -3786,6 +3953,7 @@ export const arr = [
     },
     dialling_code: '+971',
     isoCode: '784',
+    name_ar: 'الإمارات العربية المتحدة',
   },
   {
     name: 'United Kingdom of Great Britain and Northern Ireland',
@@ -3803,6 +3971,7 @@ export const arr = [
     },
     dialling_code: '+44',
     isoCode: '826',
+    name_ar: 'المملكة المتحدة لبريطانيا العظمى وأيرلندا الشمالية',
   },
   {
     name: 'United States of America',
@@ -3822,6 +3991,7 @@ export const arr = [
     },
     dialling_code: '+1',
     isoCode: '840',
+    name_ar: 'الولايات المتحدة الأمريكية',
   },
   {
     name: 'Uruguay',
@@ -3839,6 +4009,7 @@ export const arr = [
     },
     dialling_code: '+598',
     isoCode: '858',
+    name_ar: 'أورغواي',
   },
   {
     name: 'Uzbekistan',
@@ -3856,6 +4027,7 @@ export const arr = [
     },
     dialling_code: '+998',
     isoCode: '860',
+    name_ar: 'أوزبكستان',
   },
   {
     name: 'Vanuatu',
@@ -3873,6 +4045,7 @@ export const arr = [
     },
     dialling_code: '+678',
     isoCode: '548',
+    name_ar: 'فانواتو',
   },
   {
     name: 'Venezuela (Bolivarian Republic of)',
@@ -3890,6 +4063,7 @@ export const arr = [
     },
     dialling_code: '+58',
     isoCode: '862',
+    name_ar: 'فنزويلا (جمهورية - البوليفارية)',
   },
   {
     name: 'Viet Nam',
@@ -3907,6 +4081,7 @@ export const arr = [
     },
     dialling_code: '+84',
     isoCode: '704',
+    name_ar: 'فيتنام',
   },
   {
     name: 'Wallis and Futuna',
@@ -3924,23 +4099,7 @@ export const arr = [
     },
     dialling_code: '+681',
     isoCode: '876',
-  },
-  {
-    name: 'Wallis and Futuna',
-    code: 'WF',
-    capital: 'Mata-Utu',
-    region: 'OC',
-    currency: {
-      code: 'XPF',
-      name: 'CFP franc',
-      symbol: 'Fr',
-    },
-    language: {
-      code: 'fr',
-      name: 'French',
-    },
-    dialling_code: '+681',
-    isoCode: '876',
+    name_ar: 'والس وفوتونا',
   },
   {
     name: 'Yemen',
@@ -3958,6 +4117,7 @@ export const arr = [
     },
     dialling_code: '+967',
     isoCode: '887',
+    name_ar: 'اليمن',
   },
   {
     name: 'Zambia',
@@ -3975,6 +4135,7 @@ export const arr = [
     },
     dialling_code: '+260',
     isoCode: '894',
+    name_ar: 'زامبيا',
   },
   {
     name: 'Zimbabwe',
@@ -3994,8 +4155,10 @@ export const arr = [
     },
     dialling_code: '+263',
     isoCode: '716',
+    name_ar: 'زيمبابوي',
   },
 ];
+
 export const obj = {
   AF: {
     name: 'Afghanistan',
@@ -4013,6 +4176,7 @@ export const obj = {
     },
     dialling_code: '+93',
     isoCode: '004',
+    name_ar: 'أفغانستان',
   },
   AL: {
     name: 'Albania',
@@ -4030,6 +4194,7 @@ export const obj = {
     },
     dialling_code: '+355',
     isoCode: '008',
+    name_ar: 'ألبانيا',
   },
   DZ: {
     name: 'Algeria',
@@ -4047,6 +4212,7 @@ export const obj = {
     },
     dialling_code: '+213',
     isoCode: '012',
+    name_ar: 'الجزائر',
   },
   AS: {
     name: 'American Samoa',
@@ -4064,6 +4230,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '016',
+    name_ar: 'ساموا الأمريكية',
   },
   AD: {
     name: 'Andorra',
@@ -4081,6 +4248,7 @@ export const obj = {
     },
     dialling_code: '+376',
     isoCode: '020',
+    name_ar: 'أندورا',
   },
   AO: {
     name: 'Angola',
@@ -4098,6 +4266,7 @@ export const obj = {
     },
     dialling_code: '+244',
     isoCode: '024',
+    name_ar: 'أنغولا',
   },
   AI: {
     name: 'Anguilla',
@@ -4113,8 +4282,9 @@ export const obj = {
       code: 'en',
       name: 'English',
     },
-    dialling_code: '+43',
+    dialling_code: '+443',
     isoCode: '660',
+    name_ar: 'أنغيلا',
   },
   AG: {
     name: 'Antigua and Barbuda',
@@ -4132,6 +4302,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '028',
+    name_ar: 'أنتيغوا وبربودا',
   },
   AR: {
     name: 'Argentina',
@@ -4149,6 +4320,7 @@ export const obj = {
     },
     dialling_code: '+54',
     isoCode: '032',
+    name_ar: 'الأرجنتين',
   },
   AM: {
     name: 'Armenia',
@@ -4166,6 +4338,7 @@ export const obj = {
     },
     dialling_code: '+374',
     isoCode: '051',
+    name_ar: 'أرمينيا',
   },
   AW: {
     name: 'Aruba',
@@ -4183,6 +4356,7 @@ export const obj = {
     },
     dialling_code: '+297',
     isoCode: '533',
+    name_ar: 'أروبا',
   },
   AU: {
     name: 'Australia',
@@ -4200,6 +4374,7 @@ export const obj = {
     },
     dialling_code: '+61',
     isoCode: '036',
+    name_ar: 'أستراليا',
   },
   AZ: {
     name: 'Azerbaijan',
@@ -4217,6 +4392,7 @@ export const obj = {
     },
     dialling_code: '+994',
     isoCode: '031',
+    name_ar: 'أذربيجان',
   },
   BS: {
     name: 'Bahamas',
@@ -4234,6 +4410,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '044',
+    name_ar: 'جزر باهاما',
   },
   BH: {
     name: 'Bahrain',
@@ -4251,6 +4428,7 @@ export const obj = {
     },
     dialling_code: '+973',
     isoCode: '048',
+    name_ar: 'البحرين',
   },
   BD: {
     name: 'Bangladesh',
@@ -4268,6 +4446,7 @@ export const obj = {
     },
     dialling_code: '+880',
     isoCode: '050',
+    name_ar: 'بنغلاديش',
   },
   BB: {
     name: 'Barbados',
@@ -4285,6 +4464,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '052',
+    name_ar: 'بربادوس',
   },
   BY: {
     name: 'Belarus',
@@ -4302,6 +4482,7 @@ export const obj = {
     },
     dialling_code: '+375',
     isoCode: '112',
+    name_ar: 'بيلاروسيا',
   },
   BE: {
     name: 'Belgium',
@@ -4319,6 +4500,7 @@ export const obj = {
     },
     dialling_code: '+32',
     isoCode: '056',
+    name_ar: 'بلجيكا',
   },
   BZ: {
     name: 'Belize',
@@ -4336,6 +4518,7 @@ export const obj = {
     },
     dialling_code: '+501',
     isoCode: '084',
+    name_ar: 'بليز',
   },
   BJ: {
     name: 'Benin',
@@ -4353,6 +4536,7 @@ export const obj = {
     },
     dialling_code: '+229',
     isoCode: '204',
+    name_ar: 'بنين',
   },
   BM: {
     name: 'Bermuda',
@@ -4370,6 +4554,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '060',
+    name_ar: 'برمودا',
   },
   BT: {
     name: 'Bhutan',
@@ -4387,6 +4572,7 @@ export const obj = {
     },
     dialling_code: '+975',
     isoCode: '064',
+    name_ar: 'بوتان',
   },
   BO: {
     name: 'Bolivia (Plurinational State of)',
@@ -4404,6 +4590,7 @@ export const obj = {
     },
     dialling_code: '+591',
     isoCode: '068',
+    name_ar: 'بوليفيا (دولة - المتعددة القوميات)',
   },
   BA: {
     name: 'Bosnia and Herzegovina',
@@ -4421,6 +4608,7 @@ export const obj = {
     },
     dialling_code: '+387',
     isoCode: '070',
+    name_ar: 'البوسنة والهرسك',
   },
   BW: {
     name: 'Botswana',
@@ -4438,6 +4626,7 @@ export const obj = {
     },
     dialling_code: '+267',
     isoCode: '072',
+    name_ar: 'بوتسوانا',
   },
   BR: {
     name: 'Brazil',
@@ -4455,6 +4644,7 @@ export const obj = {
     },
     dialling_code: '+55',
     isoCode: '076',
+    name_ar: 'البرازيل',
   },
   IO: {
     name: 'British Indian Ocean Territory',
@@ -4472,6 +4662,7 @@ export const obj = {
     },
     dialling_code: '+246',
     isoCode: '086',
+    name_ar: 'الإقليم البريطاني في المحيط الهندي',
   },
   VG: {
     name: 'Virgin Islands (British)',
@@ -4489,6 +4680,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '092',
+    name_ar: 'جزر العذراء (البريطانية)',
   },
   VI: {
     name: 'Virgin Islands (U.S.)',
@@ -4506,6 +4698,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '850',
+    name_ar: 'جزر العذراء (الولايات المتحدة)',
   },
   BN: {
     name: 'Brunei Darussalam',
@@ -4523,6 +4716,7 @@ export const obj = {
     },
     dialling_code: '+673',
     isoCode: '096',
+    name_ar: 'بروناي دار السلام',
   },
   BG: {
     name: 'Bulgaria',
@@ -4540,6 +4734,7 @@ export const obj = {
     },
     dialling_code: '+359',
     isoCode: '100',
+    name_ar: 'بلغاريا',
   },
   BF: {
     name: 'Burkina Faso',
@@ -4557,6 +4752,7 @@ export const obj = {
     },
     dialling_code: '+226',
     isoCode: '854',
+    name_ar: 'بوركينا فاسو',
   },
   BI: {
     name: 'Burundi',
@@ -4574,6 +4770,7 @@ export const obj = {
     },
     dialling_code: '+257',
     isoCode: '108',
+    name_ar: 'بوروندي',
   },
   KH: {
     name: 'Cambodia',
@@ -4591,6 +4788,7 @@ export const obj = {
     },
     dialling_code: '+855',
     isoCode: '116',
+    name_ar: 'كمبوديا',
   },
   CM: {
     name: 'Cameroon',
@@ -4608,6 +4806,7 @@ export const obj = {
     },
     dialling_code: '+237',
     isoCode: '120',
+    name_ar: 'الكاميرون',
   },
   CA: {
     name: 'Canada',
@@ -4625,6 +4824,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '124',
+    name_ar: 'كندا',
   },
   CV: {
     name: 'Cabo Verde',
@@ -4644,6 +4844,7 @@ export const obj = {
     },
     dialling_code: '+238',
     isoCode: '132',
+    name_ar: 'كابو فيردي',
   },
   KY: {
     name: 'Cayman Islands',
@@ -4662,6 +4863,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '136',
+    name_ar: 'جزر كايمان',
   },
   CF: {
     name: 'Central African Republic',
@@ -4679,6 +4881,7 @@ export const obj = {
     },
     dialling_code: '+236',
     isoCode: '140',
+    name_ar: 'جمهورية أفريقيا الوسطى',
   },
   CL: {
     name: 'Chile',
@@ -4698,6 +4901,7 @@ export const obj = {
     },
     dialling_code: '+56',
     isoCode: '152',
+    name_ar: 'تشيلي',
   },
   CN: {
     name: 'China',
@@ -4715,6 +4919,7 @@ export const obj = {
     },
     dialling_code: '+86',
     isoCode: '156',
+    name_ar: 'الصين',
   },
   CO: {
     name: 'Colombia',
@@ -4732,6 +4937,7 @@ export const obj = {
     },
     dialling_code: '+57',
     isoCode: '170',
+    name_ar: 'كولومبيا',
   },
   KM: {
     name: 'Comoros',
@@ -4749,6 +4955,7 @@ export const obj = {
     },
     dialling_code: '+269',
     isoCode: '174',
+    name_ar: 'جزر القمر',
   },
   CG: {
     name: 'Congo',
@@ -4766,6 +4973,7 @@ export const obj = {
     },
     dialling_code: '+242',
     isoCode: '178',
+    name_ar: 'الكونغو',
   },
   CD: {
     name: 'Congo (Democratic Republic of the)',
@@ -4783,6 +4991,7 @@ export const obj = {
     },
     dialling_code: '+243',
     isoCode: '180',
+    name_ar: 'الكونغو (جمهورية الكونغو الديمقراطية)',
   },
   CK: {
     name: 'Cook Islands',
@@ -4800,6 +5009,7 @@ export const obj = {
     },
     dialling_code: '+682',
     isoCode: '184',
+    name_ar: 'جزر كوك',
   },
   CR: {
     name: 'Costa Rica',
@@ -4817,6 +5027,7 @@ export const obj = {
     },
     dialling_code: '+506',
     isoCode: '188',
+    name_ar: 'كوستاريكا',
   },
   HR: {
     name: 'Croatia',
@@ -4834,6 +5045,7 @@ export const obj = {
     },
     dialling_code: '+385',
     isoCode: '191',
+    name_ar: 'كرواتيا',
   },
   CU: {
     name: 'Cuba',
@@ -4851,6 +5063,7 @@ export const obj = {
     },
     dialling_code: '+53',
     isoCode: '192',
+    name_ar: 'كوبا',
   },
   CY: {
     name: 'Cyprus',
@@ -4868,6 +5081,7 @@ export const obj = {
     },
     dialling_code: '+357',
     isoCode: '196',
+    name_ar: 'قبرص',
   },
   CZ: {
     name: 'Czech Republic',
@@ -4885,6 +5099,7 @@ export const obj = {
     },
     dialling_code: '+420',
     isoCode: '203',
+    name_ar: 'جمهورية التشيك',
   },
   DK: {
     name: 'Denmark',
@@ -4902,6 +5117,7 @@ export const obj = {
     },
     dialling_code: '+45',
     isoCode: '208',
+    name_ar: 'الدانمرك',
   },
   DJ: {
     name: 'Djibouti',
@@ -4919,6 +5135,7 @@ export const obj = {
     },
     dialling_code: '+253',
     isoCode: '262',
+    name_ar: 'جيبوتي',
   },
   DM: {
     name: 'Dominica',
@@ -4936,6 +5153,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '212',
+    name_ar: 'دومينيكا',
   },
   DO: {
     name: 'Dominican Republic',
@@ -4953,6 +5171,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '214',
+    name_ar: 'جمهورية الدومينيكان',
   },
   EC: {
     name: 'Ecuador',
@@ -4970,6 +5189,7 @@ export const obj = {
     },
     dialling_code: '+593',
     isoCode: '218',
+    name_ar: 'الإكوادور',
   },
   EG: {
     name: 'Egypt',
@@ -4987,6 +5207,7 @@ export const obj = {
     },
     dialling_code: '+20',
     isoCode: '818',
+    name_ar: 'مصر',
   },
   SV: {
     name: 'El Salvador',
@@ -5004,6 +5225,7 @@ export const obj = {
     },
     dialling_code: '+503',
     isoCode: '222',
+    name_ar: 'السلفادور',
   },
   GQ: {
     name: 'Equatorial Guinea',
@@ -5023,6 +5245,7 @@ export const obj = {
     },
     dialling_code: '+240',
     isoCode: '226',
+    name_ar: 'غينيا الاستوائية',
   },
   ER: {
     name: 'Eritrea',
@@ -5040,6 +5263,7 @@ export const obj = {
     },
     dialling_code: '+291',
     isoCode: '232',
+    name_ar: 'إريتريا',
   },
   EE: {
     name: 'Estonia',
@@ -5057,6 +5281,7 @@ export const obj = {
     },
     dialling_code: '+372',
     isoCode: '233',
+    name_ar: 'إستونيا',
   },
   ET: {
     name: 'Ethiopia',
@@ -5074,6 +5299,7 @@ export const obj = {
     },
     dialling_code: '+251',
     isoCode: '231',
+    name_ar: 'إثيوبيا',
   },
   FK: {
     name: 'Falkland Islands (Malvinas)',
@@ -5091,6 +5317,7 @@ export const obj = {
     },
     dialling_code: '+500',
     isoCode: '238',
+    name_ar: 'جزر فوكلاند (مالفيناس)',
   },
   FO: {
     name: 'Faroe Islands',
@@ -5108,6 +5335,7 @@ export const obj = {
     },
     dialling_code: '+298',
     isoCode: '234',
+    name_ar: 'جزر فارو',
   },
   FJ: {
     name: 'Fiji',
@@ -5125,6 +5353,7 @@ export const obj = {
     },
     dialling_code: '+679',
     isoCode: '242',
+    name_ar: 'فيجي',
   },
   FI: {
     name: 'Finland',
@@ -5144,6 +5373,7 @@ export const obj = {
     },
     dialling_code: '+358',
     isoCode: '246',
+    name_ar: 'فنلندا',
   },
   FR: {
     name: 'France',
@@ -5162,6 +5392,7 @@ export const obj = {
     },
     dialling_code: '+33',
     isoCode: '250',
+    name_ar: 'فرنسا',
   },
   GF: {
     name: 'French Guiana',
@@ -5179,6 +5410,7 @@ export const obj = {
     },
     dialling_code: '+594',
     isoCode: '254',
+    name_ar: 'غينيا الفرنسية',
   },
   PF: {
     name: 'French Polynesia',
@@ -5196,6 +5428,7 @@ export const obj = {
     },
     dialling_code: '+689',
     isoCode: '258',
+    name_ar: 'بولينيزيا الفرنسية',
   },
   GA: {
     name: 'Gabon',
@@ -5213,6 +5446,7 @@ export const obj = {
     },
     dialling_code: '+241',
     isoCode: '266',
+    name_ar: 'الغابون',
   },
   GM: {
     name: 'Gambia',
@@ -5230,6 +5464,7 @@ export const obj = {
     },
     dialling_code: '+220',
     isoCode: '270',
+    name_ar: 'غامبيا',
   },
   GE: {
     name: 'Georgia',
@@ -5247,6 +5482,7 @@ export const obj = {
     },
     dialling_code: '+995',
     isoCode: '268',
+    name_ar: 'جورجيا',
   },
   DE: {
     name: 'Germany',
@@ -5264,6 +5500,7 @@ export const obj = {
     },
     dialling_code: '+49',
     isoCode: '276',
+    name_ar: 'ألمانيا',
   },
   GH: {
     name: 'Ghana',
@@ -5281,6 +5518,7 @@ export const obj = {
     },
     dialling_code: '+233',
     isoCode: '288',
+    name_ar: 'غانا',
   },
   GI: {
     name: 'Gibraltar',
@@ -5298,6 +5536,7 @@ export const obj = {
     },
     dialling_code: '+350',
     isoCode: '292',
+    name_ar: 'جبل طارق',
   },
   GR: {
     name: 'Greece',
@@ -5315,6 +5554,7 @@ export const obj = {
     },
     dialling_code: '+30',
     isoCode: '300',
+    name_ar: 'اليونان',
   },
   GL: {
     name: 'Greenland',
@@ -5332,6 +5572,7 @@ export const obj = {
     },
     dialling_code: '+299',
     isoCode: '304',
+    name_ar: 'جرينلاند',
   },
   GD: {
     name: 'Grenada',
@@ -5349,6 +5590,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '308',
+    name_ar: 'غرينادا',
   },
   GP: {
     name: 'Guadeloupe',
@@ -5366,6 +5608,7 @@ export const obj = {
     },
     dialling_code: '+590',
     isoCode: '312',
+    name_ar: 'جوادلوب',
   },
   GU: {
     name: 'Guam',
@@ -5383,6 +5626,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '316',
+    name_ar: 'غوام',
   },
   GT: {
     name: 'Guatemala',
@@ -5400,6 +5644,7 @@ export const obj = {
     },
     dialling_code: '+502',
     isoCode: '320',
+    name_ar: 'غواتيمالا',
   },
   GN: {
     name: 'Guinea',
@@ -5417,6 +5662,7 @@ export const obj = {
     },
     dialling_code: '+224',
     isoCode: '324',
+    name_ar: 'غينيا',
   },
   GW: {
     name: 'Guinea-Bissau',
@@ -5434,6 +5680,7 @@ export const obj = {
     },
     dialling_code: '+245',
     isoCode: '624',
+    name_ar: 'غينيا بيساو',
   },
   GY: {
     name: 'Guyana',
@@ -5451,6 +5698,7 @@ export const obj = {
     },
     dialling_code: '+592',
     isoCode: '328',
+    name_ar: 'غيانا',
   },
   HT: {
     name: 'Haiti',
@@ -5468,6 +5716,7 @@ export const obj = {
     },
     dialling_code: '+509',
     isoCode: '332',
+    name_ar: 'هايتي',
   },
   VA: {
     name: 'Holy See',
@@ -5485,6 +5734,7 @@ export const obj = {
     },
     dialling_code: '+39',
     isoCode: '336',
+    name_ar: 'الكرسي الرسولي',
   },
   HN: {
     name: 'Honduras',
@@ -5502,6 +5752,7 @@ export const obj = {
     },
     dialling_code: '+504',
     isoCode: '340',
+    name_ar: 'هندوراس',
   },
   HK: {
     name: 'Hong Kong',
@@ -5519,6 +5770,7 @@ export const obj = {
     },
     dialling_code: '+852',
     isoCode: '344',
+    name_ar: 'هونغ كونغ',
   },
   HU: {
     name: 'Hungary',
@@ -5536,6 +5788,7 @@ export const obj = {
     },
     dialling_code: '+36',
     isoCode: '348',
+    name_ar: 'المجر',
   },
   IS: {
     name: 'Iceland',
@@ -5553,6 +5806,7 @@ export const obj = {
     },
     dialling_code: '+354',
     isoCode: '352',
+    name_ar: 'آيسلندا',
   },
   IN: {
     name: 'India',
@@ -5570,6 +5824,7 @@ export const obj = {
     },
     dialling_code: '+91',
     isoCode: '356',
+    name_ar: 'الهند',
   },
   ID: {
     name: 'Indonesia',
@@ -5587,6 +5842,7 @@ export const obj = {
     },
     dialling_code: '+62',
     isoCode: '360',
+    name_ar: 'إندونيسيا',
   },
   CI: {
     name: "Côte d'Ivoire",
@@ -5604,6 +5860,7 @@ export const obj = {
     },
     dialling_code: '+225',
     isoCode: '384',
+    name_ar: 'كوت ديفوار',
   },
   IR: {
     name: 'Iran (Islamic Republic of)',
@@ -5621,6 +5878,7 @@ export const obj = {
     },
     dialling_code: '+98',
     isoCode: '364',
+    name_ar: 'إيران (جمهورية - الإسلامية)',
   },
   IQ: {
     name: 'Iraq',
@@ -5638,6 +5896,7 @@ export const obj = {
     },
     dialling_code: '+964',
     isoCode: '368',
+    name_ar: 'العراق',
   },
   IE: {
     name: 'Ireland',
@@ -5655,6 +5914,7 @@ export const obj = {
     },
     dialling_code: '+353',
     isoCode: '372',
+    name_ar: 'أيرلندا',
   },
   IL: {
     name: 'Israel',
@@ -5672,6 +5932,7 @@ export const obj = {
     },
     dialling_code: '+972',
     isoCode: '376',
+    name_ar: 'إسرائيل',
   },
   IT: {
     name: 'Italy',
@@ -5689,6 +5950,7 @@ export const obj = {
     },
     dialling_code: '+39',
     isoCode: '380',
+    name_ar: 'إيطاليا',
   },
   JM: {
     name: 'Jamaica',
@@ -5706,6 +5968,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '388',
+    name_ar: 'جامايكا',
   },
   JP: {
     name: 'Japan',
@@ -5723,6 +5986,7 @@ export const obj = {
     },
     dialling_code: '+81',
     isoCode: '392',
+    name_ar: 'اليابان',
   },
   JO: {
     name: 'Jordan',
@@ -5740,6 +6004,7 @@ export const obj = {
     },
     dialling_code: '+962',
     isoCode: '400',
+    name_ar: 'الأردن',
   },
   KZ: {
     name: 'Kazakhstan',
@@ -5757,6 +6022,7 @@ export const obj = {
     },
     dialling_code: '+7',
     isoCode: '398',
+    name_ar: 'كازاخستان',
   },
   KE: {
     name: 'Kenya',
@@ -5774,6 +6040,7 @@ export const obj = {
     },
     dialling_code: '+254',
     isoCode: '404',
+    name_ar: 'كينيا',
   },
   KI: {
     name: 'Kiribati',
@@ -5791,6 +6058,7 @@ export const obj = {
     },
     dialling_code: '+686',
     isoCode: '296',
+    name_ar: 'كيريباس',
   },
   KW: {
     name: 'Kuwait',
@@ -5808,6 +6076,7 @@ export const obj = {
     },
     dialling_code: '+965',
     isoCode: '414',
+    name_ar: 'الكويت',
   },
   KG: {
     name: 'Kyrgyzstan',
@@ -5825,6 +6094,7 @@ export const obj = {
     },
     dialling_code: '+996',
     isoCode: '417',
+    name_ar: 'قيرغيزستان',
   },
   LA: {
     name: "Lao People's Democratic Republic",
@@ -5842,6 +6112,7 @@ export const obj = {
     },
     dialling_code: '+856',
     isoCode: '418',
+    name_ar: 'لاوس (جمهورية - الديمقراطية الشعبية)',
   },
   LV: {
     name: 'Latvia',
@@ -5859,6 +6130,7 @@ export const obj = {
     },
     dialling_code: '+371',
     isoCode: '428',
+    name_ar: 'لاتفيا',
   },
   LB: {
     name: 'Lebanon',
@@ -5876,6 +6148,7 @@ export const obj = {
     },
     dialling_code: '+961',
     isoCode: '422',
+    name_ar: 'لبنان',
   },
   LS: {
     name: 'Lesotho',
@@ -5893,6 +6166,7 @@ export const obj = {
     },
     dialling_code: '+266',
     isoCode: '426',
+    name_ar: 'ليسوتو',
   },
   LR: {
     name: 'Liberia',
@@ -5910,6 +6184,7 @@ export const obj = {
     },
     dialling_code: '+231',
     isoCode: '430',
+    name_ar: 'ليبريا',
   },
   LY: {
     name: 'Libya',
@@ -5927,6 +6202,7 @@ export const obj = {
     },
     dialling_code: '+218',
     isoCode: '434',
+    name_ar: 'ليبيا',
   },
   LI: {
     name: 'Liechtenstein',
@@ -5944,6 +6220,7 @@ export const obj = {
     },
     dialling_code: '+423',
     isoCode: '438',
+    name_ar: 'ليختنشتاين',
   },
   LT: {
     name: 'Lithuania',
@@ -5961,6 +6238,7 @@ export const obj = {
     },
     dialling_code: '+370',
     isoCode: '440',
+    name_ar: 'ليتوانيا',
   },
   LU: {
     name: 'Luxembourg',
@@ -5978,6 +6256,7 @@ export const obj = {
     },
     dialling_code: '+352',
     isoCode: '442',
+    name_ar: 'لوكسمبورغ',
   },
   MO: {
     name: 'Macao',
@@ -5995,6 +6274,7 @@ export const obj = {
     },
     dialling_code: '+853',
     isoCode: '446',
+    name_ar: 'ماكاو',
   },
   MK: {
     name: 'Macedonia (the former Yugoslav Republic of)',
@@ -6012,6 +6292,7 @@ export const obj = {
     },
     dialling_code: '+389',
     isoCode: '807',
+    name_ar: 'مقدونيا (جمهورية - اليوغوسلافية السابقة)',
   },
   MG: {
     name: 'Madagascar',
@@ -6029,6 +6310,7 @@ export const obj = {
     },
     dialling_code: '+261',
     isoCode: '450',
+    name_ar: 'مدغشقر',
   },
   MW: {
     name: 'Malawi',
@@ -6046,6 +6328,7 @@ export const obj = {
     },
     dialling_code: '+265',
     isoCode: '454',
+    name_ar: 'مالاوي',
   },
   MY: {
     name: 'Malaysia',
@@ -6063,6 +6346,7 @@ export const obj = {
     },
     dialling_code: '+60',
     isoCode: '458',
+    name_ar: 'ماليزيا',
   },
   MV: {
     name: 'Maldives',
@@ -6080,6 +6364,7 @@ export const obj = {
     },
     dialling_code: '+960',
     isoCode: '462',
+    name_ar: 'جزر المالديف',
   },
   ML: {
     name: 'Mali',
@@ -6097,6 +6382,7 @@ export const obj = {
     },
     dialling_code: '+223',
     isoCode: '466',
+    name_ar: 'مالي',
   },
   MT: {
     name: 'Malta',
@@ -6114,6 +6400,7 @@ export const obj = {
     },
     dialling_code: '+356',
     isoCode: '470',
+    name_ar: 'مالطا',
   },
   MH: {
     name: 'Marshall Islands',
@@ -6131,6 +6418,7 @@ export const obj = {
     },
     dialling_code: '+692',
     isoCode: '584',
+    name_ar: 'جزر مارشال',
   },
   MQ: {
     name: 'Martinique',
@@ -6148,6 +6436,7 @@ export const obj = {
     },
     dialling_code: '+596',
     isoCode: '474',
+    name_ar: 'مارتينيك',
   },
   MR: {
     name: 'Mauritania',
@@ -6165,6 +6454,7 @@ export const obj = {
     },
     dialling_code: '+222',
     isoCode: '478',
+    name_ar: 'موريتانيا',
   },
   MU: {
     name: 'Mauritius',
@@ -6182,6 +6472,7 @@ export const obj = {
     },
     dialling_code: '+230',
     isoCode: '480',
+    name_ar: 'موريشيوس',
   },
   YT: {
     name: 'Mayotte',
@@ -6199,6 +6490,7 @@ export const obj = {
     },
     dialling_code: '+262',
     isoCode: '175',
+    name_ar: 'مايوت',
   },
   MX: {
     name: 'Mexico',
@@ -6216,6 +6508,7 @@ export const obj = {
     },
     dialling_code: '+52',
     isoCode: '484',
+    name_ar: 'المكسيك',
   },
   FM: {
     name: 'Micronesia (Federated States of)',
@@ -6233,6 +6526,7 @@ export const obj = {
     },
     dialling_code: '+691',
     isoCode: '583',
+    name_ar: 'ميكرونيزيا (ولايات - المتحدة)',
   },
   MD: {
     name: 'Moldova (Republic of)',
@@ -6250,6 +6544,7 @@ export const obj = {
     },
     dialling_code: '+373',
     isoCode: '498',
+    name_ar: 'مولدوفا (جمهورية)',
   },
   MC: {
     name: 'Monaco',
@@ -6267,6 +6562,7 @@ export const obj = {
     },
     dialling_code: '+377',
     isoCode: '492',
+    name_ar: 'موناكو',
   },
   MN: {
     name: 'Mongolia',
@@ -6284,6 +6580,7 @@ export const obj = {
     },
     dialling_code: '+976',
     isoCode: '496',
+    name_ar: 'منغوليا',
   },
   ME: {
     name: 'Montenegro',
@@ -6301,6 +6598,7 @@ export const obj = {
     },
     dialling_code: '+382',
     isoCode: '499',
+    name_ar: 'الجبل الأسود',
   },
   MS: {
     name: 'Montserrat',
@@ -6318,6 +6616,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '500',
+    name_ar: 'مونتسرات',
   },
   MA: {
     name: 'Morocco',
@@ -6335,6 +6634,7 @@ export const obj = {
     },
     dialling_code: '+212',
     isoCode: '504',
+    name_ar: 'المغرب',
   },
   MZ: {
     name: 'Mozambique',
@@ -6352,6 +6652,7 @@ export const obj = {
     },
     dialling_code: '+258',
     isoCode: '508',
+    name_ar: 'موزمبيق',
   },
   MM: {
     name: 'Myanmar',
@@ -6369,6 +6670,7 @@ export const obj = {
     },
     dialling_code: '+95',
     isoCode: '104',
+    name_ar: 'ميانمار',
   },
   NA: {
     name: 'Namibia',
@@ -6386,6 +6688,7 @@ export const obj = {
     },
     dialling_code: '+264',
     isoCode: '516',
+    name_ar: 'ناميبيا',
   },
   NR: {
     name: 'Nauru',
@@ -6403,6 +6706,7 @@ export const obj = {
     },
     dialling_code: '+674',
     isoCode: '520',
+    name_ar: 'ناورو',
   },
   NP: {
     name: 'Nepal',
@@ -6420,6 +6724,7 @@ export const obj = {
     },
     dialling_code: '+977',
     isoCode: '524',
+    name_ar: 'نيبال',
   },
   NL: {
     name: 'Netherlands',
@@ -6437,6 +6742,7 @@ export const obj = {
     },
     dialling_code: '+31',
     isoCode: '528',
+    name_ar: 'هولندا',
   },
   NC: {
     name: 'New Caledonia',
@@ -6454,6 +6760,7 @@ export const obj = {
     },
     dialling_code: '+687',
     isoCode: '540',
+    name_ar: 'كاليدونيا الجديدة',
   },
   NZ: {
     name: 'New Zealand',
@@ -6471,6 +6778,7 @@ export const obj = {
     },
     dialling_code: '+64',
     isoCode: '554',
+    name_ar: 'نيوزيلندا',
   },
   NI: {
     name: 'Nicaragua',
@@ -6488,6 +6796,7 @@ export const obj = {
     },
     dialling_code: '+505',
     isoCode: '558',
+    name_ar: 'نيكاراغوا',
   },
   NE: {
     name: 'Niger',
@@ -6505,6 +6814,7 @@ export const obj = {
     },
     dialling_code: '+227',
     isoCode: '562',
+    name_ar: 'النيجر',
   },
   NG: {
     name: 'Nigeria',
@@ -6522,6 +6832,7 @@ export const obj = {
     },
     dialling_code: '+234',
     isoCode: '566',
+    name_ar: 'نيجيريا',
   },
   NU: {
     name: 'Niue',
@@ -6539,6 +6850,7 @@ export const obj = {
     },
     dialling_code: '+683',
     isoCode: '570',
+    name_ar: 'نيوي',
   },
   NF: {
     name: 'Norfolk Island',
@@ -6556,6 +6868,7 @@ export const obj = {
     },
     dialling_code: '+672',
     isoCode: '574',
+    name_ar: 'جزيرة نورفولك',
   },
   KP: {
     name: "Korea (Democratic People's Republic of)",
@@ -6573,6 +6886,7 @@ export const obj = {
     },
     dialling_code: '+850',
     isoCode: '408',
+    name_ar: 'كوريا (جمهورية - الديمقراطية الشعبية)',
   },
   MP: {
     name: 'Northern Mariana Islands',
@@ -6590,6 +6904,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '580',
+    name_ar: 'جزر ماريانا الشمالية',
   },
   NO: {
     name: 'Norway',
@@ -6607,6 +6922,7 @@ export const obj = {
     },
     dialling_code: '+47',
     isoCode: '578',
+    name_ar: 'النرويج',
   },
   OM: {
     name: 'Oman',
@@ -6624,6 +6940,7 @@ export const obj = {
     },
     dialling_code: '+968',
     isoCode: '512',
+    name_ar: 'عمان',
   },
   PK: {
     name: 'Pakistan',
@@ -6641,6 +6958,7 @@ export const obj = {
     },
     dialling_code: '+92',
     isoCode: '586',
+    name_ar: 'باكستان',
   },
   PW: {
     name: 'Palau',
@@ -6658,6 +6976,7 @@ export const obj = {
     },
     dialling_code: '+680',
     isoCode: '585',
+    name_ar: 'بالاو',
   },
   PS: {
     name: 'Palestine, State of',
@@ -6675,6 +6994,7 @@ export const obj = {
     },
     dialling_code: '+970',
     isoCode: '275',
+    name_ar: 'فلسطين',
   },
   PA: {
     name: 'Panama',
@@ -6692,6 +7012,7 @@ export const obj = {
     },
     dialling_code: '+507',
     isoCode: '591',
+    name_ar: 'بنما',
   },
   PG: {
     name: 'Papua New Guinea',
@@ -6709,6 +7030,7 @@ export const obj = {
     },
     dialling_code: '+675',
     isoCode: '598',
+    name_ar: 'بابوا غينيا الجديدة',
   },
   PY: {
     name: 'Paraguay',
@@ -6726,6 +7048,7 @@ export const obj = {
     },
     dialling_code: '+595',
     isoCode: '600',
+    name_ar: 'باراغواي',
   },
   PE: {
     name: 'Peru',
@@ -6743,6 +7066,7 @@ export const obj = {
     },
     dialling_code: '+51',
     isoCode: '604',
+    name_ar: 'بيرو',
   },
   PH: {
     name: 'Philippines',
@@ -6760,6 +7084,7 @@ export const obj = {
     },
     dialling_code: '+63',
     isoCode: '608',
+    name_ar: 'الفلبين',
   },
   PL: {
     name: 'Poland',
@@ -6777,6 +7102,7 @@ export const obj = {
     },
     dialling_code: '+48',
     isoCode: '616',
+    name_ar: 'بولندا',
   },
   PT: {
     name: 'Portugal',
@@ -6794,6 +7120,7 @@ export const obj = {
     },
     dialling_code: '+351',
     isoCode: '620',
+    name_ar: 'البرتغال',
   },
   PR: {
     name: 'Puerto Rico',
@@ -6811,6 +7138,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '630',
+    name_ar: 'بورتوريكو',
   },
   QA: {
     name: 'Qatar',
@@ -6828,6 +7156,7 @@ export const obj = {
     },
     dialling_code: '+974',
     isoCode: '634',
+    name_ar: 'قطر',
   },
   XK: {
     name: 'Republic of Kosovo',
@@ -6845,6 +7174,7 @@ export const obj = {
     },
     dialling_code: '+381',
     isoCode: '383',
+    name_ar: 'جمهورية كوسوفو',
   },
   RE: {
     name: 'Réunion',
@@ -6862,6 +7192,7 @@ export const obj = {
     },
     dialling_code: '+262',
     isoCode: '638',
+    name_ar: 'ريونيون',
   },
   RO: {
     name: 'Romania',
@@ -6879,6 +7210,7 @@ export const obj = {
     },
     dialling_code: '+40',
     isoCode: '642',
+    name_ar: 'رومانيا',
   },
   RU: {
     name: 'Russian Federation',
@@ -6896,6 +7228,7 @@ export const obj = {
     },
     dialling_code: '+7',
     isoCode: '643',
+    name_ar: 'الروسية الاتحادية',
   },
   RW: {
     name: 'Rwanda',
@@ -6913,6 +7246,7 @@ export const obj = {
     },
     dialling_code: '+250',
     isoCode: '646',
+    name_ar: 'رواندا',
   },
   BL: {
     name: 'Saint Barthélemy',
@@ -6930,6 +7264,7 @@ export const obj = {
     },
     dialling_code: '+590',
     isoCode: '652',
+    name_ar: 'سان بارتليمي',
   },
   SH: {
     name: 'Saint Helena, Ascension and Tristan da Cunha',
@@ -6947,6 +7282,7 @@ export const obj = {
     },
     dialling_code: '+290',
     isoCode: '654',
+    name_ar: 'سانت هيلينا وأسينشن وتريستان دا كونها',
   },
   KN: {
     name: 'Saint Kitts and Nevis',
@@ -6964,6 +7300,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '659',
+    name_ar: 'سانت كيتس ونيفيس',
   },
   LC: {
     name: 'Saint Lucia',
@@ -6981,6 +7318,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '662',
+    name_ar: 'سانت لوسيا',
   },
   MF: {
     name: 'Saint Martin (French part)',
@@ -6998,6 +7336,7 @@ export const obj = {
     },
     dialling_code: '+590',
     isoCode: '663',
+    name_ar: 'سانت مارتن (الجزء الفرنسي)',
   },
   PM: {
     name: 'Saint Pierre and Miquelon',
@@ -7015,6 +7354,7 @@ export const obj = {
     },
     dialling_code: '+508',
     isoCode: '666',
+    name_ar: 'سانت بيير وميكولون',
   },
   VC: {
     name: 'Saint Vincent and the Grenadines',
@@ -7032,6 +7372,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '670',
+    name_ar: 'سانت فينسنت وجزر غرينادين',
   },
   WS: {
     name: 'Samoa',
@@ -7049,6 +7390,7 @@ export const obj = {
     },
     dialling_code: '+685',
     isoCode: '882',
+    name_ar: 'ساموا',
   },
   SM: {
     name: 'San Marino',
@@ -7066,6 +7408,7 @@ export const obj = {
     },
     dialling_code: '+378',
     isoCode: '674',
+    name_ar: 'سان مارينو',
   },
   ST: {
     name: 'Sao Tome and Principe',
@@ -7083,6 +7426,7 @@ export const obj = {
     },
     dialling_code: '+239',
     isoCode: '678',
+    name_ar: 'ساو تومي وبرينسيب',
   },
   SA: {
     name: 'Saudi Arabia',
@@ -7100,6 +7444,7 @@ export const obj = {
     },
     dialling_code: '+966',
     isoCode: '682',
+    name_ar: 'المملكة العربية السعودية',
   },
   SN: {
     name: 'Senegal',
@@ -7117,6 +7462,7 @@ export const obj = {
     },
     dialling_code: '+221',
     isoCode: '686',
+    name_ar: 'السنغال',
   },
   RS: {
     name: 'Serbia',
@@ -7134,6 +7480,7 @@ export const obj = {
     },
     dialling_code: '+381',
     isoCode: '688',
+    name_ar: 'صربيا',
   },
   SC: {
     name: 'Seychelles',
@@ -7151,6 +7498,7 @@ export const obj = {
     },
     dialling_code: '+248',
     isoCode: '690',
+    name_ar: 'سيشل',
   },
   SL: {
     name: 'Sierra Leone',
@@ -7168,6 +7516,7 @@ export const obj = {
     },
     dialling_code: '+232',
     isoCode: '694',
+    name_ar: 'سيراليون',
   },
   SG: {
     name: 'Singapore',
@@ -7185,6 +7534,7 @@ export const obj = {
     },
     dialling_code: '+65',
     isoCode: '702',
+    name_ar: 'سنغافورة',
   },
   SK: {
     name: 'Slovakia',
@@ -7202,6 +7552,7 @@ export const obj = {
     },
     dialling_code: '+421',
     isoCode: '703',
+    name_ar: 'سلوفاكيا',
   },
   SI: {
     name: 'Slovenia',
@@ -7219,6 +7570,7 @@ export const obj = {
     },
     dialling_code: '+386',
     isoCode: '705',
+    name_ar: 'سلوفينيا',
   },
   SB: {
     name: 'Solomon Islands',
@@ -7236,6 +7588,7 @@ export const obj = {
     },
     dialling_code: '+677',
     isoCode: '090',
+    name_ar: 'جزر سليمان',
   },
   SO: {
     name: 'Somalia',
@@ -7253,6 +7606,7 @@ export const obj = {
     },
     dialling_code: '+252',
     isoCode: '706',
+    name_ar: 'الصومال',
   },
   ZA: {
     name: 'South Africa',
@@ -7272,6 +7626,7 @@ export const obj = {
     },
     dialling_code: '+27',
     isoCode: '710',
+    name_ar: 'جنوب أفريقيا',
   },
   KR: {
     name: 'Korea (Republic of)',
@@ -7289,6 +7644,7 @@ export const obj = {
     },
     dialling_code: '+82',
     isoCode: '410',
+    name_ar: 'كوريا (جمهورية)',
   },
   ES: {
     name: 'Spain',
@@ -7306,6 +7662,7 @@ export const obj = {
     },
     dialling_code: '+34',
     isoCode: '724',
+    name_ar: 'إسبانيا',
   },
   LK: {
     name: 'Sri Lanka',
@@ -7325,6 +7682,7 @@ export const obj = {
     },
     dialling_code: '+94',
     isoCode: '144',
+    name_ar: 'سريلانكا',
   },
   SD: {
     name: 'Sudan',
@@ -7342,6 +7700,7 @@ export const obj = {
     },
     dialling_code: '+249',
     isoCode: '729',
+    name_ar: 'السودان',
   },
   SS: {
     name: 'South Sudan',
@@ -7359,6 +7718,7 @@ export const obj = {
     },
     dialling_code: '+211',
     isoCode: '728',
+    name_ar: 'جنوب السودان',
   },
   SR: {
     name: 'Suriname',
@@ -7376,6 +7736,7 @@ export const obj = {
     },
     dialling_code: '+597',
     isoCode: '740',
+    name_ar: 'سورينام',
   },
   SZ: {
     name: 'Swaziland',
@@ -7393,6 +7754,7 @@ export const obj = {
     },
     dialling_code: '+268',
     isoCode: '748',
+    name_ar: 'إسواتيني',
   },
   SE: {
     name: 'Sweden',
@@ -7410,6 +7772,7 @@ export const obj = {
     },
     dialling_code: '+46',
     isoCode: '752',
+    name_ar: 'السويد',
   },
   CH: {
     name: 'Switzerland',
@@ -7427,6 +7790,7 @@ export const obj = {
     },
     dialling_code: '+41',
     isoCode: '756',
+    name_ar: 'سويسرا',
   },
   SY: {
     name: 'Syrian Arab Republic',
@@ -7444,6 +7808,7 @@ export const obj = {
     },
     dialling_code: '+963',
     isoCode: '760',
+    name_ar: 'الجمهورية العربية السورية',
   },
   TW: {
     name: 'Taiwan',
@@ -7461,6 +7826,7 @@ export const obj = {
     },
     dialling_code: '+886',
     isoCode: '158',
+    name_ar: 'تايوان',
   },
   TJ: {
     name: 'Tajikistan',
@@ -7478,6 +7844,7 @@ export const obj = {
     },
     dialling_code: '+992',
     isoCode: '762',
+    name_ar: 'طاجيكستان',
   },
   TZ: {
     name: 'Tanzania, United Republic of',
@@ -7495,6 +7862,7 @@ export const obj = {
     },
     dialling_code: '+255',
     isoCode: '834',
+    name_ar: 'تنزانيا (جمهورية - المتحدة)',
   },
   TH: {
     name: 'Thailand',
@@ -7512,6 +7880,7 @@ export const obj = {
     },
     dialling_code: '+66',
     isoCode: '764',
+    name_ar: 'تايلاند',
   },
   TL: {
     name: 'Timor-Leste',
@@ -7529,6 +7898,7 @@ export const obj = {
     },
     dialling_code: '+670',
     isoCode: '626',
+    name_ar: 'تيمور-ليشتي',
   },
   TG: {
     name: 'Togo',
@@ -7546,6 +7916,7 @@ export const obj = {
     },
     dialling_code: '+228',
     isoCode: '768',
+    name_ar: 'توغو',
   },
   TK: {
     name: 'Tokelau',
@@ -7563,6 +7934,7 @@ export const obj = {
     },
     dialling_code: '+690',
     isoCode: '772',
+    name_ar: 'توكيلاو',
   },
   TO: {
     name: 'Tonga',
@@ -7580,6 +7952,7 @@ export const obj = {
     },
     dialling_code: '+676',
     isoCode: '776',
+    name_ar: 'تونغا',
   },
   TT: {
     name: 'Trinidad and Tobago',
@@ -7597,6 +7970,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '780',
+    name_ar: 'ترينيداد وتوباغو',
   },
   TN: {
     name: 'Tunisia',
@@ -7614,6 +7988,7 @@ export const obj = {
     },
     dialling_code: '+216',
     isoCode: '788',
+    name_ar: 'تونس',
   },
   TR: {
     name: 'Turkey',
@@ -7631,6 +8006,7 @@ export const obj = {
     },
     dialling_code: '+90',
     isoCode: '792',
+    name_ar: 'تركيا',
   },
   TM: {
     name: 'Turkmenistan',
@@ -7648,6 +8024,7 @@ export const obj = {
     },
     dialling_code: '+993',
     isoCode: '795',
+    name_ar: 'تركمانستان',
   },
   TC: {
     name: 'Turks and Caicos Islands',
@@ -7665,6 +8042,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '796',
+    name_ar: 'جزر توركس وكايكوس',
   },
   TV: {
     name: 'Tuvalu',
@@ -7682,6 +8060,7 @@ export const obj = {
     },
     dialling_code: '+688',
     isoCode: '798',
+    name_ar: 'توفالو',
   },
   UG: {
     name: 'Uganda',
@@ -7699,6 +8078,7 @@ export const obj = {
     },
     dialling_code: '+256',
     isoCode: '800',
+    name_ar: 'أوغندا',
   },
   UA: {
     name: 'Ukraine',
@@ -7716,6 +8096,7 @@ export const obj = {
     },
     dialling_code: '+380',
     isoCode: '804',
+    name_ar: 'أوكرانيا',
   },
   AE: {
     name: 'United Arab Emirates',
@@ -7733,6 +8114,7 @@ export const obj = {
     },
     dialling_code: '+971',
     isoCode: '784',
+    name_ar: 'الإمارات العربية المتحدة',
   },
   GB: {
     name: 'United Kingdom of Great Britain and Northern Ireland',
@@ -7750,6 +8132,7 @@ export const obj = {
     },
     dialling_code: '+44',
     isoCode: '826',
+    name_ar: 'المملكة المتحدة لبريطانيا العظمى وأيرلندا الشمالية',
   },
   US: {
     name: 'United States of America',
@@ -7769,6 +8152,7 @@ export const obj = {
     },
     dialling_code: '+1',
     isoCode: '840',
+    name_ar: 'الولايات المتحدة الأمريكية',
   },
   UY: {
     name: 'Uruguay',
@@ -7786,6 +8170,7 @@ export const obj = {
     },
     dialling_code: '+598',
     isoCode: '858',
+    name_ar: 'أورغواي',
   },
   UZ: {
     name: 'Uzbekistan',
@@ -7803,6 +8188,7 @@ export const obj = {
     },
     dialling_code: '+998',
     isoCode: '860',
+    name_ar: 'أوزبكستان',
   },
   VU: {
     name: 'Vanuatu',
@@ -7820,6 +8206,7 @@ export const obj = {
     },
     dialling_code: '+678',
     isoCode: '548',
+    name_ar: 'فانواتو',
   },
   VE: {
     name: 'Venezuela (Bolivarian Republic of)',
@@ -7837,6 +8224,7 @@ export const obj = {
     },
     dialling_code: '+58',
     isoCode: '862',
+    name_ar: 'فنزويلا (جمهورية - البوليفارية)',
   },
   VN: {
     name: 'Viet Nam',
@@ -7854,6 +8242,7 @@ export const obj = {
     },
     dialling_code: '+84',
     isoCode: '704',
+    name_ar: 'فيتنام',
   },
   WF: {
     name: 'Wallis and Futuna',
@@ -7871,6 +8260,7 @@ export const obj = {
     },
     dialling_code: '+681',
     isoCode: '876',
+    name_ar: 'والس وفوتونا',
   },
   YE: {
     name: 'Yemen',
@@ -7888,6 +8278,7 @@ export const obj = {
     },
     dialling_code: '+967',
     isoCode: '887',
+    name_ar: 'اليمن',
   },
   ZM: {
     name: 'Zambia',
@@ -7905,6 +8296,7 @@ export const obj = {
     },
     dialling_code: '+260',
     isoCode: '894',
+    name_ar: 'زامبيا',
   },
   ZW: {
     name: 'Zimbabwe',
@@ -7924,5 +8316,6 @@ export const obj = {
     },
     dialling_code: '+263',
     isoCode: '716',
+    name_ar: 'زيمبابوي',
   },
 };
