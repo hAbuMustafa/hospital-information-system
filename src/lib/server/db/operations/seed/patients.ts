@@ -111,6 +111,7 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
           .replace('مسجون', '')
           .replace(/\s+/, ' ')
           .trim();
+        if (admission.admission_notes === '') admission.admission_notes === undefined;
       }
 
       const [newPatient] = await tx
