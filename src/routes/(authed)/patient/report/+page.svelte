@@ -105,7 +105,7 @@
   .ward-wrapper {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 4.5rem 1fr;
+    grid-template-rows: repeat(max-content, 2);
   }
 
   h2 {
@@ -114,6 +114,7 @@
     position: sticky;
     inset-block-start: 0;
     background-color: var(--main-bg-color);
+    padding-block: 1rem;
 
     @media print {
       break-after: avoid;
@@ -142,7 +143,7 @@
 
   thead {
     position: sticky;
-    inset-block-start: 2rem;
+    inset-block-start: 3.75rem;
   }
 
   tr:has(th) {
