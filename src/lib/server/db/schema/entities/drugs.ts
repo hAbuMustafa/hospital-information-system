@@ -100,9 +100,10 @@ export const Product_looks_like = Drug.table('Product_looks_like', {
 export const Formulary = Drug.table('Formulary', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 100 }).notNull(),
+  name_ar: varchar({ length: 100 }).notNull(),
   upa_code: bigint({ mode: 'bigint' }),
-  dosing_unit_id: smallint()
-    .references(() => DosingUnit.id)
+  formulation_category_id: smallint()
+    .references(() => FormulationCategory.id)
     .notNull(),
 });
 
@@ -129,7 +130,7 @@ export const Formulation = Drug.table(
       foreignColumns: [table.id],
       name: 'ac_role_target_link',
     }),
-  ],
+  ]
 );
 
 // strategy, high_concentration_electrolyte, dangerous
@@ -153,19 +154,16 @@ export const Formulary_ROA = Drug.table('Formulary_ROA', {
     .references(() => RouteOfAdministration.id),
 });
 
-// Helps calculate concentrations
-export const DosingUnit = Drug.table('DosingUnit', {
+// Helps calculate concentrations:
+// 'compressed', --> tab. / cap. / transdermal patch / pessary / supp.
+// 'metered', --> mdi
+// 'powder for reconstitution', --> vial / susp.
+// 'solution', --> inj. / neb. solution / syp. / tpn sol. / vol. expanders
+// 'bulk', --> cream / oint. / gel
+export const FormulationCategory = Drug.table('FormulationCategory', {
   id: smallserial().primaryKey(),
   name: varchar({ length: 25 }).notNull(),
-  category: text({
-    enum: [
-      'compressed', // tab. / cap. / transdermal patch / pessary / supp.
-      'metered', // mdi
-      'powder for reconstitution', // vial / susp.
-      'solution', // inj. / syp. / tpn sol. / vol. expanders
-      'bulk', // cream / oint. / gel
-    ],
-  }),
+  name_ar: varchar({ length: 25 }).notNull(),
 });
 
 // Routes of dosage administration (e.g. Oral[for tablets and syrups], transdermal [patches and creams], ...etc)
