@@ -123,16 +123,4 @@
   li:is(:hover, :focus, :focus-within):not(:has(.gravatar)) {
     background-color: hsl(from var(--main-bg-color) h s 50%);
   }
-
-  @position-try --below-left {
-    inset: unset;
-    inset-block-start: calc(anchor(bottom) + 0.25rem);
-    inset-inline-start: anchor(right);
-  }
-
-  @position-try --below-right {
-    inset: unset;
-    inset-block-start: calc(anchor(bottom) + 0.25rem);
-    inset-inline-end: anchor(left);
-  }
 </style>

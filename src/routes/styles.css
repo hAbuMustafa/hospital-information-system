@@ -106,12 +106,12 @@ input.unequal {
 }
 
 :is(
-    label:has(+ input:required:not([type='radio']):not([type='checkbox'])),
-    label:has(+ div input:required:not([type='radio']):not([type='checkbox'])),
-    label:has(+ select:required),
-    label:has(+ textarea:required),
-    :not(fieldset) > fieldset:has(:required) > legend
-  )::after {
+  label:has(+ input:required:not([type='radio']):not([type='checkbox'])),
+  label:has(+ div input:required:not([type='radio']):not([type='checkbox'])),
+  label:has(+ select:required),
+  label:has(+ textarea:required),
+  :not(fieldset) > fieldset:has(:required) > legend
+)::after {
   content: '*';
 
   -webkit-margin-start: 0.25rem;
@@ -223,4 +223,28 @@ input:is([type='radio'], [type='checkbox']):disabled + label {
   @page {
     margin: 5mm;
   }
+}
+
+@position-try --below-left {
+  inset: unset;
+  inset-block-start: calc(anchor(bottom) + 0.25rem);
+  inset-inline-start: anchor(right);
+}
+
+@position-try --below-right {
+  inset: unset;
+  inset-block-start: calc(anchor(bottom) + 0.25rem);
+  inset-inline-end: anchor(left);
+}
+
+@position-try --top-right {
+  inset: unset;
+  inset-block-start: calc(anchor(top) + 0.25rem);
+  inset-inline-end: anchor(left);
+}
+
+@position-try --top-left {
+  inset: unset;
+  inset-block-start: calc(anchor(top) + 0.25rem);
+  inset-inline-end: anchor(right);
 }
