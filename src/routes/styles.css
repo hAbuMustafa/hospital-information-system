@@ -239,12 +239,12 @@ input:is([type='radio'], [type='checkbox']):disabled + label {
 
 @position-try --top-right {
   inset: unset;
-  inset-block-start: calc(anchor(top) + 0.25rem);
-  inset-inline-end: anchor(right);
+  inset-block-start: anchor(top);
+  inset-inline-end: calc(anchor(right) + 0.5rem);
 }
 
 @position-try --top-left {
   inset: unset;
-  inset-block-start: calc(anchor(top) + 0.25rem);
-  inset-inline-start: anchor(left);
+  inset-block-start: anchor(top);
+  inset-inline-start: calc(anchor(left) + 0.5rem);
 }
