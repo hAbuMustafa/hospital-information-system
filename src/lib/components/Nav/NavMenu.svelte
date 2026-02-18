@@ -112,6 +112,15 @@
       inset-block-start: calc(anchor(bottom) + 0.25rem);
       inset-inline-start: anchor(right);
       position-try-fallbacks: --below-right, --below-left;
+
+      @media (max-width: 400px) {
+        inset: unset;
+        inset-block-start: anchor(top);
+        inset-inline-end: anchor(right);
+        position-try-fallbacks: --top-right, --top-left, --bottom-center;
+
+        align-items: center;
+      }
     }
   }
 

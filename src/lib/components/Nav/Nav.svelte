@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { MenuIcon } from '@lucide/svelte';
   import NavLogo from './NavLogo.svelte';
   import NavMenu from './NavMenu.svelte';
   import { menus } from './navList';
@@ -46,15 +47,24 @@
   <NavLogo />
 
   {#if user}
+    <button
+      type="button"
+      id="logged-in-menu-toggle"
+      title="القائمة الرئيسية"
+      popovertarget="logged-in-menu"
+      style:anchor-name="logged-in-menu"
+    >
+      <MenuIcon />
+    </button>
     {#if userSpecificMenus.length}
-      <ul>
+      <ul id="logged-in-menu" popover>
         {#each userSpecificMenus as menu, i (i)}
           <NavMenu {...menu} />
         {/each}
       </ul>
     {/if}
 
-    <ul>
+    <ul id="account-menu">
       <NavMenu {...accountMenu}>
         <img
           class="gravatar"
@@ -94,6 +104,63 @@
 
       @media print {
         display: none;
+      }
+    }
+
+    #account-menu {
+      @media (max-width: 400px) {
+        padding: 0;
+      }
+    }
+  }
+
+  #logged-in-menu-toggle {
+    display: none;
+    background-color: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+
+    @media (max-width: 400px) {
+      display: block;
+    }
+
+    &:hover {
+      background-color: hsl(from var(--main-bg-color) h s 60%);
+    }
+  }
+
+  #logged-in-menu {
+    inset: unset;
+    border: unset;
+    background-color: unset;
+    width: 70%;
+    display: flex;
+    justify-content: space-around;
+    margin-inline: 15%;
+
+    list-style: none;
+    position: relative;
+
+    @media (max-width: 400px) {
+      display: none;
+      inset: unset;
+      width: initial;
+      flex-direction: column;
+      position: absolute;
+      inset-block-start: calc(anchor(bottom) + 0.25rem);
+      justify-self: anchor-center;
+
+      gap: 0.25rem;
+      padding-inline: 1rem;
+
+      background-color: var(--main-bg-color);
+      border: var(--main-border);
+      border-radius: 0.25rem;
+      box-shadow: black 10px 10px 25px;
+
+      &:popover-open {
+        display: flex;
       }
     }
   }
