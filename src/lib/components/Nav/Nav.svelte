@@ -41,6 +41,8 @@
       ],
     ],
   };
+
+  let clientWidth = $state(0);
 </script>
 
 <nav aria-label="Primary Navigation">
@@ -57,7 +59,11 @@
       <MenuIcon />
     </button>
     {#if userSpecificMenus.length}
-      <ul id="logged-in-menu" popover>
+      <ul
+        id="logged-in-menu"
+        bind:clientWidth
+        popover={clientWidth >= 400 ? 'auto' : null}
+      >
         {#each userSpecificMenus as menu, i (i)}
           <NavMenu {...menu} />
         {/each}
@@ -131,17 +137,6 @@
   }
 
   #logged-in-menu {
-    inset: unset;
-    border: unset;
-    background-color: unset;
-    width: 70%;
-    display: flex;
-    justify-content: space-around;
-    margin-inline: 15%;
-
-    list-style: none;
-    position: relative;
-
     @media (max-width: 400px) {
       display: none;
       inset: unset;
