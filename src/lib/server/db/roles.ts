@@ -93,23 +93,27 @@ export const roles = [
   },
 ];
 
-const fmiPharmacist = roles.filter((r) => r.title.includes('Free Medications Inpatient'));
-const fmoPharmacist = roles.filter((r) =>
+export const fmiPharmacist = roles.filter((r) =>
+  r.title.includes('Free Medications Inpatient')
+);
+export const fmoPharmacist = roles.filter((r) =>
   r.title.includes('Free Medications Outpatient')
 );
-const fmwPharmacist = roles.filter((r) => r.title.includes('Free Medications Warehouse'));
+export const fmwPharmacist = roles.filter((r) =>
+  r.title.includes('Free Medications Warehouse')
+);
 
-const emiPharmacist = roles.filter((r) =>
+export const emiPharmacist = roles.filter((r) =>
   r.title.includes('Economy Medications Inpatient')
 );
-const emoPharmacist = roles.filter((r) =>
+export const emoPharmacist = roles.filter((r) =>
   r.title.includes('Economy Medications Outpatient')
 );
-const emwPharmacist = roles.filter((r) =>
+export const emwPharmacist = roles.filter((r) =>
   r.title.includes('Economy Medications Warehouse')
 );
 
-const phManager = roles.filter((r) => r.title.includes('Pharmacy Manager'));
-const wManager = roles.filter((r) => r.title.includes('Warehouse Manager'));
+export const phManager = roles.filter((r) => r.title.includes('Pharmacy Manager'));
+export const wManager = roles.filter((r) => r.title.includes('Warehouse Manager'));
 
-const pharmacist = roles.filter((r) => r.id >= 6 || r.id < 20);
+export const pharmacist = roles.filter((r) => r.id >= 6 || r.id < 20);
