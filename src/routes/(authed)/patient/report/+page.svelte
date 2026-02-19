@@ -133,6 +133,11 @@
     grid-template-rows: repeat(max-content, 2);
 
     overflow-x: scroll;
+
+    @media print {
+      break-inside: avoid;
+      break-after: always;
+    }
   }
 
   h2 {
@@ -150,10 +155,6 @@
       progress {
         width: 20vw;
       }
-    }
-
-    @media print {
-      break-after: avoid;
     }
   }
 
