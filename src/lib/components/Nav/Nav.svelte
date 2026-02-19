@@ -3,6 +3,7 @@
   import NavLogo from './NavLogo.svelte';
   import NavMenu from './NavMenu.svelte';
   import { menus } from './navList';
+  import { browser } from '$app/environment';
 
   function menuFilterPredicate<T extends { permission?: PermissionT }>(menu: T) {
     return (
@@ -43,6 +44,22 @@
   };
 
   let clientWidth = $state(0);
+  let popover: '' | 'auto' | 'manual' | 'hint' | null | undefined = $state(null);
+
+  let menuElement;
+
+  if (browser) {
+    const observer = new ResizeObserver(([entry]) => {
+      clientWidth = entry.contentRect.width;
+      popover = clientWidth < 400 ? 'auto' : null;
+    });
+
+    $effect(() => {
+      if (menuElement) observer.observe(menuElement);
+
+      return () => observer.disconnect();
+    });
+  }
 </script>
 
 <nav aria-label="Primary Navigation">
@@ -59,11 +76,7 @@
       <MenuIcon />
     </button>
     {#if userSpecificMenus.length}
-      <ul
-        id="logged-in-menu"
-        bind:clientWidth
-        popover={clientWidth >= 400 ? 'auto' : null}
-      >
+      <ul id="logged-in-menu" bind:clientWidth {popover}>
         {#each userSpecificMenus as menu, i (i)}
           <NavMenu {...menu} />
         {/each}
