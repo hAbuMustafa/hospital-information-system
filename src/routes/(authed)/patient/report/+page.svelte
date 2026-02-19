@@ -109,7 +109,7 @@
               {#if data.user?.role === 1 || inpatientPharmacist.some((r) => r.id === data.user?.role)}
                 <td>
                   <a
-                    href="/pharmacy/dispense?patient_id={patient.patient_id}"
+                    href="/pharmacy/dispense/{patient.patient_id}"
                     class="button"
                     style:background-color="green"
                     style:color="white"
