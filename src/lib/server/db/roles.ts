@@ -113,6 +113,9 @@ export const emwPharmacist = roles.filter((r) =>
   r.title.includes('Economy Medications Warehouse')
 );
 
+export const inpatientPharmacist = roles.filter((r) => r.title.includes('Inpatient'));
+export const outpatientPharmacist = roles.filter((r) => r.title.includes('Outpatient'));
+
 export const phManager = roles.filter((r) => r.title.includes('Pharmacy Manager'));
 export const wManager = roles.filter((r) => r.title.includes('Warehouse Manager'));
 
