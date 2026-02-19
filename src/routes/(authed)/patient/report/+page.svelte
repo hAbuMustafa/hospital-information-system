@@ -2,6 +2,7 @@
   import { formatDate, getTermed } from '$lib/utils/date-format';
   import { getFlagEmoji, obj as countries } from '$lib/utils/countries';
   import type { inPatient_view } from '$server/db/schema/entities/patients';
+  import { inpatientPharmacist } from '$lib/utils/roles';
 
   let { data } = $props();
   let patientsByWard = $derived(
@@ -37,6 +38,9 @@
           {#if data.user?.role === 1 || data.user?.role === 22}
             <col class="patient-actions" span="2" />
           {/if}
+          {#if data.user?.role === 1 || inpatientPharmacist.some((r) => r.id === data.user?.role)}
+            <col class="patient-dispense" />
+          {/if}
         </colgroup>
         <thead>
           <tr>
@@ -46,6 +50,9 @@
             {#if data.user?.role === 1 || data.user?.role === 22}
               <th>تحويل</th>
               <th>خروج</th>
+            {/if}
+            {#if data.user?.role === 1 || inpatientPharmacist.some((r) => r.id === data.user?.role)}
+              <th>صرف علاج</th>
             {/if}
           </tr>
         </thead>
@@ -96,6 +103,18 @@
                     style:color="light-dark(var(--main-text-color),var(--main-text-color))"
                   >
                     خروج
+                  </a>
+                </td>
+              {/if}
+              {#if data.user?.role === 1 || inpatientPharmacist.some((r) => r.id === data.user?.role)}
+                <td>
+                  <a
+                    href="/pharmacy/dispense?patient_id={patient.patient_id}"
+                    class="button"
+                    style:background-color="green"
+                    style:color="white"
+                  >
+                    صرف
                   </a>
                 </td>
               {/if}
