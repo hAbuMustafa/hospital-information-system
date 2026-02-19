@@ -93,4 +93,23 @@ export const roles = [
   },
 ];
 
-// todo: make pre-made role lists for different entities (pharmacies, warehouses) that include member, managers, supervisors
+const fmiPharmacist = roles.filter((r) => r.title.includes('Free Medications Inpatient'));
+const fmoPharmacist = roles.filter((r) =>
+  r.title.includes('Free Medications Outpatient')
+);
+const fmwPharmacist = roles.filter((r) => r.title.includes('Free Medications Warehouse'));
+
+const emiPharmacist = roles.filter((r) =>
+  r.title.includes('Economy Medications Inpatient')
+);
+const emoPharmacist = roles.filter((r) =>
+  r.title.includes('Economy Medications Outpatient')
+);
+const emwPharmacist = roles.filter((r) =>
+  r.title.includes('Economy Medications Warehouse')
+);
+
+const phManager = roles.filter((r) => r.title.includes('Pharmacy Manager'));
+const wManager = roles.filter((r) => r.title.includes('Warehouse Manager'));
+
+const pharmacist = roles.filter((r) => r.id >= 6 || r.id < 20);
