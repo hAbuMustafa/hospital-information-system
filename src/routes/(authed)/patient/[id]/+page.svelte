@@ -2,6 +2,7 @@
   import Timeline from '$comp/Timeline/Timeline.svelte';
   import { formatDate, getAge, getDuration, getTermed } from '$lib/utils/date-format';
   import Sheet from '$lib/components/Sheet/Sheet.svelte';
+  import { getFlagEmoji, obj } from '$lib/utils/countries.js';
 
   let { data } = $props();
 
@@ -18,10 +19,12 @@
         <dt>الرقم الموحد:</dt>
         <dd>{data.patient.person_id}</dd>
 
-        {#if data.patient.id_doc_type_id !== 1}
-          <!-- todo: separate nationality in a separate column -->
+        {#if data.patient.id_doc_type_id !== 1 && data.patient.nationality}
           <dt>الجنسية:</dt>
-          <dd>{data.patient.admission_notes}</dd>
+          <dd>
+            {obj[data.patient.nationality].name_ar}
+            {getFlagEmoji(data.patient.nationality)}
+          </dd>
         {/if}
 
         <dt>{data.patient.id_doc_type}:</dt>
@@ -31,7 +34,7 @@
           <dt>تاريخ الميلاد:</dt>
           <dd>
             {formatDate(new Date(data.patient.birthdate), 'YYYY/MM/DD')} ({getAge(
-              data.patient.birthdate,
+              data.patient.birthdate
             )} سنة)
           </dd>
         {/if}
@@ -77,7 +80,7 @@
         <dt>مدة الإقامة:</dt>
         {@const daysOfStay = getDuration(
           data.patient.admission_time,
-          data.patient.discharge_time,
+          data.patient.discharge_time
         )}
         <dd>
           {getTermed(daysOfStay, 'يوم', 'أيام')}
