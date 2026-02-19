@@ -30,5 +30,3 @@
     <PatientButton {patient} disableIfDischarged={true} />
   {/snippet}
 </ISelect>
-
-<!-- todo: also add "dispense" column in the patient report page -->

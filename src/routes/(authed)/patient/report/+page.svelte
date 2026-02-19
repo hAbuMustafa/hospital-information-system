@@ -34,15 +34,19 @@
           <col class="patient-identifier" />
           <col class="patient-cards" />
           <col class="patient-dates" />
-          <col class="patient-actions" span="2" />
+          {#if data.user?.role === 1 || data.user?.role === 22}
+            <col class="patient-actions" span="2" />
+          {/if}
         </colgroup>
         <thead>
           <tr>
             <th>رقم الملف</th>
             <th>اسم المريض</th>
             <th>تاريخ الدخول</th>
-            <th>تحويل</th>
-            <th>خروج</th>
+            {#if data.user?.role === 1 || data.user?.role === 22}
+              <th>تحويل</th>
+              <th>خروج</th>
+            {/if}
           </tr>
         </thead>
         <tbody>
@@ -73,26 +77,28 @@
                 </div>
               </td>
               <td>{formatDate(patient.admission_time, 'YYYY/MM/DD')}</td>
-              <td>
-                <a
-                  href="/patient/transfer?patient_id={patient.patient_id}"
-                  class="button"
-                  style:background-color="orange"
-                  style:color="light-dark(var(--main-text-color),var(--main-bg-color))"
-                >
-                  تحويل
-                </a>
-              </td>
-              <td>
-                <a
-                  href="/patient/discharge?patient_id={patient.patient_id}"
-                  class="button"
-                  style:background-color="light-dark(salmon, maroon)"
-                  style:color="light-dark(var(--main-text-color),var(--main-text-color))"
-                >
-                  خروج
-                </a>
-              </td>
+              {#if data.user?.role === 1 || data.user?.role === 22}
+                <td>
+                  <a
+                    href="/patient/transfer?patient_id={patient.patient_id}"
+                    class="button"
+                    style:background-color="orange"
+                    style:color="light-dark(var(--main-text-color),var(--main-bg-color))"
+                  >
+                    تحويل
+                  </a>
+                </td>
+                <td>
+                  <a
+                    href="/patient/discharge?patient_id={patient.patient_id}"
+                    class="button"
+                    style:background-color="light-dark(salmon, maroon)"
+                    style:color="light-dark(var(--main-text-color),var(--main-text-color))"
+                  >
+                    خروج
+                  </a>
+                </td>
+              {/if}
             </tr>
           {/each}
         </tbody>
