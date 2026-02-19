@@ -83,7 +83,7 @@
       </ul>
     {/if}
 
-    <ul id="account-menu">
+    <ul id="account-menu-list">
       <NavMenu {...accountMenu}>
         <img
           class="gravatar"
@@ -126,7 +126,7 @@
       }
     }
 
-    #account-menu {
+    #account-menu-list {
       @media (max-width: 400px) {
         padding: 0;
       }
