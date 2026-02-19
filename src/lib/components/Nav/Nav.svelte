@@ -46,7 +46,7 @@
   let clientWidth = $state(0);
   let popover: '' | 'auto' | 'manual' | 'hint' | null | undefined = $state(null);
 
-  let menuElement;
+  let menuElement: HTMLUListElement | null = $state(null);
 
   if (browser) {
     const observer = new ResizeObserver(([entry]) => {
