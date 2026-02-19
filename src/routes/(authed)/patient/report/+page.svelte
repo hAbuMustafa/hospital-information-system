@@ -36,10 +36,10 @@
           <col class="patient-cards" />
           <col class="patient-dates" />
           {#if data.user?.role === 1 || data.user?.role === 22}
-            <col class="patient-actions" span="2" />
+            <col class="patient-actions action-column" span="2" />
           {/if}
           {#if data.user?.role === 1 || inpatientPharmacist.some((r) => r.id === data.user?.role)}
-            <col class="patient-dispense" />
+            <col class="patient-dispense action-column" />
           {/if}
         </colgroup>
         <thead>
@@ -48,11 +48,11 @@
             <th>اسم المريض</th>
             <th>تاريخ الدخول</th>
             {#if data.user?.role === 1 || data.user?.role === 22}
-              <th>تحويل</th>
-              <th>خروج</th>
+              <th class="action-column">تحويل</th>
+              <th class="action-column">خروج</th>
             {/if}
             {#if data.user?.role === 1 || inpatientPharmacist.some((r) => r.id === data.user?.role)}
-              <th>صرف علاج</th>
+              <th class="action-column">صرف علاج</th>
             {/if}
           </tr>
         </thead>
@@ -60,7 +60,7 @@
           {#each patientsByWard[ward_name] as patient, ii (patient.patient_file_number)}
             <tr>
               <td>
-                <a href="/patient/{patient.patient_id}" class="button"
+                <a href="/patient/{patient.patient_id}" class="button patient-file-id"
                   >{patient.patient_file_number}</a
                 >
               </td>
@@ -236,6 +236,13 @@
       .patient-name {
         flex-basis: 1;
       }
+    }
+  }
+
+  td:has(a.button:not(.patient-file-id)),
+  .action-column {
+    @media print {
+      display: none;
     }
   }
 </style>
