@@ -83,6 +83,7 @@ export const actions = {
       ]);
     }
 
+    console.log(typeof birthdate);
     if (
       firstName !== person.first_name ||
       fatherName !== person.father_name ||
@@ -97,7 +98,7 @@ export const actions = {
         grandfather_name: grandfatherName,
         family_name: familyName,
         gender,
-        birthdate,
+        birthdate: birthdate ? birthdate : null,
       });
 
       if (!result.success) {
