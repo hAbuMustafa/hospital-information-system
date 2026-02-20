@@ -32,103 +32,114 @@
   let hasAName = $derived(!firstName && !fatherName && !grandfatherName && !familyName);
 </script>
 
-<form method="POST" class="flex-form">
-  <div class="input-pair">
-    <label for="first_name">اسم المريض</label>
-    <div class="input-group">
-      <input
-        type="text"
-        name="first_name"
-        id="first_name"
-        placeholder="الاسم الأول"
-        bind:value={firstName}
-        required
-      />
-      <input
-        type="text"
-        name="father_name"
-        id="father_name"
-        placeholder="اسم الأب"
-        bind:value={fatherName}
-        required
-      />
-      <input
-        type="text"
-        name="grandfather_name"
-        id="grandfather_name"
-        placeholder="اسم الجد"
-        bind:value={grandfatherName}
-        required
-      />
-      <input
-        type="text"
-        name="family_name"
-        id="family_name"
-        placeholder="اسم العائلة"
-        bind:value={familyName}
-      />
+<div class="multi-form-wrapper">
+  <form method="POST" class="flex-form" action="?/personal_data">
+    <div class="input-pair">
+      <label for="first_name">اسم المريض</label>
+      <div class="input-group">
+        <input
+          type="text"
+          name="first_name"
+          id="first_name"
+          placeholder="الاسم الأول"
+          bind:value={firstName}
+          required
+        />
+        <input
+          type="text"
+          name="father_name"
+          id="father_name"
+          placeholder="اسم الأب"
+          bind:value={fatherName}
+          required
+        />
+        <input
+          type="text"
+          name="grandfather_name"
+          id="grandfather_name"
+          placeholder="اسم الجد"
+          bind:value={grandfatherName}
+          required
+        />
+        <input
+          type="text"
+          name="family_name"
+          id="family_name"
+          placeholder="اسم العائلة"
+          bind:value={familyName}
+        />
 
-      <button
-        type="button"
-        disabled={hasAName}
-        onclick={() => {
-          firstName = '';
-          fatherName = '';
-          grandfatherName = '';
-          familyName = '';
-        }}
-      >
-        مسح
-      </button>
+        <button
+          type="button"
+          disabled={hasAName}
+          onclick={() => {
+            firstName = '';
+            fatherName = '';
+            grandfatherName = '';
+            familyName = '';
+          }}
+        >
+          مسح
+        </button>
+      </div>
     </div>
-  </div>
 
-  <Picker
-    label="نوع الهوية"
-    name="id_doc_type"
-    options={data.id_doc_type_list}
-    bind:value={idDocType}
-  />
-
-  <div class="input-pair">
-    <label for="id_doc_num">رقم الهوية</label>
-    <input
-      name="id_doc_num"
-      id="id_doc_num"
-      type="text"
-      bind:value={idDocNum}
-      pattern={idDocType === 1 ? nationalIdPattern.source : null}
-      required={idDocType !== 6}
-      disabled={idDocType === 6}
+    <Picker
+      name="gender"
+      label="النوع"
+      options={[
+        { id: true, name: 'ذكر' },
+        { id: false, name: 'أنثى' },
+      ]}
+      bind:value={gender}
+      locked={isNationalId}
     />
-  </div>
 
-  <Picker
-    name="gender"
-    label="النوع"
-    options={[
-      { id: true, name: 'ذكر' },
-      { id: false, name: 'أنثى' },
-    ]}
-    bind:value={gender}
-    locked={isNationalId}
-  />
+    <div class="input-pair">
+      <label for="birthdate" class:locked={isNationalId}>تاريخ الميلاد</label>
+      <input
+        name="birthdate"
+        id="birthdate"
+        type="date"
+        bind:value={birthdate}
+        readonly={isNationalId}
+      />
+    </div>
 
-  <div class="input-pair">
-    <label for="birthdate" class:locked={isNationalId}>تاريخ الميلاد</label>
-    <input
-      name="birthdate"
-      id="birthdate"
-      type="date"
-      bind:value={birthdate}
-      readonly={isNationalId}
+    <input type="submit" value="تعديل البيانات الشخصية" />
+  </form>
+
+  <form method="POST" class="flex-form" action="?/id_data">
+    <Picker
+      label="نوع الهوية"
+      name="id_doc_type"
+      options={data.id_doc_type_list}
+      bind:value={idDocType}
     />
-  </div>
 
-  <input type="submit" value="تعديل" />
-</form>
+    <div class="input-pair">
+      <label for="id_doc_num">رقم الهوية</label>
+      <input
+        name="id_doc_num"
+        id="id_doc_num"
+        type="text"
+        bind:value={idDocNum}
+        pattern={idDocType === 1 ? nationalIdPattern.source : null}
+        required={idDocType !== 6}
+        disabled={idDocType === 6}
+      />
+    </div>
+    <input type="submit" value="تعديل بيانات الهوية" />
+  </form>
+</div>
 
 <style>
+  .multi-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
   .input-group {
     display: grid;
     grid-template-columns: repeat(4, 3fr) 1fr;

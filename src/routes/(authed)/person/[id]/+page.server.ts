@@ -33,7 +33,7 @@ export async function load({ params, fetch }) {
 }
 
 export const actions = {
-  default: async ({ params, request, fetch }) => {
+  personal_data: async ({ params, request, fetch }) => {
     let personId = params.id as unknown as number;
 
     const person: typeof people_view.$inferSelect = await fetch(
@@ -50,10 +50,8 @@ export const actions = {
     const fatherName = formData.get('father_name') as unknown as string;
     const grandfatherName = formData.get('grandfather_name') as unknown as string;
     const familyName = formData.get('family_name') as unknown as string;
-    let idDocType = formData.get('id_doc_type') as unknown as number;
-    const idDocNumber = formData.get('id_doc_num') as unknown as string;
     let gender = formData.get('gender') as unknown as boolean;
-    let birthdate = formData.get('birthdate');
+    let birthdate = formData.get('birthdate') as unknown as string;
 
     const failMessages = [];
 
@@ -62,8 +60,6 @@ export const actions = {
       fatherName,
       grandfatherName,
       familyName,
-      idDocType,
-      idDocNumber,
       gender,
       birthdate,
     });
@@ -71,18 +67,12 @@ export const actions = {
     if (!firstName) failMessages.push(' اسم المريض مطلوب');
     if (!fatherName) failMessages.push(' اسم المريض مطلوب');
     if (!grandfatherName) failMessages.push(' اسم المريض مطلوب');
-    if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
-    if (!idDocNumber && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
-    if (idDocType == 1 && !verifyEgyptianNationalId(idDocNumber as string))
-      failMessages.push('صيغة رقم الهوية غير صحيحة');
     if (!gender) failMessages.push('الجنس/النوع مطلوب');
 
     if (failMessages.length) return failWithMessages(failMessages);
 
     try {
       personId = Number(personId);
-
-      idDocType = Number(idDocType);
 
       gender = Boolean(gender);
     } catch (e) {
@@ -107,15 +97,62 @@ export const actions = {
         grandfather_name: grandfatherName,
         family_name: familyName,
         gender,
-        birthdate: new Date(birthdate as string),
+        birthdate,
       });
 
       if (!result.success) {
         console.error(result.error);
         return failWithMessages([
-          { message: 'حدث خطأ أثناء تسجيل بيانات المريض', type: 'error' },
+          { message: 'حدث خطأ أثناء تعديل بيانات المريض', type: 'error' },
         ]);
       }
+    }
+
+    return {
+      success: true,
+      message: `تم تعديل بيانات "${person.full_name} الشخصية"`,
+    };
+  },
+  id_data: async ({ params, request, fetch }) => {
+    let personId = params.id as unknown as number;
+
+    const person: typeof people_view.$inferSelect = await fetch(
+      `/api/person?id=${personId}`
+    ).then((r) => {
+      if (r.ok) {
+        return r.json();
+      } else return null;
+    });
+
+    const formData = await request.formData();
+
+    let idDocType = formData.get('id_doc_type') as unknown as number;
+    const idDocNumber = formData.get('id_doc_num') as unknown as string;
+
+    const failMessages = [];
+
+    const failWithMessages = failWithFormFieldsAndMessageArrayBuilder({
+      idDocType,
+      idDocNumber,
+    });
+
+    if (!idDocType) failMessages.push('نوع الهوية مطلوبة');
+    if (!idDocNumber && idDocType != 6) failMessages.push('رقم الهوية مطلوب');
+    if (idDocType == 1 && !verifyEgyptianNationalId(idDocNumber as string))
+      failMessages.push('صيغة رقم الهوية غير صحيحة');
+
+    if (failMessages.length) return failWithMessages(failMessages);
+
+    try {
+      personId = Number(personId);
+
+      idDocType = Number(idDocType);
+    } catch (e) {
+      console.error(JSON.stringify(formData, null, 4));
+      console.error(e);
+      failWithMessages([
+        { message: 'خطأ في طبيعة البيانات المدخلة (أرقام أو تواريخ).', type: 'error' },
+      ]);
     }
 
     if (idDocNumber && idDocType === 1 && idDocNumber !== person.id_doc_number) {
@@ -154,7 +191,7 @@ export const actions = {
 
     return {
       success: true,
-      message: `تم تعديل بيانات "${person.full_name}"`,
+      message: `تم تعديل بيانات هوية "${person.full_name}"`,
     };
   },
 };

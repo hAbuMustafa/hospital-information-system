@@ -27,7 +27,8 @@ body {
   color: var(--main-text-color);
 }
 
-main > form {
+main > form,
+main > .multi-form-wrapper > form {
   padding: 2rem;
 
   border-radius: 0.25rem;
