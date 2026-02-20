@@ -83,7 +83,6 @@ export const actions = {
       ]);
     }
 
-    console.log(typeof birthdate);
     if (
       firstName !== person.first_name ||
       fatherName !== person.father_name ||
