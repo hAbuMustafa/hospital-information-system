@@ -56,7 +56,7 @@ export const actions = {
       personId = Number(personId);
       idDocType = Number(idDocType);
 
-      gender = Boolean(gender);
+      gender = JSON.parse(gender as unknown as string);
 
       birthdate = new Date(birthdate);
     } catch (e) {
@@ -70,8 +70,8 @@ export const actions = {
     const foundAdmitted = personId
       ? await isAdmitted(personId)
       : idDocType !== 6
-      ? await isAdmitted(idDocType, idDocNum)
-      : undefined;
+        ? await isAdmitted(idDocType, idDocNum)
+        : undefined;
 
     if (foundAdmitted) {
       return failWithMessages([

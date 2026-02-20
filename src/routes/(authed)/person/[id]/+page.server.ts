@@ -74,7 +74,7 @@ export const actions = {
     try {
       personId = Number(personId);
 
-      gender = Boolean(gender);
+      gender = JSON.parse(gender as unknown as string);
     } catch (e) {
       console.error(JSON.stringify(formData, null, 4));
       console.error(e);
