@@ -72,7 +72,6 @@
   <input
     id="{name}_{opt.id}"
     type="radio"
-    {name}
     value={opt.id}
     bind:group={value}
     disabled={locked || (disable && disable.includes(opt.id))}
