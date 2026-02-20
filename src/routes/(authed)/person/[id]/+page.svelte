@@ -66,7 +66,6 @@
         id="family_name"
         placeholder="اسم العائلة"
         bind:value={familyName}
-        required
       />
 
       <button
@@ -123,7 +122,6 @@
       type="date"
       bind:value={birthdate}
       readonly={isNationalId}
-      required
     />
   </div>
 
