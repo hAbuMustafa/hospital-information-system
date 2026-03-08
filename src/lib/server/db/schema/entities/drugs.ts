@@ -55,6 +55,13 @@ export const ProductUnit = Drug.table('ProductUnit', {
   name_ar: varchar({ length: 15 }),
 });
 
+// e.g. "Water for Injection", "Normal Saline", "Lidocaine"
+export const ReconstitutionDiluents = Drug.table('ReconstitutionDiluents', {
+  id: smallserial().primaryKey(),
+  name: varchar({ length: 24 }),
+  name_ar: varchar({ length: 24 }),
+});
+
 export const ActiveIngredient_Use = Drug.table('ActiveIngredient_Use', {
   id: smallserial().primaryKey(),
   ac_id: smallint().references(() => ActiveIngredient.id),
@@ -69,6 +76,13 @@ export const Product_drug = Drug.table('Product_drug', {
   name_ar: varchar({ length: 45 }),
   product_unit_id: smallint().references(() => ProductUnit.id),
   volume_in_ml: numeric({ precision: 7, scale: 2, mode: 'number' }).default(1.0), // for liquid forms only
+  reconstitution_volume_in_ml: numeric({
+    precision: 7,
+    scale: 2,
+    mode: 'number',
+  }).default(1.0), // for reconstituted forms only
+  reconstitution_diluent: smallint().references(() => ReconstitutionDiluents.id),
+  doses_per_unit: smallint().default(1.0), // for metered forms only (e.g. 120 puffs per inhaler)
   is_imported: boolean(),
   smc_code: integer(),
 });
