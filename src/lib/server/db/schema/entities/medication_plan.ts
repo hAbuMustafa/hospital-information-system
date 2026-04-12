@@ -12,7 +12,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Formulary } from './drugs';
-import { Staff } from './hospital';
+import { Staff } from './hr';
 import { Sec_pb_key } from './system';
 
 export const MedicationPlan = pgSchema('MedicationPlan');
@@ -37,7 +37,7 @@ export const MedPlan = MedicationPlan.table(
     discontinue_phys_id: smallint().references(() => Staff.id),
     discontinue_phys_signature: varchar({ length: 256 }),
     discontinue_phys_sign_key_id: bigint({ mode: 'bigint' }).references(
-      () => Sec_pb_key.id,
+      () => Sec_pb_key.id
     ),
   },
   (table) => [
@@ -46,7 +46,7 @@ export const MedPlan = MedicationPlan.table(
       foreignColumns: [table.id],
       name: 'mixture_link',
     }),
-  ],
+  ]
 );
 
 export const MedPlan_note = MedicationPlan.table('MedPlan_note', {

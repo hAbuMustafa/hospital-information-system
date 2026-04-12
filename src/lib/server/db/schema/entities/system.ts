@@ -12,7 +12,7 @@ import {
   date,
 } from 'drizzle-orm/pg-core';
 import { People_contact_information, Person, Person_IdDoc } from './people';
-import { Staff } from './hospital';
+import { Staff } from './hr';
 import { sql } from 'drizzle-orm';
 
 export const Security = pgSchema('Security');

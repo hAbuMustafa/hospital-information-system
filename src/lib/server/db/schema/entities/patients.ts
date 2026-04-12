@@ -14,7 +14,8 @@ import {
   unique,
   char,
 } from 'drizzle-orm/pg-core';
-import { Staff, Ward } from './hospital';
+import { Ward } from './hospital';
+import { Staff } from './hr';
 import { Sec_pb_key } from './system';
 import { Person } from './people';
 import { sql } from 'drizzle-orm';

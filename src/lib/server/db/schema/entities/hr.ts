@@ -14,15 +14,11 @@ export const HR = pgSchema('HR');
 
 export const Staff = HR.table('Staff', {
   id: smallserial().primaryKey(),
-  job: smallint()
-    .notNull()
-    .references(() => Job.id),
+  job: smallint().references(() => Job.id),
   job_level: text({ enum: ['1', '2', '3'] }),
   qualification: varchar({ length: 45 }),
   major: varchar({ length: 45 }),
-  department: smallint()
-    .notNull()
-    .references(() => Department.id),
+  department: smallint().references(() => Department.id),
   employment_date: date(),
   person_id: integer()
     .notNull()

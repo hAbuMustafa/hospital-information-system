@@ -13,7 +13,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { InPatient } from './patients';
 import { Sec_pb_key } from './system';
-import { Staff } from './hospital';
+import { Staff } from './hr';
 import { MedPlan } from './medication_plan';
 import { Product_drug } from './drugs';
 

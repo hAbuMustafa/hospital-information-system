@@ -8,7 +8,7 @@ import {
   Person,
   Person_IdDoc,
 } from '../../schema/entities/people';
-import { Staff } from '../../schema/entities/hospital';
+import { Staff } from '../../schema/entities/hr';
 import { getBirthdateFromNationalId, getGenderFromNationalId } from '../utils';
 
 const SALT_ROUNDS = 12;
