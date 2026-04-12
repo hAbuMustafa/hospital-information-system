@@ -21,5 +21,6 @@ export default defineConfig({
     'Pharmacy',
     'Security',
     'Drug',
+    'HR',
   ],
 });

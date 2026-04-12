@@ -3,11 +3,10 @@ import {
   varchar,
   integer,
   text,
-  date,
   smallserial,
   smallint,
 } from 'drizzle-orm/pg-core';
-import { Person } from './people';
+import { Staff } from './hr';
 
 export const Hospital = pgSchema('Hospital');
 
@@ -19,21 +18,9 @@ export const Ward = Hospital.table('Ward', {
   tags: text(),
 });
 
-export const Staff = Hospital.table('Staff', {
+export const Department = Hospital.table('Department', {
   id: smallserial().primaryKey(),
-  job: varchar({ length: 45 }), // todo: make a list
-  qualification: varchar({ length: 45 }),
-  major: varchar({ length: 45 }),
-  department: varchar({ length: 45 }), // todo: make a list
-  employment_date: date(),
-  person_id: integer()
-    .notNull()
-    .references(() => Person.id),
-});
-
-export const ReportsTo = Hospital.table('ReportsTo', {
-  staff_id: smallint().references(() => Staff.id),
-  reports_to_id: smallint().references(() => Staff.id),
+  name: text().notNull(),
 });
 
 // Pharmacies, Warehouses, Crash Cars, ...etc

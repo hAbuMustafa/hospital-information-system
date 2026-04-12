@@ -6,6 +6,7 @@ import * as People from './people';
 import * as Pharmacy from './pharmacy';
 import * as System from './system';
 import * as Drug from './drugs';
+import * as HR from './hr';
 
 const schema = {
   ...Hospital,
@@ -16,6 +17,7 @@ const schema = {
   ...Pharmacy,
   ...System,
   ...Drug,
+  ...HR,
 };
 
 export default schema;
