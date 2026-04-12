@@ -5,14 +5,14 @@
 
   const { data, form } = $props();
 
-  let returnedDiagnosesOnFormError = form?.diagnosis ? form.diagnosis : null;
+  let returnedDiagnosesOnFormError = $derived(form?.diagnosis ?? null);
 
-  let patientFileNumber = $state(form?.patientFileNumber ?? '');
-  let healthInsurance = $state(form?.healthInsurance === true);
-  let diagnoses = $state<string[]>(returnedDiagnosesOnFormError ?? []);
+  let patientFileNumber = $derived(form?.patientFileNumber ?? '');
+  let healthInsurance = $derived(form?.healthInsurance === true);
+  let diagnoses = $derived<string[]>(returnedDiagnosesOnFormError ?? []);
   let diagnosisText = $state('');
-  let admissionWard = $state(form?.admissionWard ? Number(form.admissionWard) : null);
-  let admissionDate = $state(
+  let admissionWard = $derived(form?.admissionWard ? Number(form.admissionWard) : null);
+  let admissionDate = $derived(
     form?.admissionDate ?? formatDate(new Date(), 'YYYY-MM-DDTHH:mm')
   );
 
