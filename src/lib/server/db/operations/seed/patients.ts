@@ -36,8 +36,8 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
           .where(
             and(
               eq(people_view.full_name, admission.name),
-              isNull(people_view.id_doc_number)
-            )
+              isNull(people_view.id_doc_number),
+            ),
           );
         foundPersonId = first_result?.id;
       }
@@ -154,43 +154,45 @@ export async function seedPatientAdmission(admission: PatientSeedT) {
         });
       }
 
-      const pDiagnoses = admission.diagnosis.split('+').map((d) => d.trim());
+      if (admission.diagnosis) {
+        const pDiagnoses = admission.diagnosis.split('+').map((d) => d.trim());
 
-      for (let i = 0; i < pDiagnoses.length; i++) {
-        const currentDiagnosisText = pDiagnoses[i];
+        for (let i = 0; i < pDiagnoses.length; i++) {
+          const currentDiagnosisText = pDiagnoses[i];
 
-        let diagnosis: typeof Diagnosis.$inferSelect;
+          let diagnosis: typeof Diagnosis.$inferSelect;
 
-        const [foundDiagnosis] = await tx
-          .select()
-          .from(Diagnosis)
-          .where(eq(Diagnosis.name, currentDiagnosisText));
+          const [foundDiagnosis] = await tx
+            .select()
+            .from(Diagnosis)
+            .where(eq(Diagnosis.name, currentDiagnosisText));
 
-        if (foundDiagnosis) {
-          diagnosis = foundDiagnosis;
-        } else {
-          const newRow = await createDiagnosis(currentDiagnosisText, tx);
-
-          if (newRow.success) {
-            diagnosis = newRow.data;
+          if (foundDiagnosis) {
+            diagnosis = foundDiagnosis;
           } else {
-            console.error(
-              'failed creating diagnosis',
-              currentDiagnosisText,
-              'for patient',
-              newPatient.id,
-              admission.name
-            );
-            continue;
-          }
-        }
+            const newRow = await createDiagnosis(currentDiagnosisText, tx);
 
-        await tx.insert(Patient_diagnosis).values({
-          patient_id: newPatient.id,
-          diagnosis_id: diagnosis.id,
-          timestamp: admission.admission_date,
-          type: 'Initial',
-        });
+            if (newRow.success) {
+              diagnosis = newRow.data;
+            } else {
+              console.error(
+                'failed creating diagnosis',
+                currentDiagnosisText,
+                'for patient',
+                newPatient.id,
+                admission.name,
+              );
+              continue;
+            }
+          }
+
+          await tx.insert(Patient_diagnosis).values({
+            patient_id: newPatient.id,
+            diagnosis_id: diagnosis.id,
+            timestamp: admission.admission_date,
+            type: 'Initial',
+          });
+        }
       }
 
       return newPatient;
@@ -252,7 +254,7 @@ export async function seedPatientDischarge(discharge: seedDischargeT) {
         .select()
         .from(InPatient_file)
         .where(
-          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber))
+          and(eq(InPatient_file.year, admYear), eq(InPatient_file.number, admFileNumber)),
         );
 
       if (patient) {

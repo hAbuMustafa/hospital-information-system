@@ -82,6 +82,7 @@ export async function beginSeed() {
     const new_Diagnoses = Array.from(
       new Set(
         new_PatientAdmissions
+          .filter((p) => Boolean(p.diagnosis))
           .map((p) => p.diagnosis?.split('+').map((d) => d.trim()))
           .flat()
           .sort(),
