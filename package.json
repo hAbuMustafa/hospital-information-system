@@ -51,5 +51,6 @@
     "lodash.debounce": "^4.0.8",
     "pg": "^8.17.2",
     "svelte-sonner": "^1.0.7"
-  }
+  },
+  "packageManager": "pnpm@10.33.0"
 }
