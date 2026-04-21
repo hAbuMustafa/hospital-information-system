@@ -8,6 +8,8 @@
   let patientsByWard = $derived(
     Object.groupBy(data.patients, (p: typeof inPatient_view.$inferSelect) => p.ward_name)
   );
+
+  const today = formatDate(new Date(), 'MM-DD');
 </script>
 
 {#each data.wards.map((w) => w.name) as ward_name, i (i)}
@@ -80,6 +82,10 @@
                   {/if}
                   {#if patient.security_status !== null && patient.security_status === true}
                     <span class="patient-security_status" title="(مسجون)">⛓️‍💥</span>
+                  {/if}
+                  {#if patient.birthdate && formatDate(patient.birthdate, 'MM-DD') === today}
+                    <span class="patient-birthday_today" title="عيد ميلاده اليوم">🎂</span
+                    >
                   {/if}
                 </div>
               </td>
