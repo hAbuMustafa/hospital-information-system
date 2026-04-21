@@ -2,7 +2,7 @@ import {
   pgSchema,
   serial,
   varchar,
-  text,
+  check,
   char,
   foreignKey,
   bigint,
@@ -13,6 +13,7 @@ import {
   smallserial,
   numeric,
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const Drug = pgSchema('Drug');
 
@@ -135,7 +136,10 @@ export const Formulation = Drug.table(
       .notNull(),
     amount_unit_fraction: smallint().references(() => PreparationUnit_modifier.id),
     is_per_ml: boolean().notNull().default(false),
-    role: varchar({ length: 45 }).notNull(),
+    role: smallint()
+      .references(() => ActiveIngredient_Role.id)
+      .notNull()
+      .default(1),
     role_target: integer(),
   },
   (table) => [
@@ -144,6 +148,10 @@ export const Formulation = Drug.table(
       foreignColumns: [table.id],
       name: 'ac_role_target_link',
     }),
+    check(
+      'active_ingredient_target_not_specified',
+      sql`role != 1 OR role_target IS NOT NULL`
+    ),
   ]
 );
 
