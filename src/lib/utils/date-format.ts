@@ -3,7 +3,7 @@ import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
-export function formatDate(date: number | Date, format = 'YYYY-MM-DD') {
+export function formatDate(date: number | string | Date, format = 'YYYY-MM-DD') {
   return dayjs(date).format(format);
 }
 
@@ -30,7 +30,7 @@ export function getAge(birthdate: number | Date | string) {
 export function getDuration(
   start: Date,
   end: Date,
-  unit: QUnitType | OpUnitType = 'days',
+  unit: QUnitType | OpUnitType = 'days'
 ) {
   return dayjs(end).diff(dayjs(start), unit);
 }
